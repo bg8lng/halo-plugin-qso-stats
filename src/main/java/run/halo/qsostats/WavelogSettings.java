@@ -1,1 +1,97 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBjb20uZmFzdGVyeG1sLmphY2tzb24uYW5ub3RhdGlvbi5Kc29uSWdub3JlUHJvcGVydGllczsKaW1wb3J0IGphdmEudXRpbC5MaXN0OwppbXBvcnQgb3JnLmFwYWNoZS5jb21tb25zLmxhbmczLlN0cmluZ1V0aWxzOwoKLyoqCiAqIOaPkuS7tuiuvue9ruaooeWei++8jOWvueW6lCByZXNvdXJjZXMvZXh0ZW5zaW9ucy9zZXR0aW5ncy55YW1sIOS4reeahOS4ieS4quWIhue7hO+8mgogKiBhcGnvvIhXYXZlbG9nIEFQSSDphY3nva7vvInjgIFzdGF0c++8iOe7n+iuoemhueebru+8ieOAgWRpc3BsYXnvvIjlsZXnpLrorr7nva7vvInjgIIKICoKICogPHA+55SxIHtAbGluayBydW4uaGFsby5hcHAucGx1Z2luLlJlYWN0aXZlU2V0dGluZ0ZldGNoZXJ9IOaMieWIhue7hOWPjeW6j+WIl+WMlu+8jAogKiDlrZfmrrXlkI3kuI7ooajljZUgbmFtZSDkuIDoh7TjgIIKICovCnB1YmxpYyBmaW5hbCBjbGFzcyBXYXZlbG9nU2V0dGluZ3MgewoKICAgIHByaXZhdGUgV2F2ZWxvZ1NldHRpbmdzKCkgewogICAgfQoKICAgIC8qKiBhcGkg5YiG57uE77yaV2F2ZWxvZyBBUEkg6YWN572uICovCiAgICBASnNvbklnbm9yZVByb3BlcnRpZXMoaWdub3JlVW5rbm93biA9IHRydWUpCiAgICBwdWJsaWMgcmVjb3JkIEFwaShTdHJpbmcgYmFzZVVybCwgU3RyaW5nIGFwaVRva2VuLCBJbnRlZ2VyIGNhY2hlU2Vjb25kcywKICAgICAgICAgICAgICAgICAgICAgIEludGVnZXIgdGltZW91dFNlY29uZHMsIFN0cmluZyBwYWdlVGl0bGUpIHsKCiAgICAgICAgcHVibGljIFN0cmluZyBiYXNlVXJsT3JEZWZhdWx0KCkgewogICAgICAgICAgICByZXR1cm4gU3RyaW5nVXRpbHMuZGVmYXVsdFN0cmluZyhiYXNlVXJsKS50cmltKCk7CiAgICAgICAgfQoKICAgICAgICBwdWJsaWMgU3RyaW5nIGFwaVRva2VuT3JEZWZhdWx0KCkgewogICAgICAgICAgICByZXR1cm4gU3RyaW5nVXRpbHMuZGVmYXVsdFN0cmluZyhhcGlUb2tlbikudHJpbSgpOwogICAgICAgIH0KCiAgICAgICAgcHVibGljIGludCBjYWNoZVNlY29uZHNPckRlZmF1bHQoKSB7CiAgICAgICAgICAgIHJldHVybiBjYWNoZVNlY29uZHMgIT0gbnVsbCAmJiBjYWNoZVNlY29uZHMgPiAwID8gY2FjaGVTZWNvbmRzIDogMzAwOwogICAgICAgIH0KCiAgICAgICAgcHVibGljIGludCB0aW1lb3V0U2Vjb25kc09yRGVmYXVsdCgpIHsKICAgICAgICAgICAgcmV0dXJuIHRpbWVvdXRTZWNvbmRzICE9IG51bGwgJiYgdGltZW91dFNlY29uZHMgPiAwID8gdGltZW91dFNlY29uZHMgOiAxMDsKICAgICAgICB9CgogICAgICAgIHB1YmxpYyBTdHJpbmcgcGFnZVRpdGxlT3JEZWZhdWx0KCkgewogICAgICAgICAgICByZXR1cm4gU3RyaW5nVXRpbHMuZGVmYXVsdElmQmxhbmsocGFnZVRpdGxlLCAi6YCa6IGU57uf6K6hIik7CiAgICAgICAgfQoKICAgICAgICBwdWJsaWMgYm9vbGVhbiBpc0NvbmZpZ3VyZWQoKSB7CiAgICAgICAgICAgIHJldHVybiBTdHJpbmdVdGlscy5pc05vdEJsYW5rKGJhc2VVcmxPckRlZmF1bHQoKSkKICAgICAgICAgICAgICAgICYmIFN0cmluZ1V0aWxzLmlzTm90QmxhbmsoYXBpVG9rZW5PckRlZmF1bHQoKSk7CiAgICAgICAgfQogICAgfQoKICAgIC8qKiBzdGF0cyDliIbnu4TvvJrlsZXnpLrnmoTnu5/orqHpobnnm64gKi8KICAgIEBKc29uSWdub3JlUHJvcGVydGllcyhpZ25vcmVVbmtub3duID0gdHJ1ZSkKICAgIHB1YmxpYyByZWNvcmQgU3RhdHMoTGlzdDxJdGVtPiBpdGVtcykgewoKICAgICAgICBwdWJsaWMgTGlzdDxJdGVtPiBpdGVtc09yRGVmYXVsdCgpIHsKICAgICAgICAgICAgcmV0dXJuIGl0ZW1zID09IG51bGwgPyBMaXN0Lm9mKCkgOiBpdGVtczsKICAgICAgICB9CiAgICB9CgogICAgLyoqIGRpc3BsYXkg5YiG57uE77ya5bGV56S66K6+572uICovCiAgICBASnNvbklnbm9yZVByb3BlcnRpZXMoaWdub3JlVW5rbm93biA9IHRydWUpCiAgICBwdWJsaWMgcmVjb3JkIERpc3BsYXkoQm9vbGVhbiBzaG93U2VjdGlvblRpdGxlLCBTdHJpbmcgc2VjdGlvblRpdGxlLAogICAgICAgICAgICAgICAgICAgICAgICAgIEJvb2xlYW4gc2hvd1VwZGF0ZWRBdCwgU3RyaW5nIGZhbGxiYWNrVGV4dCkgewoKICAgICAgICBwdWJsaWMgYm9vbGVhbiBzaG93U2VjdGlvblRpdGxlT3JEZWZhdWx0KCkgewogICAgICAgICAgICByZXR1cm4gc2hvd1NlY3Rpb25UaXRsZSA9PSBudWxsIHx8IHNob3dTZWN0aW9uVGl0bGU7CiAgICAgICAgfQoKICAgICAgICBwdWJsaWMgU3RyaW5nIHNlY3Rpb25UaXRsZU9yRGVmYXVsdCgpIHsKICAgICAgICAgICAgcmV0dXJuIFN0cmluZ1V0aWxzLmRlZmF1bHRJZkJsYW5rKHNlY3Rpb25UaXRsZSwgIumAmuiBlOe7n+iuoSIpOwogICAgICAgIH0KCiAgICAgICAgcHVibGljIGJvb2xlYW4gc2hvd1VwZGF0ZWRBdE9yRGVmYXVsdCgpIHsKICAgICAgICAgICAgcmV0dXJuIHNob3dVcGRhdGVkQXQgPT0gbnVsbCB8fCBzaG93VXBkYXRlZEF0OwogICAgICAgIH0KCiAgICAgICAgcHVibGljIFN0cmluZyBmYWxsYmFja1RleHRPckRlZmF1bHQoKSB7CiAgICAgICAgICAgIHJldHVybiBTdHJpbmdVdGlscy5kZWZhdWx0SWZCbGFuayhmYWxsYmFja1RleHQsICLnu5/orqHmlbDmja7mmoLkuI3lj6/nlKjvvIzor7fnqI3lkI7lho3or5UiKTsKICAgICAgICB9CiAgICB9CgogICAgLyoqIOWNleS4que7n+iuoemhueebru+8iGFycmF5IOihqOWNleeahOavj+S4gOmhue+8iSAqLwogICAgQEpzb25JZ25vcmVQcm9wZXJ0aWVzKGlnbm9yZVVua25vd24gPSB0cnVlKQogICAgcHVibGljIHJlY29yZCBJdGVtKFN0cmluZyBrZXksIFN0cmluZyB0aXRsZSwgQm9vbGVhbiBlbmFibGVkLCBJbnRlZ2VyIGxpbWl0KSB7CgogICAgICAgIHB1YmxpYyBib29sZWFuIGVuYWJsZWRPckRlZmF1bHQoKSB7CiAgICAgICAgICAgIHJldHVybiBlbmFibGVkID09IG51bGwgfHwgZW5hYmxlZDsKICAgICAgICB9CgogICAgICAgIHB1YmxpYyBTdHJpbmcgdGl0bGVPckRlZmF1bHQoU3RyaW5nIGZhbGxiYWNrKSB7CiAgICAgICAgICAgIHJldHVybiBTdHJpbmdVdGlscy5kZWZhdWx0SWZCbGFuayh0aXRsZSwgZmFsbGJhY2spOwogICAgICAgIH0KCiAgICAgICAgcHVibGljIGludCBsaW1pdE9yRGVmYXVsdChpbnQgZGVmKSB7CiAgICAgICAgICAgIHJldHVybiBsaW1pdCAhPSBudWxsICYmIGxpbWl0ID4gMCA/IGxpbWl0IDogZGVmOwogICAgICAgIH0KICAgIH0KfQo=
+package run.halo.qsostats;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * 插件设置模型，对应 resources/extensions/settings.yaml 中的三个分组：
+ * api（Wavelog API 配置）、stats（统计项目）、display（展示设置）。
+ *
+ * <p>由 {@link run.halo.app.plugin.ReactiveSettingFetcher} 按分组反序列化，
+ * 字段名与表单 name 一致。
+ */
+public final class WavelogSettings {
+
+    private WavelogSettings() {
+    }
+
+    /** api 分组：Wavelog API 配置 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Api(String baseUrl, String apiToken, Integer cacheSeconds,
+                      Integer timeoutSeconds, String pageTitle) {
+
+        public String baseUrlOrDefault() {
+            return StringUtils.defaultString(baseUrl).trim();
+        }
+
+        public String apiTokenOrDefault() {
+            return StringUtils.defaultString(apiToken).trim();
+        }
+
+        public int cacheSecondsOrDefault() {
+            return cacheSeconds != null && cacheSeconds > 0 ? cacheSeconds : 300;
+        }
+
+        public int timeoutSecondsOrDefault() {
+            return timeoutSeconds != null && timeoutSeconds > 0 ? timeoutSeconds : 10;
+        }
+
+        public String pageTitleOrDefault() {
+            return StringUtils.defaultIfBlank(pageTitle, "通联统计");
+        }
+
+        public boolean isConfigured() {
+            return StringUtils.isNotBlank(baseUrlOrDefault())
+                && StringUtils.isNotBlank(apiTokenOrDefault());
+        }
+    }
+
+    /** stats 分组：展示的统计项目 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Stats(List<Item> items) {
+
+        public List<Item> itemsOrDefault() {
+            return items == null ? List.of() : items;
+        }
+    }
+
+    /** display 分组：展示设置 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Display(Boolean showSectionTitle, String sectionTitle,
+                          Boolean showUpdatedAt, String fallbackText) {
+
+        public boolean showSectionTitleOrDefault() {
+            return showSectionTitle == null || showSectionTitle;
+        }
+
+        public String sectionTitleOrDefault() {
+            return StringUtils.defaultIfBlank(sectionTitle, "通联统计");
+        }
+
+        public boolean showUpdatedAtOrDefault() {
+            return showUpdatedAt == null || showUpdatedAt;
+        }
+
+        public String fallbackTextOrDefault() {
+            return StringUtils.defaultIfBlank(fallbackText, "统计数据暂不可用，请稍后再试");
+        }
+    }
+
+    /** 单个统计项目（array 表单的每一项） */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Item(String key, String title, Boolean enabled, Integer limit) {
+
+        public boolean enabledOrDefault() {
+            return enabled == null || enabled;
+        }
+
+        public String titleOrDefault(String fallback) {
+            return StringUtils.defaultIfBlank(title, fallback);
+        }
+
+        public int limitOrDefault(int def) {
+            return limit != null && limit > 0 ? limit : def;
+        }
+    }
+}

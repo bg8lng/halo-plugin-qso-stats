@@ -1,1 +1,71 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBzdGF0aWMgb3JnLnNwcmluZ2ZyYW1ld29yay53ZWIucmVhY3RpdmUuZnVuY3Rpb24uc2VydmVyLlJlcXVlc3RQcmVkaWNhdGVzLkdFVDsKaW1wb3J0IHN0YXRpYyBvcmcuc3ByaW5nZnJhbWV3b3JrLndlYi5yZWFjdGl2ZS5mdW5jdGlvbi5zZXJ2ZXIuUm91dGVyRnVuY3Rpb25zLnJvdXRlOwoKaW1wb3J0IGphdmEudXRpbC5NYXA7CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLmNvbnRleHQuYW5ub3RhdGlvbi5CZWFuOwppbXBvcnQgb3JnLnNwcmluZ2ZyYW1ld29yay5odHRwLk1lZGlhVHlwZTsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuc3RlcmVvdHlwZS5Db21wb25lbnQ7CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLndlYi5yZWFjdGl2ZS5mdW5jdGlvbi5zZXJ2ZXIuUm91dGVyRnVuY3Rpb247CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLndlYi5yZWFjdGl2ZS5mdW5jdGlvbi5zZXJ2ZXIuU2VydmVyUmVxdWVzdDsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsud2ViLnJlYWN0aXZlLmZ1bmN0aW9uLnNlcnZlci5TZXJ2ZXJSZXNwb25zZTsKaW1wb3J0IHJlYWN0b3IuY29yZS5wdWJsaXNoZXIuTW9ubzsKaW1wb3J0IHJ1bi5oYWxvLmFwcC50aGVtZS5UZW1wbGF0ZU5hbWVSZXNvbHZlcjsKCi8qKgogKiDliY3lj7Dot6/nlLHvvJoKICogPHVsPgogKiAgIDxsaT5HRVQgL3Fzby1zdGF0cy9hcGkvc3RhdGlzdGljcyDigJTigJQg5bGV56S657uE5Lu255qE5pWw5o2u5o6l5Y+j77yI5YWs5byA77yM5peg6ZyA6K6k6K+B77yJPC9saT4KICogICA8bGk+R0VUIC9xc28tc3RhdHMg4oCU4oCUIOeLrOeri+e7n+iuoemhtemdojwvbGk+CiAqIDwvdWw+CiAqCiAqIDxwPumhtemdouaooeadv+mAmui/hyB7QGxpbmsgVGVtcGxhdGVOYW1lUmVzb2x2ZXJ9IOino+aekO+8muS4u+mimOaPkOS+m+WQjOWQjeaooeadvwogKiDvvIh0ZW1wbGF0ZXMvcXNvLXN0YXRzLmh0bWzvvInml7bkvJjlhYjkvb/nlKjkuLvpopjmqKHmnb/vvIzlkKbliJnkvb/nlKjmj5Lku7boh6rluKbmqKHmnb/jgIIKICogSGFsbyDiiaUgMi4yNiDml7boh6rluKbmqKHmnb/pgJrov4cge0Bjb2RlIGxheW91dCA6OiBodG1sfSDlpI3nlKjkuLvpopjluIPlsYAKICog77yIcXNvLXN0YXRzLmh0bWzvvInvvJvogIHniYjmnKzkvb/nlKjoh6rluKblpJblo7PvvIhxc28tc3RhdHMtc3RhbmRhbG9uZS5odG1s77yJ44CCCiAqLwpAQ29tcG9uZW50CnB1YmxpYyBjbGFzcyBRc29TdGF0c1JvdXRlciB7CgogICAgLyoqIEhhbG8gMi4yNiDotbfmoLjlv4PlhoXnva7pobXpnaLluIPlsYDlpZHnuqbvvIhydW4uaGFsby5hcHAudGhlbWUuUGFnZUxheW91dENvbnRyYWN077yJICovCiAgICBwcml2YXRlIHN0YXRpYyBmaW5hbCBib29sZWFuIFBBR0VfTEFZT1VUX1NVUFBPUlRFRCA9IGlzUGFnZUxheW91dFN1cHBvcnRlZCgpOwoKICAgIHByaXZhdGUgZmluYWwgUXNvU3RhdHNTZXJ2aWNlIHFzb1N0YXRzU2VydmljZTsKICAgIHByaXZhdGUgZmluYWwgVGVtcGxhdGVOYW1lUmVzb2x2ZXIgdGVtcGxhdGVOYW1lUmVzb2x2ZXI7CgogICAgcHVibGljIFFzb1N0YXRzUm91dGVyKFFzb1N0YXRzU2VydmljZSBxc29TdGF0c1NlcnZpY2UsCiAgICAgICAgICAgICAgICAgICAgICAgICAgVGVtcGxhdGVOYW1lUmVzb2x2ZXIgdGVtcGxhdGVOYW1lUmVzb2x2ZXIpIHsKICAgICAgICB0aGlzLnFzb1N0YXRzU2VydmljZSA9IHFzb1N0YXRzU2VydmljZTsKICAgICAgICB0aGlzLnRlbXBsYXRlTmFtZVJlc29sdmVyID0gdGVtcGxhdGVOYW1lUmVzb2x2ZXI7CiAgICB9CgogICAgQEJlYW4KICAgIFJvdXRlckZ1bmN0aW9uPFNlcnZlclJlc3BvbnNlPiBxc29TdGF0c1JvdXRlckZ1bmN0aW9uKCkgewogICAgICAgIHJldHVybiByb3V0ZShHRVQoIi9xc28tc3RhdHMvYXBpL3N0YXRpc3RpY3MiKSwgdGhpczo6c3RhdGlzdGljcykKICAgICAgICAgICAgLmFuZFJvdXRlKEdFVCgiL3Fzby1zdGF0cyIpLCB0aGlzOjpwYWdlKTsKICAgIH0KCiAgICBwcml2YXRlIE1vbm88U2VydmVyUmVzcG9uc2U+IHN0YXRpc3RpY3MoU2VydmVyUmVxdWVzdCByZXF1ZXN0KSB7CiAgICAgICAgcmV0dXJuIHFzb1N0YXRzU2VydmljZS5idWlsZFBheWxvYWQoKQogICAgICAgICAgICAuZmxhdE1hcChwYXlsb2FkIC0+IFNlcnZlclJlc3BvbnNlLm9rKCkKICAgICAgICAgICAgICAgIC5jb250ZW50VHlwZShNZWRpYVR5cGUuQVBQTElDQVRJT05fSlNPTikKICAgICAgICAgICAgICAgIC5ib2R5VmFsdWUocGF5bG9hZCkpOwogICAgfQoKICAgIHByaXZhdGUgTW9ubzxTZXJ2ZXJSZXNwb25zZT4gcGFnZShTZXJ2ZXJSZXF1ZXN0IHJlcXVlc3QpIHsKICAgICAgICBTdHJpbmcgdmlld05hbWUgPSBQQUdFX0xBWU9VVF9TVVBQT1JURUQgPyAicXNvLXN0YXRzIiA6ICJxc28tc3RhdHMtc3RhbmRhbG9uZSI7CiAgICAgICAgcmV0dXJuIHRlbXBsYXRlTmFtZVJlc29sdmVyLnJlc29sdmVUZW1wbGF0ZU5hbWVPckRlZmF1bHQocmVxdWVzdC5leGNoYW5nZSgpLCB2aWV3TmFtZSkKICAgICAgICAgICAgLmZsYXRNYXAobmFtZSAtPiBxc29TdGF0c1NlcnZpY2UucGFnZVRpdGxlKCkKICAgICAgICAgICAgICAgIC5mbGF0TWFwKHRpdGxlIC0+IFNlcnZlclJlc3BvbnNlLm9rKCkucmVuZGVyKG5hbWUsIE1hcC5vZigidGl0bGUiLCB0aXRsZSkpKSk7CiAgICB9CgogICAgcHJpdmF0ZSBzdGF0aWMgYm9vbGVhbiBpc1BhZ2VMYXlvdXRTdXBwb3J0ZWQoKSB7CiAgICAgICAgdHJ5IHsKICAgICAgICAgICAgQ2xhc3MuZm9yTmFtZSgicnVuLmhhbG8uYXBwLnRoZW1lLlBhZ2VMYXlvdXRDb250cmFjdCIpOwogICAgICAgICAgICByZXR1cm4gdHJ1ZTsKICAgICAgICB9IGNhdGNoIChDbGFzc05vdEZvdW5kRXhjZXB0aW9uIGUpIHsKICAgICAgICAgICAgcmV0dXJuIGZhbHNlOwogICAgICAgIH0KICAgIH0KfQo=
+package run.halo.qsostats;
+
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+
+import java.util.Map;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
+import run.halo.app.theme.TemplateNameResolver;
+
+/**
+ * 前台路由：
+ * <ul>
+ *   <li>GET /qso-stats/api/statistics —— 展示组件的数据接口（公开，无需认证）</li>
+ *   <li>GET /qso-stats —— 独立统计页面</li>
+ * </ul>
+ *
+ * <p>页面模板通过 {@link TemplateNameResolver} 解析：主题提供同名模板
+ * （templates/qso-stats.html）时优先使用主题模板，否则使用插件自带模板。
+ * Halo ≥ 2.26 时自带模板通过 {@code layout :: html} 复用主题布局
+ * （qso-stats.html）；老版本使用自带外壳（qso-stats-standalone.html）。
+ */
+@Component
+public class QsoStatsRouter {
+
+    /** Halo 2.26 起核心内置页面布局契约（run.halo.app.theme.PageLayoutContract） */
+    private static final boolean PAGE_LAYOUT_SUPPORTED = isPageLayoutSupported();
+
+    private final QsoStatsService qsoStatsService;
+    private final TemplateNameResolver templateNameResolver;
+
+    public QsoStatsRouter(QsoStatsService qsoStatsService,
+                          TemplateNameResolver templateNameResolver) {
+        this.qsoStatsService = qsoStatsService;
+        this.templateNameResolver = templateNameResolver;
+    }
+
+    @Bean
+    RouterFunction<ServerResponse> qsoStatsRouterFunction() {
+        return route(GET("/qso-stats/api/statistics"), this::statistics)
+            .andRoute(GET("/qso-stats"), this::page);
+    }
+
+    private Mono<ServerResponse> statistics(ServerRequest request) {
+        return qsoStatsService.buildPayload()
+            .flatMap(payload -> ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(payload));
+    }
+
+    private Mono<ServerResponse> page(ServerRequest request) {
+        String viewName = PAGE_LAYOUT_SUPPORTED ? "qso-stats" : "qso-stats-standalone";
+        return templateNameResolver.resolveTemplateNameOrDefault(request.exchange(), viewName)
+            .flatMap(name -> qsoStatsService.pageTitle()
+                .flatMap(title -> ServerResponse.ok().render(name, Map.of("title", title))));
+    }
+
+    private static boolean isPageLayoutSupported() {
+        try {
+            Class.forName("run.halo.app.theme.PageLayoutContract");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+}

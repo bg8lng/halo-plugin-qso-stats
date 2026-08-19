@@ -1,1 +1,214 @@
-LyogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CiAgIOmAmuiBlOe7n+iuoee7hOS7tuagt+W8j++8iFFzb1N0YXRzIHBsdWdpbu+8iQogICDorr7orqHljp/liJnvvJrot5/pmo/kuLvpopjpo47moLwg4oCU4oCUIOe7p+aJv+mhtemdouWtl+S9k+S4juminOiJsu+8jOaJgOacieminOiJsui1sAogICBDU1Mg5Y+Y6YeP5LiU5bim5Lit5oCn5YWc5bqV5YC877yb5Li76aKY5Y+v6YCa6L+H6KaG55uW5ZCM5ZCN5Y+Y6YeP5a6a5Yi277yaCiAgICAgLnFzby1zdGF0cy13aWRnZXQgewogICAgICAgLS1xc28tc3RhdHMtYWNjZW50OiAjeW91ci1jb2xvcjsKICAgICAgIC0tcXNvLXN0YXRzLWNhcmQtYmc6IC4uLjsKICAgICAgIC4uLgogICAgIH0KICAgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ICovCgoucXNvLXN0YXRzLXdpZGdldCB7CiAgLS1xc28tc3RhdHMtYWNjZW50OiAjMjU2M2ViOwogIC0tcXNvLXN0YXRzLWNhcmQtYmc6IHJnYmEoMTI3LCAxMjcsIDEyNywgMC4wNik7CiAgLS1xc28tc3RhdHMtY2FyZC1ib3JkZXI6IHJnYmEoMTI3LCAxMjcsIDEyNywgMC4xNik7CiAgLS1xc28tc3RhdHMtcmFkaXVzOiAxMHB4OwogIC0tcXNvLXN0YXRzLXRleHQ6IGluaGVyaXQ7CiAgLS1xc28tc3RhdHMtbXV0ZWQ6IHJnYmEoMTI3LCAxMjcsIDEyNywgMC44NSk7CiAgLS1xc28tc3RhdHMtdHJhY2s6IHJnYmEoMTI3LCAxMjcsIDEyNywgMC4xNik7CiAgLS1xc28tc3RhdHMtZ2FwOiAxcmVtOwoKICBmb250LWZhbWlseTogaW5oZXJpdDsKICBjb2xvcjogdmFyKC0tcXNvLXN0YXRzLXRleHQpOwogIGxpbmUtaGVpZ2h0OiAxLjY7Cn0KCi5xc28tc3RhdHMgewogIGRpc3BsYXk6IGdyaWQ7CiAgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOiByZXBlYXQoYXV0by1maWxsLCBtaW5tYXgoMjQwcHgsIDFmcikpOwogIGdhcDogdmFyKC0tcXNvLXN0YXRzLWdhcCk7Cn0KCi5xc28tc3RhdHNfX2hlYWRlciB7CiAgZ3JpZC1jb2x1bW46IDEgLyAtMTsKICBmb250LXNpemU6IDEuMTVlbTsKICBmb250LXdlaWdodDogNjAwOwogIG1hcmdpbjogMCAwIDAuMjVyZW07Cn0KCi5xc28tc3RhdHNfX2NhcmQgewogIGRpc3BsYXk6IGZsZXg7CiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsKICBnYXA6IDAuMzVyZW07CiAgcGFkZGluZzogMS4xcmVtIDEuMjVyZW07CiAgYmFja2dyb3VuZDogdmFyKC0tcXNvLXN0YXRzLWNhcmQtYmcpOwogIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLXFzby1zdGF0cy1jYXJkLWJvcmRlcik7CiAgYm9yZGVyLXJhZGl1czogdmFyKC0tcXNvLXN0YXRzLXJhZGl1cyk7CiAgbWluLXdpZHRoOiAwOwp9CgoucXNvLXN0YXRzX19jYXJkLXRpdGxlIHsKICBmb250LXNpemU6IDAuODVlbTsKICBvcGFjaXR5OiAwLjc1OwogIG1hcmdpbjogMDsKfQoKLnFzby1zdGF0c19fY2FyZC1ib2R5IHsKICBtaW4td2lkdGg6IDA7Cn0KCi8qIOWkp+aVsOWtl+WNoeeJhyAqLwoucXNvLXN0YXRzX19udW1iZXIgewogIGZvbnQtc2l6ZTogMnJlbTsKICBmb250LXdlaWdodDogNzAwOwogIGxpbmUtaGVpZ2h0OiAxLjI7CiAgY29sb3I6IHZhcigtLXFzby1zdGF0cy1hY2NlbnQpOwogIGZvbnQtdmFyaWFudC1udW1lcmljOiB0YWJ1bGFyLW51bXM7Cn0KCi8qIOa0u+i3g+W6piAvIERYQ0PvvJrlpJrkuKrlsI/mjIfmoIflubbmjpIgKi8KLnFzby1zdGF0c19fbWV0cmljcyB7CiAgZGlzcGxheTogZmxleDsKICBnYXA6IDEuMnJlbTsKICBmbGV4LXdyYXA6IHdyYXA7Cn0KCi5xc28tc3RhdHNfX21ldHJpYyB7CiAgZGlzcGxheTogZmxleDsKICBmbGV4LWRpcmVjdGlvbjogY29sdW1uOwp9CgoucXNvLXN0YXRzX19tZXRyaWMtdmFsdWUgewogIGZvbnQtc2l6ZTogMS4yNXJlbTsKICBmb250LXdlaWdodDogNjUwOwogIGNvbG9yOiB2YXIoLS1xc28tc3RhdHMtYWNjZW50KTsKICBmb250LXZhcmlhbnQtbnVtZXJpYzogdGFidWxhci1udW1zOwp9CgoucXNvLXN0YXRzX19tZXRyaWMtbGFiZWwgewogIGZvbnQtc2l6ZTogMC43OGVtOwogIG9wYWNpdHk6IDAuNzsKfQoKLyog5YiG5biD5p2h5b2i5Zu+ICovCi5xc28tc3RhdHNfX3Jvd3MgewogIGRpc3BsYXk6IGZsZXg7CiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsKICBnYXA6IDAuNXJlbTsKfQoKLnFzby1zdGF0c19fcm93IHsKICBkaXNwbGF5OiBncmlkOwogIGdyaWQtdGVtcGxhdGUtY29sdW1uczogbWlubWF4KDMuNWVtLCBhdXRvKSAxZnIgYXV0bzsKICBhbGlnbi1pdGVtczogY2VudGVyOwogIGdhcDogMC42cmVtOwogIGZvbnQtc2l6ZTogMC45ZW07Cn0KCi5xc28tc3RhdHNfX3Jvdy1sYWJlbCB7CiAgd2hpdGUtc3BhY2U6IG5vd3JhcDsKICBvdmVyZmxvdzogaGlkZGVuOwogIHRleHQtb3ZlcmZsb3c6IGVsbGlwc2lzOwp9CgoucXNvLXN0YXRzX19yb3ctYmFyIHsKICBoZWlnaHQ6IDZweDsKICBib3JkZXItcmFkaXVzOiAzcHg7CiAgYmFja2dyb3VuZDogdmFyKC0tcXNvLXN0YXRzLXRyYWNrKTsKICBvdmVyZmxvdzogaGlkZGVuOwp9CgoucXNvLXN0YXRzX19yb3ctYmFyLWZpbGwgewogIGRpc3BsYXk6IGJsb2NrOwogIGhlaWdodDogMTAwJTsKICBib3JkZXItcmFkaXVzOiAzcHg7CiAgYmFja2dyb3VuZDogdmFyKC0tcXNvLXN0YXRzLWFjY2VudCk7CiAgdHJhbnNpdGlvbjogd2lkdGggMC41cyBlYXNlOwp9CgoucXNvLXN0YXRzX19yb3ctY291bnQgewogIGZvbnQtdmFyaWFudC1udW1lcmljOiB0YWJ1bGFyLW51bXM7CiAgb3BhY2l0eTogMC44NTsKICB3aGl0ZS1zcGFjZTogbm93cmFwOwp9CgovKiDmnIDov5HpgJrogZQgKi8KLnFzby1zdGF0c19fcmVjZW50IHsKICBkaXNwbGF5OiBmbGV4OwogIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47CiAgZ2FwOiAwLjQ1cmVtOwogIGZvbnQtc2l6ZTogMC45ZW07Cn0KCi5xc28tc3RhdHNfX3JlY2VudC1yb3cgewogIGRpc3BsYXk6IGZsZXg7CiAgYWxpZ24taXRlbXM6IGJhc2VsaW5lOwogIGdhcDogMC41cmVtOwogIG1pbi13aWR0aDogMDsKfQoKLnFzby1zdGF0c19fcmVjZW50LWNhbGwgewogIGZvbnQtd2VpZ2h0OiA2MDA7CiAgY29sb3I6IHZhcigtLXFzby1zdGF0cy1hY2NlbnQpOwogIHdoaXRlLXNwYWNlOiBub3dyYXA7Cn0KCi5xc28tc3RhdHNfX3JlY2VudC1tZXRhIHsKICBvcGFjaXR5OiAwLjc1OwogIHdoaXRlLXNwYWNlOiBub3dyYXA7CiAgb3ZlcmZsb3c6IGhpZGRlbjsKICB0ZXh0LW92ZXJmbG93OiBlbGxpcHNpczsKfQoKLnFzby1zdGF0c19fcmVjZW50LXRpbWUgewogIG1hcmdpbi1sZWZ0OiBhdXRvOwogIG9wYWNpdHk6IDAuNjsKICBmb250LXNpemU6IDAuODVlbTsKICB3aGl0ZS1zcGFjZTogbm93cmFwOwp9CgovKiDnirbmgIHljLogKi8KLnFzby1zdGF0c19fZXJyb3IsCi5xc28tc3RhdHNfX2xvYWRpbmcgewogIGdyaWQtY29sdW1uOiAxIC8gLTE7CiAgcGFkZGluZzogMS4ycmVtIDEuMjVyZW07CiAgYmFja2dyb3VuZDogdmFyKC0tcXNvLXN0YXRzLWNhcmQtYmcpOwogIGJvcmRlcjogMXB4IGRhc2hlZCB2YXIoLS1xc28tc3RhdHMtY2FyZC1ib3JkZXIpOwogIGJvcmRlci1yYWRpdXM6IHZhcigtLXFzby1zdGF0cy1yYWRpdXMpOwogIGNvbG9yOiB2YXIoLS1xc28tc3RhdHMtbXV0ZWQpOwogIGZvbnQtc2l6ZTogMC45MmVtOwp9CgoucXNvLXN0YXRzX19lcnJvci1kZXRhaWwgewogIG1hcmdpbi10b3A6IDAuNHJlbTsKICBmb250LXNpemU6IDAuODJlbTsKICBvcGFjaXR5OiAwLjY1OwogIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDsKfQoKLnFzby1zdGF0c19fZm9vdGVyIHsKICBncmlkLWNvbHVtbjogMSAvIC0xOwogIGZvbnQtc2l6ZTogMC43OGVtOwogIG9wYWNpdHk6IDAuNjsKICB0ZXh0LWFsaWduOiByaWdodDsKfQoKLyog54us56uL57uf6K6h6aG16Z2i77yIL3Fzby1zdGF0c++8iSAqLwoucXNvLXN0YXRzLXBhZ2UgewogIG1heC13aWR0aDogOTgwcHg7CiAgbWFyZ2luOiAwIGF1dG87CiAgcGFkZGluZzogMS41cmVtIDEuMjVyZW0gM3JlbTsKfQoKLnFzby1zdGF0cy1wYWdlX190aXRsZSB7CiAgZm9udC1zaXplOiAxLjZyZW07CiAgbWFyZ2luOiAwIDAgMS4yNXJlbTsKfQoKLyog5bCP5bGP5LyY5YyWICovCkBtZWRpYSAobWF4LXdpZHRoOiA0ODBweCkgewogIC5xc28tc3RhdHMgewogICAgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOiAxZnI7CiAgfQp9Cg==
+/* ============================================================
+   通联统计组件样式（QsoStats plugin）
+   设计原则：跟随主题风格 —— 继承页面字体与颜色，所有颜色走
+   CSS 变量且带中性兜底值；主题可通过覆盖同名变量定制：
+     .qso-stats-widget {
+       --qso-stats-accent: #your-color;
+       --qso-stats-card-bg: ...;
+       ...
+     }
+   ============================================================ */
+
+.qso-stats-widget {
+  --qso-stats-accent: #2563eb;
+  --qso-stats-card-bg: rgba(127, 127, 127, 0.06);
+  --qso-stats-card-border: rgba(127, 127, 127, 0.16);
+  --qso-stats-radius: 10px;
+  --qso-stats-text: inherit;
+  --qso-stats-muted: rgba(127, 127, 127, 0.85);
+  --qso-stats-track: rgba(127, 127, 127, 0.16);
+  --qso-stats-gap: 1rem;
+
+  font-family: inherit;
+  color: var(--qso-stats-text);
+  line-height: 1.6;
+}
+
+.qso-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--qso-stats-gap);
+}
+
+.qso-stats__header {
+  grid-column: 1 / -1;
+  font-size: 1.15em;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.qso-stats__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--qso-stats-card-bg);
+  border: 1px solid var(--qso-stats-card-border);
+  border-radius: var(--qso-stats-radius);
+  min-width: 0;
+}
+
+.qso-stats__card-title {
+  font-size: 0.85em;
+  opacity: 0.75;
+  margin: 0;
+}
+
+.qso-stats__card-body {
+  min-width: 0;
+}
+
+/* 大数字卡片 */
+.qso-stats__number {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--qso-stats-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 活跃度 / DXCC：多个小指标并排 */
+.qso-stats__metrics {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.qso-stats__metric {
+  display: flex;
+  flex-direction: column;
+}
+
+.qso-stats__metric-value {
+  font-size: 1.25rem;
+  font-weight: 650;
+  color: var(--qso-stats-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.qso-stats__metric-label {
+  font-size: 0.78em;
+  opacity: 0.7;
+}
+
+/* 分布条形图 */
+.qso-stats__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.qso-stats__row {
+  display: grid;
+  grid-template-columns: minmax(3.5em, auto) 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9em;
+}
+
+.qso-stats__row-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qso-stats__row-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--qso-stats-track);
+  overflow: hidden;
+}
+
+.qso-stats__row-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--qso-stats-accent);
+  transition: width 0.5s ease;
+}
+
+.qso-stats__row-count {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* 最近通联 */
+.qso-stats__recent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.9em;
+}
+
+.qso-stats__recent-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.qso-stats__recent-call {
+  font-weight: 600;
+  color: var(--qso-stats-accent);
+  white-space: nowrap;
+}
+
+.qso-stats__recent-meta {
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qso-stats__recent-time {
+  margin-left: auto;
+  opacity: 0.6;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+/* 状态区 */
+.qso-stats__error,
+.qso-stats__loading {
+  grid-column: 1 / -1;
+  padding: 1.2rem 1.25rem;
+  background: var(--qso-stats-card-bg);
+  border: 1px dashed var(--qso-stats-card-border);
+  border-radius: var(--qso-stats-radius);
+  color: var(--qso-stats-muted);
+  font-size: 0.92em;
+}
+
+.qso-stats__error-detail {
+  margin-top: 0.4rem;
+  font-size: 0.82em;
+  opacity: 0.65;
+  word-break: break-all;
+}
+
+.qso-stats__footer {
+  grid-column: 1 / -1;
+  font-size: 0.78em;
+  opacity: 0.6;
+  text-align: right;
+}
+
+/* 独立统计页面（/qso-stats） */
+.qso-stats-page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.qso-stats-page__title {
+  font-size: 1.6rem;
+  margin: 0 0 1.25rem;
+}
+
+/* 小屏优化 */
+@media (max-width: 480px) {
+  .qso-stats {
+    grid-template-columns: 1fr;
+  }
+}

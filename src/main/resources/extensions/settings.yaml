@@ -1,1 +1,125 @@
-YXBpVmVyc2lvbjogdjFhbHBoYTEKa2luZDogU2V0dGluZwptZXRhZGF0YToKICBuYW1lOiBxc28tc3RhdHMtc2V0dGluZ3MKc3BlYzoKICBmb3JtczoKICAgIC0gZ3JvdXA6IGFwaQogICAgICBsYWJlbDogV2F2ZWxvZyBBUEkg6YWN572uCiAgICAgIGZvcm1TY2hlbWE6CiAgICAgICAgLSAkZm9ybWtpdDogdGV4dAogICAgICAgICAgbmFtZTogYmFzZVVybAogICAgICAgICAgbGFiZWw6IFdhdmVsb2cg56uZ54K55Zyw5Z2ACiAgICAgICAgICB2YWx1ZTogIiIKICAgICAgICAgIGhlbHA6ICLkvovlpoIgaHR0cHM6Ly9sb2cuZXhhbXBsZS5jb23vvIjlj6/luKYgL2luZGV4LnBocCDliY3nvIDvvInjgILmj5Lku7bkvJroh6rliqjmi7zmjqUgL2luZGV4LnBocC9hcGkvdjIvIOiuv+mXrue7n+iuoeaOpeWPo+OAgiIKICAgICAgICAtICRmb3Jta2l0OiBwYXNzd29yZAogICAgICAgICAgbmFtZTogYXBpVG9rZW4KICAgICAgICAgIGxhYmVsOiBBUEkgVG9rZW4KICAgICAgICAgIHZhbHVlOiAiIgogICAgICAgICAgaGVscDogIuWcqCBXYXZlbG9nIOeUqOaIt+iPnOWNleeahCBBUEkg6aG16Z2i5Yib5bu6IHYyIFRva2Vu77yId2wyXyDlvIDlpLTvvInvvIzpnIDopoEgc3RhdGlzdGljOnJlYWQg5ZKMIHFzbzpyZWFkIOadg+mZkOOAgiIKICAgICAgICAtICRmb3Jta2l0OiBudW1iZXIKICAgICAgICAgIG5hbWU6IGNhY2hlU2Vjb25kcwogICAgICAgICAgbGFiZWw6IOe8k+WtmOaXtumXtO+8iOenku+8iQogICAgICAgICAgdmFsdWU6IDMwMAogICAgICAgICAgbWluOiAxMAogICAgICAgICAgbWF4OiA4NjQwMAogICAgICAgICAgaGVscDogIldhdmVsb2cg5pWw5o2u57yT5a2Y5pe26ZW/77yM6YG/5YWN5q+P5qyh6K6/6Zeu6YO96K+35rGC5pel5b+X5bmz5Y+w44CCIgogICAgICAgIC0gJGZvcm1raXQ6IG51bWJlcgogICAgICAgICAgbmFtZTogdGltZW91dFNlY29uZHMKICAgICAgICAgIGxhYmVsOiDor7fmsYLotoXml7bvvIjnp5LvvIkKICAgICAgICAgIHZhbHVlOiAxMAogICAgICAgICAgbWluOiAxCiAgICAgICAgICBtYXg6IDYwCiAgICAgICAgLSAkZm9ybWtpdDogdGV4dAogICAgICAgICAgbmFtZTogcGFnZVRpdGxlCiAgICAgICAgICBsYWJlbDog57uf6K6h6aG16Z2i5qCH6aKYCiAgICAgICAgICB2YWx1ZTogIumAmuiBlOe7n+iuoSIKICAgICAgICAgIGhlbHA6ICLnlKjkuo4gL3Fzby1zdGF0cyDpobXpnaLkuI7mtY/op4jlmajmoIfnrb7pobXmoIfpopjjgIIiCgogICAgLSBncm91cDogc3RhdHMKICAgICAgbGFiZWw6IOe7n+iuoemhueebrgogICAgICBmb3JtU2NoZW1hOgogICAgICAgIC0gJGZvcm1raXQ6IGFycmF5CiAgICAgICAgICBuYW1lOiBpdGVtcwogICAgICAgICAgbGFiZWw6IOWxleekuueahOe7n+iuoemhueebrgogICAgICAgICAgdmFsdWU6CiAgICAgICAgICAgIC0ga2V5OiB0b3RhbF9xc29zCiAgICAgICAgICAgICAgdGl0bGU6IOmAmuiBlOaAu+aVsAogICAgICAgICAgICAgIGVuYWJsZWQ6IHRydWUKICAgICAgICAgICAgLSBrZXk6IGFjdGl2aXR5CiAgICAgICAgICAgICAgdGl0bGU6IOa0u+i3g+W6pgogICAgICAgICAgICAgIGVuYWJsZWQ6IHRydWUKICAgICAgICAgICAgLSBrZXk6IGR4Y2MKICAgICAgICAgICAgICB0aXRsZTogRFhDQyDlrZflpLQKICAgICAgICAgICAgICBlbmFibGVkOiB0cnVlCiAgICAgICAgICAgIC0ga2V5OiBiYW5kcwogICAgICAgICAgICAgIHRpdGxlOiDms6LmrrXliIbluIMKICAgICAgICAgICAgICBlbmFibGVkOiB0cnVlCiAgICAgICAgICAgICAgbGltaXQ6IDYKICAgICAgICAgICAgLSBrZXk6IG1vZGVzCiAgICAgICAgICAgICAgdGl0bGU6IOaooeW8j+WIhuW4gwogICAgICAgICAgICAgIGVuYWJsZWQ6IHRydWUKICAgICAgICAgICAgICBsaW1pdDogNgogICAgICAgICAgICAtIGtleTogcmVjZW50CiAgICAgICAgICAgICAgdGl0bGU6IOacgOi/kemAmuiBlAogICAgICAgICAgICAgIGVuYWJsZWQ6IHRydWUKICAgICAgICAgICAgICBsaW1pdDogNQogICAgICAgICAgaXRlbUxhYmVsczoKICAgICAgICAgICAgLSB0eXBlOiB0ZXh0CiAgICAgICAgICAgICAgbGFiZWw6ICR2YWx1ZS50aXRsZQogICAgICAgICAgaGVscDogIuWPr+WinuWIoOOAgeaOkuW6j+OAgeWQr+WBnOe7n+iuoemhueebru+8m+avj+S4qumhueebrueahOagh+mimOWPr+iHquWumuS5ieOAgiIKICAgICAgICAgIGNoaWxkcmVuOgogICAgICAgICAgICAtICRmb3Jta2l0OiBzZWxlY3QKICAgICAgICAgICAgICBuYW1lOiBrZXkKICAgICAgICAgICAgICBsYWJlbDog57uf6K6h57G75Z6LCiAgICAgICAgICAgICAgdmFsdWU6IHRvdGFsX3Fzb3MKICAgICAgICAgICAgICBvcHRpb25zOgogICAgICAgICAgICAgICAgLSBsYWJlbDog6YCa6IGU5oC75pWwCiAgICAgICAgICAgICAgICAgIHZhbHVlOiB0b3RhbF9xc29zCiAgICAgICAgICAgICAgICAtIGxhYmVsOiDmtLvot4PluqbvvIjku4rml6UgLyDmnKzmnIggLyDku4rlubTvvIkKICAgICAgICAgICAgICAgICAgdmFsdWU6IGFjdGl2aXR5CiAgICAgICAgICAgICAgICAtIGxhYmVsOiBEWENDIOWtl+WktAogICAgICAgICAgICAgICAgICB2YWx1ZTogZHhjYwogICAgICAgICAgICAgICAgLSBsYWJlbDog5rOi5q615YiG5biDCiAgICAgICAgICAgICAgICAgIHZhbHVlOiBiYW5kcwogICAgICAgICAgICAgICAgLSBsYWJlbDog5qih5byP5YiG5biDCiAgICAgICAgICAgICAgICAgIHZhbHVlOiBtb2RlcwogICAgICAgICAgICAgICAgLSBsYWJlbDog5pyA6L+R6YCa6IGUCiAgICAgICAgICAgICAgICAgIHZhbHVlOiByZWNlbnQKICAgICAgICAgICAgLSAkZm9ybWtpdDogdGV4dAogICAgICAgICAgICAgIG5hbWU6IHRpdGxlCiAgICAgICAgICAgICAgbGFiZWw6IOaYvuekuuagh+mimAogICAgICAgICAgICAgIHZhbHVlOiAiIgogICAgICAgICAgICAtICRmb3Jta2l0OiBzd2l0Y2gKICAgICAgICAgICAgICBuYW1lOiBlbmFibGVkCiAgICAgICAgICAgICAgbGFiZWw6IOWQr+eUqAogICAgICAgICAgICAgIHZhbHVlOiB0cnVlCiAgICAgICAgICAgIC0gJGZvcm1raXQ6IG51bWJlcgogICAgICAgICAgICAgIG5hbWU6IGxpbWl0CiAgICAgICAgICAgICAgbGFiZWw6IOaYvuekuuadoeaVsAogICAgICAgICAgICAgIHZhbHVlOiA1CiAgICAgICAgICAgICAgbWluOiAxCiAgICAgICAgICAgICAgbWF4OiA1MAogICAgICAgICAgICAgIGlmOiAiJHZhbHVlLmtleSA9PT0gJ2JhbmRzJyB8fCAkdmFsdWUua2V5ID09PSAnbW9kZXMnIHx8ICR2YWx1ZS5rZXkgPT09ICdyZWNlbnQnIgogICAgICAgICAgICAgIGhlbHA6ICLku4Xlr7nms6LmrrXliIbluIPjgIHmqKHlvI/liIbluIPjgIHmnIDov5HpgJrogZTnlJ/mlYjjgIIiCgogICAgLSBncm91cDogZGlzcGxheQogICAgICBsYWJlbDog5bGV56S66K6+572uCiAgICAgIGZvcm1TY2hlbWE6CiAgICAgICAgLSAkZm9ybWtpdDogc3dpdGNoCiAgICAgICAgICBuYW1lOiBzaG93U2VjdGlvblRpdGxlCiAgICAgICAgICBsYWJlbDog5pi+56S65Yy65Z2X5qCH6aKYCiAgICAgICAgICB2YWx1ZTogdHJ1ZQogICAgICAgIC0gJGZvcm1raXQ6IHRleHQKICAgICAgICAgIG5hbWU6IHNlY3Rpb25UaXRsZQogICAgICAgICAgbGFiZWw6IOWMuuWdl+agh+mimAogICAgICAgICAgdmFsdWU6ICLpgJrogZTnu5/orqEiCiAgICAgICAgICBoZWxwOiAi57uE5Lu26aG26YOo55qE5qCH6aKY5paH5a2X44CCIgogICAgICAgIC0gJGZvcm1raXQ6IHN3aXRjaAogICAgICAgICAgbmFtZTogc2hvd1VwZGF0ZWRBdAogICAgICAgICAgbGFiZWw6IOaYvuekuuaVsOaNruabtOaWsOaXtumXtAogICAgICAgICAgdmFsdWU6IHRydWUKICAgICAgICAtICRmb3Jta2l0OiB0ZXh0CiAgICAgICAgICBuYW1lOiBmYWxsYmFja1RleHQKICAgICAgICAgIGxhYmVsOiDliqDovb3lpLHotKXmj5DnpLrmlofmoYgKICAgICAgICAgIHZhbHVlOiAi57uf6K6h5pWw5o2u5pqC5LiN5Y+v55So77yM6K+356iN5ZCO5YaN6K+VIgo=
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: qso-stats-settings
+spec:
+  forms:
+    - group: api
+      label: Wavelog API 配置
+      formSchema:
+        - $formkit: text
+          name: baseUrl
+          label: Wavelog 站点地址
+          value: ""
+          help: "例如 https://log.example.com（可带 /index.php 前缀）。插件会自动拼接 /index.php/api/v2/ 访问统计接口。"
+        - $formkit: password
+          name: apiToken
+          label: API Token
+          value: ""
+          help: "在 Wavelog 用户菜单的 API 页面创建 v2 Token（wl2_ 开头），需要 statistic:read 和 qso:read 权限。"
+        - $formkit: number
+          name: cacheSeconds
+          label: 缓存时间（秒）
+          value: 300
+          min: 10
+          max: 86400
+          help: "Wavelog 数据缓存时长，避免每次访问都请求日志平台。"
+        - $formkit: number
+          name: timeoutSeconds
+          label: 请求超时（秒）
+          value: 10
+          min: 1
+          max: 60
+        - $formkit: text
+          name: pageTitle
+          label: 统计页面标题
+          value: "通联统计"
+          help: "用于 /qso-stats 页面与浏览器标签页标题。"
+
+    - group: stats
+      label: 统计项目
+      formSchema:
+        - $formkit: array
+          name: items
+          label: 展示的统计项目
+          value:
+            - key: total_qsos
+              title: 通联总数
+              enabled: true
+            - key: activity
+              title: 活跃度
+              enabled: true
+            - key: dxcc
+              title: DXCC 字头
+              enabled: true
+            - key: bands
+              title: 波段分布
+              enabled: true
+              limit: 6
+            - key: modes
+              title: 模式分布
+              enabled: true
+              limit: 6
+            - key: recent
+              title: 最近通联
+              enabled: true
+              limit: 5
+          itemLabels:
+            - type: text
+              label: $value.title
+          help: "可增删、排序、启停统计项目；每个项目的标题可自定义。"
+          children:
+            - $formkit: select
+              name: key
+              label: 统计类型
+              value: total_qsos
+              options:
+                - label: 通联总数
+                  value: total_qsos
+                - label: 活跃度（今日 / 本月 / 今年）
+                  value: activity
+                - label: DXCC 字头
+                  value: dxcc
+                - label: 波段分布
+                  value: bands
+                - label: 模式分布
+                  value: modes
+                - label: 最近通联
+                  value: recent
+            - $formkit: text
+              name: title
+              label: 显示标题
+              value: ""
+            - $formkit: switch
+              name: enabled
+              label: 启用
+              value: true
+            - $formkit: number
+              name: limit
+              label: 显示条数
+              value: 5
+              min: 1
+              max: 50
+              if: "$value.key === 'bands' || $value.key === 'modes' || $value.key === 'recent'"
+              help: "仅对波段分布、模式分布、最近通联生效。"
+
+    - group: display
+      label: 展示设置
+      formSchema:
+        - $formkit: switch
+          name: showSectionTitle
+          label: 显示区块标题
+          value: true
+        - $formkit: text
+          name: sectionTitle
+          label: 区块标题
+          value: "通联统计"
+          help: "组件顶部的标题文字。"
+        - $formkit: switch
+          name: showUpdatedAt
+          label: 显示数据更新时间
+          value: true
+        - $formkit: text
+          name: fallbackText
+          label: 加载失败提示文案
+          value: "统计数据暂不可用，请稍后再试"

@@ -1,1 +1,11 @@
-PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij4KICA8cmVjdCB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgcng9IjI0IiBmaWxsPSIjMjU2M2ViIi8+CiAgPCEtLSDlpKnnur8gLS0+CiAgPHBhdGggZD0iTTY0IDk2IEw2NCA0NCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik02NCA0NCBMODggMjQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8Y2lyY2xlIGN4PSI2NCIgY3k9Ijk2IiByPSI3IiBmaWxsPSIjZmZmIi8+CiAgPCEtLSDnlLXms6IgLS0+CiAgPHBhdGggZD0iTTQwIDY2IGEzNCAzNCAwIDAgMSA0OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjk1Ii8+CiAgPHBhdGggZD0iTTMwIDU0IGE1MCA1MCAwIDAgMSA2OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjYiLz4KICA8cGF0aCBkPSJNMjAgNDIgYTY2IDY2IDAgMCAxIDg4IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuMyIvPgo8L3N2Zz4K
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="24" fill="#2563eb"/>
+  <!-- 天线 -->
+  <path d="M64 96 L64 44" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M64 44 L88 24" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="64" cy="96" r="7" fill="#fff"/>
+  <!-- 电波 -->
+  <path d="M40 66 a34 34 0 0 1 48 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0.95"/>
+  <path d="M30 54 a50 50 0 0 1 68 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M20 42 a66 66 0 0 1 88 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0.3"/>
+</svg>

@@ -1,1 +1,35 @@
-Lyog6aKE6KeI55So55qE5qih5ouf57uf6K6h6L296I2377yI5LiOIFdhdmVsb2cgc3RhdGlzdGljIEFQSSDnu5PmnoTkuIDoh7TvvIkgKi8KewogICJzZWN0aW9uVGl0bGUiOiAi6YCa6IGU57uf6K6hIiwKICAic2hvd1NlY3Rpb25UaXRsZSI6IHRydWUsCiAgInNob3dVcGRhdGVkQXQiOiB0cnVlLAogICJmYWxsYmFja1RleHQiOiAi57uf6K6h5pWw5o2u5pqC5LiN5Y+v55So77yM6K+356iN5ZCO5YaN6K+VIiwKICAidXBkYXRlZEF0IjogIjIwMjYtMDgtMTlUMTA6MzA6MDBaIiwKICAic2VjdGlvbnMiOiBbCiAgICB7ICJrZXkiOiAidG90YWxfcXNvcyIsICJ0aXRsZSI6ICLpgJrogZTmgLvmlbAiLCAidHlwZSI6ICJudW1iZXIiLCAidmFsdWUiOiB7ICJ2YWx1ZSI6IDEyMzQgfSB9LAogICAgeyAia2V5IjogImFjdGl2aXR5IiwgInRpdGxlIjogIua0u+i3g+W6piIsICJ0eXBlIjogImFjdGl2aXR5IiwKICAgICAgInZhbHVlIjogeyAidG9kYXkiOiAyLCAibW9udGgiOiA1LCAieWVhciI6IDcgfSB9LAogICAgeyAia2V5IjogImR4Y2MiLCAidGl0bGUiOiAiRFhDQyDlrZflpLQiLCAidHlwZSI6ICJkeGNjIiwKICAgICAgInZhbHVlIjogeyAid29ya2VkIjogMTUsICJjb25maXJtZWQiOiA5LCAiYXZhaWxhYmxlIjogMzQwIH0gfSwKICAgIHsgImtleSI6ICJiYW5kcyIsICJ0aXRsZSI6ICLms6LmrrXliIbluIMiLCAidHlwZSI6ICJkaXN0cmlidXRpb24iLAogICAgICAidmFsdWUiOiBbCiAgICAgICAgeyAibGFiZWwiOiAiMjBtIiwgImNvdW50IjogMTIsICJwZXJjZW50IjogNDIuOSB9LAogICAgICAgIHsgImxhYmVsIjogIjQwbSIsICJjb3VudCI6IDgsICJwZXJjZW50IjogMjguNiB9LAogICAgICAgIHsgImxhYmVsIjogIjE1bSIsICJjb3VudCI6IDUsICJwZXJjZW50IjogMTcuOSB9LAogICAgICAgIHsgImxhYmVsIjogIjEwbSIsICJjb3VudCI6IDMsICJwZXJjZW50IjogMTAuNyB9CiAgICAgIF0gfSwKICAgIHsgImtleSI6ICJtb2RlcyIsICJ0aXRsZSI6ICLmqKHlvI/liIbluIMiLCAidHlwZSI6ICJkaXN0cmlidXRpb24iLAogICAgICAidmFsdWUiOiBbCiAgICAgICAgeyAibGFiZWwiOiAiRlQ4IiwgImNvdW50IjogMTUsICJwZXJjZW50IjogNTMuNiB9LAogICAgICAgIHsgImxhYmVsIjogIkNXIiwgImNvdW50IjogNywgInBlcmNlbnQiOiAyNS4wIH0sCiAgICAgICAgeyAibGFiZWwiOiAiU1NCIiwgImNvdW50IjogNiwgInBlcmNlbnQiOiAyMS40IH0KICAgICAgXSB9LAogICAgeyAia2V5IjogInJlY2VudCIsICJ0aXRsZSI6ICLmnIDov5HpgJrogZQiLCAidHlwZSI6ICJyZWNlbnQiLAogICAgICAidmFsdWUiOiBbCiAgICAgICAgeyAiY2FsbCI6ICJOOUVBVCIsICJiYW5kIjogIjIwbSIsICJtb2RlIjogIlNTQiIsICJ0aW1lIjogIjIwMjYtMDYtMTYgMTc6MDYiLCAiZ3JpZHNxdWFyZSI6ICJFTjQyIiB9LAogICAgICAgIHsgImNhbGwiOiAiVzFBVyIsICJiYW5kIjogIjQwbSIsICJtb2RlIjogIkNXIiwgInRpbWUiOiAiMjAyNi0wNi0xNiAxMjowNCIsICJncmlkc3F1YXJlIjogIiIgfSwKICAgICAgICB7ICJjYWxsIjogIkJHOEFBQSIsICJiYW5kIjogIjIwbSIsICJtb2RlIjogIkZUOCIsICJ0aW1lIjogIjIwMjYtMDYtMTUgMjM6NDEiLCAiZ3JpZHNxdWFyZSI6ICJPTTcwIiB9CiAgICAgIF0gfQogIF0sCiAgImVycm9yIjogbnVsbAp9Cg==
+/* 预览用的模拟统计载荷（与 Wavelog statistic API 结构一致） */
+{
+  "sectionTitle": "通联统计",
+  "showSectionTitle": true,
+  "showUpdatedAt": true,
+  "fallbackText": "统计数据暂不可用，请稍后再试",
+  "updatedAt": "2026-08-19T10:30:00Z",
+  "sections": [
+    { "key": "total_qsos", "title": "通联总数", "type": "number", "value": { "value": 1234 } },
+    { "key": "activity", "title": "活跃度", "type": "activity",
+      "value": { "today": 2, "month": 5, "year": 7 } },
+    { "key": "dxcc", "title": "DXCC 字头", "type": "dxcc",
+      "value": { "worked": 15, "confirmed": 9, "available": 340 } },
+    { "key": "bands", "title": "波段分布", "type": "distribution",
+      "value": [
+        { "label": "20m", "count": 12, "percent": 42.9 },
+        { "label": "40m", "count": 8, "percent": 28.6 },
+        { "label": "15m", "count": 5, "percent": 17.9 },
+        { "label": "10m", "count": 3, "percent": 10.7 }
+      ] },
+    { "key": "modes", "title": "模式分布", "type": "distribution",
+      "value": [
+        { "label": "FT8", "count": 15, "percent": 53.6 },
+        { "label": "CW", "count": 7, "percent": 25.0 },
+        { "label": "SSB", "count": 6, "percent": 21.4 }
+      ] },
+    { "key": "recent", "title": "最近通联", "type": "recent",
+      "value": [
+        { "call": "N9EAT", "band": "20m", "mode": "SSB", "time": "2026-06-16 17:06", "gridsquare": "EN42" },
+        { "call": "W1AW", "band": "40m", "mode": "CW", "time": "2026-06-16 12:04", "gridsquare": "" },
+        { "call": "BG8AAA", "band": "20m", "mode": "FT8", "time": "2026-06-15 23:41", "gridsquare": "OM70" }
+      ] }
+  ],
+  "error": null
+}

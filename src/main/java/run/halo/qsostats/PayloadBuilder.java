@@ -1,1 +1,136 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBjb20uZmFzdGVyeG1sLmphY2tzb24uZGF0YWJpbmQuSnNvbk5vZGU7CmltcG9ydCBqYXZhLnV0aWwuQXJyYXlMaXN0OwppbXBvcnQgamF2YS51dGlsLkxpc3Q7CmltcG9ydCBvcmcuYXBhY2hlLmNvbW1vbnMubGFuZzMuU3RyaW5nVXRpbHM7CgovKioKICog57qv6YC76L6R77ya5oqKIFdhdmVsb2cg5o6l5Y+j6L+U5Zue55qE5Y6f5aeLIEpTT04g6L2s5o2i5Li65YmN5Y+w57uE5Lu25omA6ZyA55qE57uf6K6h5Yy65Z2X44CCCiAqCiAqIDxwPuS4jeS+nei1liBTcHJpbmfvvIzkvr/kuo7ljZXlhYPmtYvor5XjgIIKICovCnB1YmxpYyBmaW5hbCBjbGFzcyBQYXlsb2FkQnVpbGRlciB7CgogICAgcHJpdmF0ZSBQYXlsb2FkQnVpbGRlcigpIHsKICAgIH0KCiAgICAvKioKICAgICAqIOagueaNruWQr+eUqOeahOe7n+iuoemhueebruaehOW7uuWMuuWdl+WIl+ihqOOAggogICAgICoKICAgICAqIEBwYXJhbSBxc29Ob2RlICAgIC9hcGkvdjIvc3RhdGlzdGljP3Byb2ZpbGU9cXNvIOeahOWujOaVtOWTjeW6lAogICAgICogQHBhcmFtIHJlY2VudE5vZGUgL2FwaS92Mi9xc28/bGltaXQ9TiDnmoTlrozmlbTlk43lupTvvIzlj6/kuLogbnVsbAogICAgICogQHBhcmFtIGl0ZW1zICAgICAg5ZCO5Y+w6YWN572u55qE57uf6K6h6aG555uuCiAgICAgKi8KICAgIHB1YmxpYyBzdGF0aWMgTGlzdDxTdGF0c1BheWxvYWQuU2VjdGlvbj4gYnVpbGRTZWN0aW9ucyhKc29uTm9kZSBxc29Ob2RlLCBKc29uTm9kZSByZWNlbnROb2RlLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIExpc3Q8V2F2ZWxvZ1NldHRpbmdzLkl0ZW0+IGl0ZW1zKSB7CiAgICAgICAgTGlzdDxTdGF0c1BheWxvYWQuU2VjdGlvbj4gc2VjdGlvbnMgPSBuZXcgQXJyYXlMaXN0PD4oKTsKICAgICAgICBpZiAocXNvTm9kZSA9PSBudWxsKSB7CiAgICAgICAgICAgIHJldHVybiBzZWN0aW9uczsKICAgICAgICB9CiAgICAgICAgSnNvbk5vZGUgcXNvID0gcXNvTm9kZS5wYXRoKCJkYXRhIikucGF0aCgicXNvIik7CiAgICAgICAgaWYgKHFzby5pc01pc3NpbmdOb2RlKCkpIHsKICAgICAgICAgICAgcmV0dXJuIHNlY3Rpb25zOwogICAgICAgIH0KICAgICAgICBmb3IgKFdhdmVsb2dTZXR0aW5ncy5JdGVtIGl0ZW0gOiBpdGVtcykgewogICAgICAgICAgICBpZiAoIWl0ZW0uZW5hYmxlZE9yRGVmYXVsdCgpKSB7CiAgICAgICAgICAgICAgICBjb250aW51ZTsKICAgICAgICAgICAgfQogICAgICAgICAgICBTdGF0c1BheWxvYWQuU2VjdGlvbiBzZWN0aW9uID0gYnVpbGRTZWN0aW9uKGl0ZW0sIHFzbywgcmVjZW50Tm9kZSk7CiAgICAgICAgICAgIGlmIChzZWN0aW9uICE9IG51bGwpIHsKICAgICAgICAgICAgICAgIHNlY3Rpb25zLmFkZChzZWN0aW9uKTsKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICByZXR1cm4gc2VjdGlvbnM7CiAgICB9CgogICAgc3RhdGljIFN0YXRzUGF5bG9hZC5TZWN0aW9uIGJ1aWxkU2VjdGlvbihXYXZlbG9nU2V0dGluZ3MuSXRlbSBpdGVtLCBKc29uTm9kZSBxc28sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEpzb25Ob2RlIHJlY2VudE5vZGUpIHsKICAgICAgICByZXR1cm4gc3dpdGNoIChpdGVtLmtleSgpKSB7CiAgICAgICAgICAgIGNhc2UgInRvdGFsX3Fzb3MiIC0+IFN0YXRzUGF5bG9hZC5zZWN0aW9uKGl0ZW0ua2V5KCksIGl0ZW0udGl0bGVPckRlZmF1bHQoIumAmuiBlOaAu+aVsCIpLAogICAgICAgICAgICAgICAgIm51bWJlciIsIG5ldyBTdGF0c1BheWxvYWQuTnVtYmVyVmFsdWUocXNvLnBhdGgoInRvdGFsIikuYXNMb25nKDApKSk7CiAgICAgICAgICAgIGNhc2UgImFjdGl2aXR5IiAtPiB7CiAgICAgICAgICAgICAgICBKc29uTm9kZSBhY3Rpdml0eSA9IHFzby5wYXRoKCJhY3Rpdml0eSIpOwogICAgICAgICAgICAgICAgeWllbGQgU3RhdHNQYXlsb2FkLnNlY3Rpb24oaXRlbS5rZXkoKSwgaXRlbS50aXRsZU9yRGVmYXVsdCgi5rS76LeD5bqmIiksICJhY3Rpdml0eSIsCiAgICAgICAgICAgICAgICAgICAgbmV3IFN0YXRzUGF5bG9hZC5BY3Rpdml0eVZhbHVlKGFjdGl2aXR5LnBhdGgoInRvZGF5IikuYXNMb25nKDApLAogICAgICAgICAgICAgICAgICAgICAgICBhY3Rpdml0eS5wYXRoKCJtb250aCIpLmFzTG9uZygwKSwKICAgICAgICAgICAgICAgICAgICAgICAgYWN0aXZpdHkucGF0aCgieWVhciIpLmFzTG9uZygwKSkpOwogICAgICAgICAgICB9CiAgICAgICAgICAgIGNhc2UgImR4Y2MiIC0+IHsKICAgICAgICAgICAgICAgIEpzb25Ob2RlIGR4Y2MgPSBxc28ucGF0aCgiZHhjYyIpOwogICAgICAgICAgICAgICAgeWllbGQgU3RhdHNQYXlsb2FkLnNlY3Rpb24oaXRlbS5rZXkoKSwgaXRlbS50aXRsZU9yRGVmYXVsdCgiRFhDQyDlrZflpLQiKSwgImR4Y2MiLAogICAgICAgICAgICAgICAgICAgIG5ldyBTdGF0c1BheWxvYWQuRHhjY1ZhbHVlKGR4Y2MucGF0aCgid29ya2VkIikuYXNMb25nKDApLAogICAgICAgICAgICAgICAgICAgICAgICBkeGNjLnBhdGgoImNvbmZpcm1lZCIpLmFzTG9uZygwKSwKICAgICAgICAgICAgICAgICAgICAgICAgZHhjYy5wYXRoKCJhdmFpbGFibGUiKS5hc0xvbmcoMCkpKTsKICAgICAgICAgICAgfQogICAgICAgICAgICBjYXNlICJiYW5kcyIgLT4gZGlzdHJpYnV0aW9uKGl0ZW0sIHFzby5wYXRoKCJicmVha2Rvd24iKS5wYXRoKCJieV9iYW5kIiksICJiYW5kIik7CiAgICAgICAgICAgIGNhc2UgIm1vZGVzIiAtPiBkaXN0cmlidXRpb24oaXRlbSwgcXNvLnBhdGgoImJyZWFrZG93biIpLnBhdGgoImJ5X21vZGUiKSwgIm1vZGUiKTsKICAgICAgICAgICAgY2FzZSAicmVjZW50IiAtPiByZWNlbnQoaXRlbSwgcmVjZW50Tm9kZSk7CiAgICAgICAgICAgIGRlZmF1bHQgLT4gbnVsbDsKICAgICAgICB9OwogICAgfQoKICAgIHByaXZhdGUgc3RhdGljIFN0YXRzUGF5bG9hZC5TZWN0aW9uIGRpc3RyaWJ1dGlvbihXYXZlbG9nU2V0dGluZ3MuSXRlbSBpdGVtLCBKc29uTm9kZSBhcnJheSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTdHJpbmcgbGFiZWxGaWVsZCkgewogICAgICAgIGludCBsaW1pdCA9IGl0ZW0ubGltaXRPckRlZmF1bHQoNSk7CiAgICAgICAgTGlzdDxTdGF0c1BheWxvYWQuRGlzdHJpYnV0aW9uUm93PiByb3dzID0gbmV3IEFycmF5TGlzdDw+KCk7CiAgICAgICAgbG9uZyB0b3RhbCA9IDA7CiAgICAgICAgaWYgKGFycmF5ICE9IG51bGwgJiYgYXJyYXkuaXNBcnJheSgpKSB7CiAgICAgICAgICAgIGZvciAoSnNvbk5vZGUgbm9kZSA6IGFycmF5KSB7CiAgICAgICAgICAgICAgICB0b3RhbCArPSBub2RlLnBhdGgoImNvdW50IikuYXNMb25nKDApOwogICAgICAgICAgICB9CiAgICAgICAgICAgIGludCB0YWtlbiA9IDA7CiAgICAgICAgICAgIGZvciAoSnNvbk5vZGUgbm9kZSA6IGFycmF5KSB7CiAgICAgICAgICAgICAgICBpZiAodGFrZW4gPj0gbGltaXQpIHsKICAgICAgICAgICAgICAgICAgICBicmVhazsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGxvbmcgY291bnQgPSBub2RlLnBhdGgoImNvdW50IikuYXNMb25nKDApOwogICAgICAgICAgICAgICAgZG91YmxlIHBlcmNlbnQgPSB0b3RhbCA+IDAgPyBNYXRoLnJvdW5kKGNvdW50ICogMTAwMC4wIC8gdG90YWwpIC8gMTAuMCA6IDA7CiAgICAgICAgICAgICAgICByb3dzLmFkZChuZXcgU3RhdHNQYXlsb2FkLkRpc3RyaWJ1dGlvblJvdyhub2RlLnBhdGgobGFiZWxGaWVsZCkuYXNUZXh0KCLigJQiKSwKICAgICAgICAgICAgICAgICAgICBjb3VudCwgcGVyY2VudCkpOwogICAgICAgICAgICAgICAgdGFrZW4rKzsKICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICByZXR1cm4gU3RhdHNQYXlsb2FkLnNlY3Rpb24oaXRlbS5rZXkoKSwgaXRlbS50aXRsZU9yRGVmYXVsdCgi5YiG5biDIiksICJkaXN0cmlidXRpb24iLCByb3dzKTsKICAgIH0KCiAgICBwcml2YXRlIHN0YXRpYyBTdGF0c1BheWxvYWQuU2VjdGlvbiByZWNlbnQoV2F2ZWxvZ1NldHRpbmdzLkl0ZW0gaXRlbSwgSnNvbk5vZGUgcmVjZW50Tm9kZSkgewogICAgICAgIGludCBsaW1pdCA9IGl0ZW0ubGltaXRPckRlZmF1bHQoNSk7CiAgICAgICAgTGlzdDxTdGF0c1BheWxvYWQuUmVjZW50Um93PiByb3dzID0gbmV3IEFycmF5TGlzdDw+KCk7CiAgICAgICAgSnNvbk5vZGUgZGF0YSA9IHJlY2VudE5vZGUgPT0gbnVsbCA/IG51bGwgOiByZWNlbnROb2RlLnBhdGgoImRhdGEiKTsKICAgICAgICBpZiAoZGF0YSAhPSBudWxsICYmIGRhdGEuaXNBcnJheSgpKSB7CiAgICAgICAgICAgIGludCB0YWtlbiA9IDA7CiAgICAgICAgICAgIGZvciAoSnNvbk5vZGUgbm9kZSA6IGRhdGEpIHsKICAgICAgICAgICAgICAgIGlmICh0YWtlbiA+PSBsaW1pdCkgewogICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgcm93cy5hZGQobmV3IFN0YXRzUGF5bG9hZC5SZWNlbnRSb3cobm9kZS5wYXRoKCJjYWxsIikuYXNUZXh0KCLigJQiKSwKICAgICAgICAgICAgICAgICAgICBub2RlLnBhdGgoImJhbmQiKS5hc1RleHQoIiIpLAogICAgICAgICAgICAgICAgICAgIG5vZGUucGF0aCgibW9kZSIpLmFzVGV4dCgiIiksCiAgICAgICAgICAgICAgICAgICAgZm9ybWF0RGF0ZVRpbWUobm9kZS5wYXRoKCJxc29fZGF0ZSIpLmFzVGV4dCgiIikpLAogICAgICAgICAgICAgICAgICAgIG5vZGUucGF0aCgiZ3JpZHNxdWFyZSIpLmFzVGV4dCgiIikpKTsKICAgICAgICAgICAgICAgIHRha2VuKys7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgcmV0dXJuIFN0YXRzUGF5bG9hZC5zZWN0aW9uKGl0ZW0ua2V5KCksIGl0ZW0udGl0bGVPckRlZmF1bHQoIuacgOi/kemAmuiBlCIpLCAicmVjZW50Iiwgcm93cyk7CiAgICB9CgogICAgLyoqCiAgICAgKiDlhbzlrrkgV2F2ZWxvZyDlpJrnp43ml6XmnJ/ml7bpl7TmoLzlvI/vvJp7QGNvZGUgWVlZWS1NTS1ERH3jgIEKICAgICAqIHtAY29kZSBZWVlZLU1NLUREIEhIOk1NWzpTU11944CBSVNPLTg2MDHvvIh7QGNvZGUgVH0g5YiG6ZqU77yJ562J44CCCiAgICAgKiDnu5/kuIDovpPlh7oge0Bjb2RlIFlZWVktTU0tREQgSEg6TU1944CCCiAgICAgKi8KICAgIHN0YXRpYyBTdHJpbmcgZm9ybWF0RGF0ZVRpbWUoU3RyaW5nIHJhdykgewogICAgICAgIGlmIChTdHJpbmdVdGlscy5pc0JsYW5rKHJhdykpIHsKICAgICAgICAgICAgcmV0dXJuICIiOwogICAgICAgIH0KICAgICAgICBTdHJpbmcgcyA9IHJhdy50cmltKCkucmVwbGFjZSgnVCcsICcgJyk7CiAgICAgICAgaWYgKHMubGVuZ3RoKCkgPj0gMTYpIHsKICAgICAgICAgICAgcmV0dXJuIHMuc3Vic3RyaW5nKDAsIDE2KTsKICAgICAgICB9CiAgICAgICAgaWYgKHMubGVuZ3RoKCkgPj0gMTApIHsKICAgICAgICAgICAgcmV0dXJuIHMuc3Vic3RyaW5nKDAsIDEwKTsKICAgICAgICB9CiAgICAgICAgcmV0dXJuIHM7CiAgICB9Cn0K
+package run.halo.qsostats;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * 纯逻辑：把 Wavelog 接口返回的原始 JSON 转换为前台组件所需的统计区块。
+ *
+ * <p>不依赖 Spring，便于单元测试。
+ */
+public final class PayloadBuilder {
+
+    private PayloadBuilder() {
+    }
+
+    /**
+     * 根据启用的统计项目构建区块列表。
+     *
+     * @param qsoNode    /api/v2/statistic?profile=qso 的完整响应
+     * @param recentNode /api/v2/qso?limit=N 的完整响应，可为 null
+     * @param items      后台配置的统计项目
+     */
+    public static List<StatsPayload.Section> buildSections(JsonNode qsoNode, JsonNode recentNode,
+                                                           List<WavelogSettings.Item> items) {
+        List<StatsPayload.Section> sections = new ArrayList<>();
+        if (qsoNode == null) {
+            return sections;
+        }
+        JsonNode qso = qsoNode.path("data").path("qso");
+        if (qso.isMissingNode()) {
+            return sections;
+        }
+        for (WavelogSettings.Item item : items) {
+            if (!item.enabledOrDefault()) {
+                continue;
+            }
+            StatsPayload.Section section = buildSection(item, qso, recentNode);
+            if (section != null) {
+                sections.add(section);
+            }
+        }
+        return sections;
+    }
+
+    static StatsPayload.Section buildSection(WavelogSettings.Item item, JsonNode qso,
+                                             JsonNode recentNode) {
+        return switch (item.key()) {
+            case "total_qsos" -> StatsPayload.section(item.key(), item.titleOrDefault("通联总数"),
+                "number", new StatsPayload.NumberValue(qso.path("total").asLong(0)));
+            case "activity" -> {
+                JsonNode activity = qso.path("activity");
+                yield StatsPayload.section(item.key(), item.titleOrDefault("活跃度"), "activity",
+                    new StatsPayload.ActivityValue(activity.path("today").asLong(0),
+                        activity.path("month").asLong(0),
+                        activity.path("year").asLong(0)));
+            }
+            case "dxcc" -> {
+                JsonNode dxcc = qso.path("dxcc");
+                yield StatsPayload.section(item.key(), item.titleOrDefault("DXCC 字头"), "dxcc",
+                    new StatsPayload.DxccValue(dxcc.path("worked").asLong(0),
+                        dxcc.path("confirmed").asLong(0),
+                        dxcc.path("available").asLong(0)));
+            }
+            case "bands" -> distribution(item, qso.path("breakdown").path("by_band"), "band");
+            case "modes" -> distribution(item, qso.path("breakdown").path("by_mode"), "mode");
+            case "recent" -> recent(item, recentNode);
+            default -> null;
+        };
+    }
+
+    private static StatsPayload.Section distribution(WavelogSettings.Item item, JsonNode array,
+                                                     String labelField) {
+        int limit = item.limitOrDefault(5);
+        List<StatsPayload.DistributionRow> rows = new ArrayList<>();
+        long total = 0;
+        if (array != null && array.isArray()) {
+            for (JsonNode node : array) {
+                total += node.path("count").asLong(0);
+            }
+            int taken = 0;
+            for (JsonNode node : array) {
+                if (taken >= limit) {
+                    break;
+                }
+                long count = node.path("count").asLong(0);
+                double percent = total > 0 ? Math.round(count * 1000.0 / total) / 10.0 : 0;
+                rows.add(new StatsPayload.DistributionRow(node.path(labelField).asText("—"),
+                    count, percent));
+                taken++;
+            }
+        }
+        return StatsPayload.section(item.key(), item.titleOrDefault("分布"), "distribution", rows);
+    }
+
+    private static StatsPayload.Section recent(WavelogSettings.Item item, JsonNode recentNode) {
+        int limit = item.limitOrDefault(5);
+        List<StatsPayload.RecentRow> rows = new ArrayList<>();
+        JsonNode data = recentNode == null ? null : recentNode.path("data");
+        if (data != null && data.isArray()) {
+            int taken = 0;
+            for (JsonNode node : data) {
+                if (taken >= limit) {
+                    break;
+                }
+                rows.add(new StatsPayload.RecentRow(node.path("call").asText("—"),
+                    node.path("band").asText(""),
+                    node.path("mode").asText(""),
+                    formatDateTime(node.path("qso_date").asText("")),
+                    node.path("gridsquare").asText("")));
+                taken++;
+            }
+        }
+        return StatsPayload.section(item.key(), item.titleOrDefault("最近通联"), "recent", rows);
+    }
+
+    /**
+     * 兼容 Wavelog 多种日期时间格式：{@code YYYY-MM-DD}、
+     * {@code YYYY-MM-DD HH:MM[:SS]}、ISO-8601（{@code T} 分隔）等。
+     * 统一输出 {@code YYYY-MM-DD HH:MM}。
+     */
+    static String formatDateTime(String raw) {
+        if (StringUtils.isBlank(raw)) {
+            return "";
+        }
+        String s = raw.trim().replace('T', ' ');
+        if (s.length() >= 16) {
+            return s.substring(0, 16);
+        }
+        if (s.length() >= 10) {
+            return s.substring(0, 10);
+        }
+        return s;
+    }
+}

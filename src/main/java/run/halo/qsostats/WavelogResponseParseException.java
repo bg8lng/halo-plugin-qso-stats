@@ -1,1 +1,11 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCi8qKgogKiBXYXZlbG9nIOWTjeW6lOS9k+S4jeaYr+WQiOazlSBKU09OIOaXtuaKm+WHuuOAggogKi8KcHVibGljIGNsYXNzIFdhdmVsb2dSZXNwb25zZVBhcnNlRXhjZXB0aW9uIGV4dGVuZHMgUnVudGltZUV4Y2VwdGlvbiB7CgogICAgcHVibGljIFdhdmVsb2dSZXNwb25zZVBhcnNlRXhjZXB0aW9uKFN0cmluZyBtZXNzYWdlLCBUaHJvd2FibGUgY2F1c2UpIHsKICAgICAgICBzdXBlcihtZXNzYWdlLCBjYXVzZSk7CiAgICB9Cn0K
+package run.halo.qsostats;
+
+/**
+ * Wavelog 响应体不是合法 JSON 时抛出。
+ */
+public class WavelogResponseParseException extends RuntimeException {
+
+    public WavelogResponseParseException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

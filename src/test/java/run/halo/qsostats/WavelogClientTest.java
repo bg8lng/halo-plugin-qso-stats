@@ -1,1 +1,44 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBzdGF0aWMgb3JnLmp1bml0Lmp1cGl0ZXIuYXBpLkFzc2VydGlvbnMuYXNzZXJ0RXF1YWxzOwoKaW1wb3J0IG9yZy5qdW5pdC5qdXBpdGVyLmFwaS5UZXN0OwoKLyoqCiAqIHtAbGluayBXYXZlbG9nQ2xpZW50I25vcm1hbGl6ZUJhc2V9IOWNleWFg+a1i+ivleOAggogKi8KY2xhc3MgV2F2ZWxvZ0NsaWVudFRlc3QgewoKICAgIEBUZXN0CiAgICB2b2lkIGFwcGVuZHNJbmRleFBocFdoZW5NaXNzaW5nKCkgewogICAgICAgIGFzc2VydEVxdWFscygiaHR0cHM6Ly9sb2cuZXhhbXBsZS5jb20vaW5kZXgucGhwIiwKICAgICAgICAgICAgV2F2ZWxvZ0NsaWVudC5ub3JtYWxpemVCYXNlKCJodHRwczovL2xvZy5leGFtcGxlLmNvbSIpKTsKICAgIH0KCiAgICBAVGVzdAogICAgdm9pZCBrZWVwc0V4aXN0aW5nSW5kZXhQaHAoKSB7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCJodHRwczovL2xvZy5leGFtcGxlLmNvbS9pbmRleC5waHAiLAogICAgICAgICAgICBXYXZlbG9nQ2xpZW50Lm5vcm1hbGl6ZUJhc2UoImh0dHBzOi8vbG9nLmV4YW1wbGUuY29tL2luZGV4LnBocCIpKTsKICAgIH0KCiAgICBAVGVzdAogICAgdm9pZCB0cmltc1RyYWlsaW5nU2xhc2hlcygpIHsKICAgICAgICBhc3NlcnRFcXVhbHMoImh0dHBzOi8vbG9nLmV4YW1wbGUuY29tL2luZGV4LnBocCIsCiAgICAgICAgICAgIFdhdmVsb2dDbGllbnQubm9ybWFsaXplQmFzZSgiaHR0cHM6Ly9sb2cuZXhhbXBsZS5jb20vIikpOwogICAgICAgIGFzc2VydEVxdWFscygiaHR0cHM6Ly9sb2cuZXhhbXBsZS5jb20vaW5kZXgucGhwIiwKICAgICAgICAgICAgV2F2ZWxvZ0NsaWVudC5ub3JtYWxpemVCYXNlKCJodHRwczovL2xvZy5leGFtcGxlLmNvbS9pbmRleC5waHAvIikpOwogICAgfQoKICAgIEBUZXN0CiAgICB2b2lkIGhhbmRsZXNCbGFuaygpIHsKICAgICAgICBhc3NlcnRFcXVhbHMoIiIsIFdhdmVsb2dDbGllbnQubm9ybWFsaXplQmFzZSgiIikpOwogICAgICAgIGFzc2VydEVxdWFscygiIiwgV2F2ZWxvZ0NsaWVudC5ub3JtYWxpemVCYXNlKG51bGwpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIiIsIFdhdmVsb2dDbGllbnQubm9ybWFsaXplQmFzZSgiICAgIikpOwogICAgfQoKICAgIEBUZXN0CiAgICB2b2lkIGtlZXBzU3ViUGF0aEluc3RhbGxzKCkgewogICAgICAgIGFzc2VydEVxdWFscygiaHR0cHM6Ly9sb2cuZXhhbXBsZS5jb20vcmFkaW8vaW5kZXgucGhwIiwKICAgICAgICAgICAgV2F2ZWxvZ0NsaWVudC5ub3JtYWxpemVCYXNlKCJodHRwczovL2xvZy5leGFtcGxlLmNvbS9yYWRpbyIpKTsKICAgIH0KfQo=
+package run.halo.qsostats;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * {@link WavelogClient#normalizeBase} 单元测试。
+ */
+class WavelogClientTest {
+
+    @Test
+    void appendsIndexPhpWhenMissing() {
+        assertEquals("https://log.example.com/index.php",
+            WavelogClient.normalizeBase("https://log.example.com"));
+    }
+
+    @Test
+    void keepsExistingIndexPhp() {
+        assertEquals("https://log.example.com/index.php",
+            WavelogClient.normalizeBase("https://log.example.com/index.php"));
+    }
+
+    @Test
+    void trimsTrailingSlashes() {
+        assertEquals("https://log.example.com/index.php",
+            WavelogClient.normalizeBase("https://log.example.com/"));
+        assertEquals("https://log.example.com/index.php",
+            WavelogClient.normalizeBase("https://log.example.com/index.php/"));
+    }
+
+    @Test
+    void handlesBlank() {
+        assertEquals("", WavelogClient.normalizeBase(""));
+        assertEquals("", WavelogClient.normalizeBase(null));
+        assertEquals("", WavelogClient.normalizeBase("   "));
+    }
+
+    @Test
+    void keepsSubPathInstalls() {
+        assertEquals("https://log.example.com/radio/index.php",
+            WavelogClient.normalizeBase("https://log.example.com/radio"));
+    }
+}

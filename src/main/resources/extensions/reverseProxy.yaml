@@ -1,1 +1,8 @@
-YXBpVmVyc2lvbjogcGx1Z2luLmhhbG8ucnVuL3YxYWxwaGExCmtpbmQ6IFJldmVyc2VQcm94eQptZXRhZGF0YToKICBuYW1lOiBxc28tc3RhdHMtcmV2ZXJzZS1wcm94eQpydWxlczoKICAtIHBhdGg6IC9zdGF0aWMvKioKICAgIGZpbGU6CiAgICAgIGRpcmVjdG9yeTogc3RhdGljCg==
+apiVersion: plugin.halo.run/v1alpha1
+kind: ReverseProxy
+metadata:
+  name: qso-stats-reverse-proxy
+rules:
+  - path: /static/**
+    file:
+      directory: static

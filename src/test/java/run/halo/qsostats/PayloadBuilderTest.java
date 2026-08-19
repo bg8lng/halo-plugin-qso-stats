@@ -1,1 +1,177 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBzdGF0aWMgb3JnLmp1bml0Lmp1cGl0ZXIuYXBpLkFzc2VydGlvbnMuYXNzZXJ0RXF1YWxzOwppbXBvcnQgc3RhdGljIG9yZy5qdW5pdC5qdXBpdGVyLmFwaS5Bc3NlcnRpb25zLmFzc2VydFRydWU7CgppbXBvcnQgY29tLmZhc3RlcnhtbC5qYWNrc29uLmRhdGFiaW5kLkpzb25Ob2RlOwppbXBvcnQgY29tLmZhc3RlcnhtbC5qYWNrc29uLmRhdGFiaW5kLk9iamVjdE1hcHBlcjsKaW1wb3J0IGphdmEudXRpbC5MaXN0OwppbXBvcnQgb3JnLmp1bml0Lmp1cGl0ZXIuYXBpLlRlc3Q7CgovKioKICoge0BsaW5rIFBheWxvYWRCdWlsZGVyfSDljZXlhYPmtYvor5XjgIIKICovCmNsYXNzIFBheWxvYWRCdWlsZGVyVGVzdCB7CgogICAgcHJpdmF0ZSBzdGF0aWMgZmluYWwgT2JqZWN0TWFwcGVyIE1BUFBFUiA9IG5ldyBPYmplY3RNYXBwZXIoKTsKCiAgICAvKiogV2F2ZWxvZyAvYXBpL3YyL3N0YXRpc3RpYz9wcm9maWxlPXFzbyDnpLrkvovlk43lupTvvIjmnaXoh6rlrpjmlrnmlofmoaPvvIkgKi8KICAgIHByaXZhdGUgc3RhdGljIGZpbmFsIFN0cmluZyBTVEFUU19KU09OID0gIiIiCiAgICAgICAgewogICAgICAgICAgImRhdGEiOiB7CiAgICAgICAgICAgICJxc28iOiB7CiAgICAgICAgICAgICAgInRvdGFsIjogMjgsCiAgICAgICAgICAgICAgImFjdGl2aXR5IjogeyAidG9kYXkiOiAyLCAibW9udGgiOiA1LCAieWVhciI6IDcgfSwKICAgICAgICAgICAgICAiYnJlYWtkb3duIjogewogICAgICAgICAgICAgICAgImJ5X2JhbmQiOiBbCiAgICAgICAgICAgICAgICAgIHsgImJhbmQiOiAiMjBtIiwgImNvdW50IjogMTIgfSwKICAgICAgICAgICAgICAgICAgeyAiYmFuZCI6ICI0MG0iLCAiY291bnQiOiA4IH0sCiAgICAgICAgICAgICAgICAgIHsgImJhbmQiOiAiMTVtIiwgImNvdW50IjogNSB9LAogICAgICAgICAgICAgICAgICB7ICJiYW5kIjogIjEwbSIsICJjb3VudCI6IDMgfQogICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgICJieV9tb2RlIjogWwogICAgICAgICAgICAgICAgICB7ICJtb2RlIjogIkZUOCIsICJjb3VudCI6IDE1IH0sCiAgICAgICAgICAgICAgICAgIHsgIm1vZGUiOiAiQ1ciLCAiY291bnQiOiA3IH0sCiAgICAgICAgICAgICAgICAgIHsgIm1vZGUiOiAiU1NCIiwgImNvdW50IjogNiB9CiAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgICAgfSwKICAgICAgICAgICAgICAiZHhjYyI6IHsKICAgICAgICAgICAgICAgICJ3b3JrZWQiOiAxNSwgImNvbmZpcm1lZCI6IDksICJjb25maXJtZWRfcGFwZXIiOiA2LAogICAgICAgICAgICAgICAgImNvbmZpcm1lZF9sb3R3IjogNywgImF2YWlsYWJsZSI6IDM0MCwKICAgICAgICAgICAgICAgICJkZWxldGVkIjogeyAid29ya2VkIjogMSwgImNvbmZpcm1lZF9wYXBlciI6IDEsICJjb25maXJtZWRfbG90dyI6IDAgfQogICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgICAgfSwKICAgICAgICAgICJtZXRhIjogeyAicHJvZmlsZSI6ICJxc28iLCAiYWRtaW4iOiBmYWxzZSB9CiAgICAgICAgfQogICAgICAgICIiIjsKCiAgICAvKiogV2F2ZWxvZyAvYXBpL3YyL3Fzbz9saW1pdD0uLi4g56S65L6L5ZON5bqUICovCiAgICBwcml2YXRlIHN0YXRpYyBmaW5hbCBTdHJpbmcgUkVDRU5UX0pTT04gPSAiIiIKICAgICAgICB7CiAgICAgICAgICAiZGF0YSI6IFsKICAgICAgICAgICAgeyAiaWQiOiA0ODg2LCAiY2FsbCI6ICJOOUVBVCIsICJiYW5kIjogIjIwbSIsICJtb2RlIjogIlNTQiIsCiAgICAgICAgICAgICAgInFzb19kYXRlIjogIjIwMjYtMDYtMTYgMTc6MDY6MDAiLCAiZ3JpZHNxdWFyZSI6ICJFTjQyIiB9LAogICAgICAgICAgICB7ICJpZCI6IDQ4ODUsICJjYWxsIjogIlcxQVciLCAiYmFuZCI6ICI0MG0iLCAibW9kZSI6ICJDVyIsCiAgICAgICAgICAgICAgInFzb19kYXRlIjogIjIwMjYtMDYtMTZUMTI6MDQ6MDBaIiwgImdyaWRzcXVhcmUiOiAiIiB9CiAgICAgICAgICBdLAogICAgICAgICAgIm1ldGEiOiB7ICJwYWdlIjogMSwgInBlcl9wYWdlIjogNTAsICJjb3VudCI6IDIsICJ0b3RhbCI6IDIgfQogICAgICAgIH0KICAgICAgICAiIiI7CgogICAgcHJpdmF0ZSBKc29uTm9kZSBzdGF0c05vZGUoKSB0aHJvd3MgRXhjZXB0aW9uIHsKICAgICAgICByZXR1cm4gTUFQUEVSLnJlYWRUcmVlKFNUQVRTX0pTT04pOwogICAgfQoKICAgIHByaXZhdGUgSnNvbk5vZGUgcmVjZW50Tm9kZSgpIHRocm93cyBFeGNlcHRpb24gewogICAgICAgIHJldHVybiBNQVBQRVIucmVhZFRyZWUoUkVDRU5UX0pTT04pOwogICAgfQoKICAgIEBUZXN0CiAgICB2b2lkIGJ1aWxkc0FsbERlZmF1bHRTZWN0aW9ucygpIHRocm93cyBFeGNlcHRpb24gewogICAgICAgIExpc3Q8V2F2ZWxvZ1NldHRpbmdzLkl0ZW0+IGl0ZW1zID0gTGlzdC5vZigKICAgICAgICAgICAgbmV3IFdhdmVsb2dTZXR0aW5ncy5JdGVtKCJ0b3RhbF9xc29zIiwgIumAmuiBlOaAu+aVsCIsIHRydWUsIG51bGwpLAogICAgICAgICAgICBuZXcgV2F2ZWxvZ1NldHRpbmdzLkl0ZW0oImFjdGl2aXR5IiwgIua0u+i3g+W6piIsIHRydWUsIG51bGwpLAogICAgICAgICAgICBuZXcgV2F2ZWxvZ1NldHRpbmdzLkl0ZW0oImR4Y2MiLCAiRFhDQyDlrZflpLQiLCB0cnVlLCBudWxsKSwKICAgICAgICAgICAgbmV3IFdhdmVsb2dTZXR0aW5ncy5JdGVtKCJiYW5kcyIsICLms6LmrrXliIbluIMiLCB0cnVlLCAzKSwKICAgICAgICAgICAgbmV3IFdhdmVsb2dTZXR0aW5ncy5JdGVtKCJtb2RlcyIsICLmqKHlvI/liIbluIMiLCB0cnVlLCAyKSwKICAgICAgICAgICAgbmV3IFdhdmVsb2dTZXR0aW5ncy5JdGVtKCJyZWNlbnQiLCAi5pyA6L+R6YCa6IGUIiwgdHJ1ZSwgNSkKICAgICAgICApOwoKICAgICAgICBMaXN0PFN0YXRzUGF5bG9hZC5TZWN0aW9uPiBzZWN0aW9ucyA9CiAgICAgICAgICAgIFBheWxvYWRCdWlsZGVyLmJ1aWxkU2VjdGlvbnMoc3RhdHNOb2RlKCksIHJlY2VudE5vZGUoKSwgaXRlbXMpOwoKICAgICAgICBhc3NlcnRFcXVhbHMoNiwgc2VjdGlvbnMuc2l6ZSgpKTsKCiAgICAgICAgU3RhdHNQYXlsb2FkLlNlY3Rpb24gdG90YWwgPSBzZWN0aW9ucy5nZXQoMCk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCJudW1iZXIiLCB0b3RhbC50eXBlKCkpOwogICAgICAgIGFzc2VydEVxdWFscygyOEwsICgoU3RhdHNQYXlsb2FkLk51bWJlclZhbHVlKSB0b3RhbC52YWx1ZSgpKS52YWx1ZSgpKTsKCiAgICAgICAgU3RhdHNQYXlsb2FkLlNlY3Rpb24gYWN0aXZpdHkgPSBzZWN0aW9ucy5nZXQoMSk7CiAgICAgICAgU3RhdHNQYXlsb2FkLkFjdGl2aXR5VmFsdWUgYXYgPSAoU3RhdHNQYXlsb2FkLkFjdGl2aXR5VmFsdWUpIGFjdGl2aXR5LnZhbHVlKCk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDJMLCBhdi50b2RheSgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoNUwsIGF2Lm1vbnRoKCkpOwogICAgICAgIGFzc2VydEVxdWFscyg3TCwgYXYueWVhcigpKTsKCiAgICAgICAgU3RhdHNQYXlsb2FkLlNlY3Rpb24gZHhjYyA9IHNlY3Rpb25zLmdldCgyKTsKICAgICAgICBTdGF0c1BheWxvYWQuRHhjY1ZhbHVlIGR2ID0gKFN0YXRzUGF5bG9hZC5EeGNjVmFsdWUpIGR4Y2MudmFsdWUoKTsKICAgICAgICBhc3NlcnRFcXVhbHMoMTVMLCBkdi53b3JrZWQoKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDlMLCBkdi5jb25maXJtZWQoKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDM0MEwsIGR2LmF2YWlsYWJsZSgpKTsKCiAgICAgICAgLy8g5rOi5q615YiG5biD5oyJ6YWN572uIGxpbWl0PTMg5oiq5patCiAgICAgICAgU3RhdHNQYXlsb2FkLlNlY3Rpb24gYmFuZHMgPSBzZWN0aW9ucy5nZXQoMyk7CiAgICAgICAgQFN1cHByZXNzV2FybmluZ3MoInVuY2hlY2tlZCIpCiAgICAgICAgTGlzdDxTdGF0c1BheWxvYWQuRGlzdHJpYnV0aW9uUm93PiBiYW5kUm93cyA9CiAgICAgICAgICAgIChMaXN0PFN0YXRzUGF5bG9hZC5EaXN0cmlidXRpb25Sb3c+KSBiYW5kcy52YWx1ZSgpOwogICAgICAgIGFzc2VydEVxdWFscygzLCBiYW5kUm93cy5zaXplKCkpOwogICAgICAgIGFzc2VydEVxdWFscygiMjBtIiwgYmFuZFJvd3MuZ2V0KDApLmxhYmVsKCkpOwogICAgICAgIGFzc2VydEVxdWFscygxMkwsIGJhbmRSb3dzLmdldCgwKS5jb3VudCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIjE1bSIsIGJhbmRSb3dzLmdldCgyKS5sYWJlbCgpKTsKCiAgICAgICAgLy8g5qih5byP5YiG5biDIGxpbWl0PTIKICAgICAgICBTdGF0c1BheWxvYWQuU2VjdGlvbiBtb2RlcyA9IHNlY3Rpb25zLmdldCg0KTsKICAgICAgICBAU3VwcHJlc3NXYXJuaW5ncygidW5jaGVja2VkIikKICAgICAgICBMaXN0PFN0YXRzUGF5bG9hZC5EaXN0cmlidXRpb25Sb3c+IG1vZGVSb3dzID0KICAgICAgICAgICAgKExpc3Q8U3RhdHNQYXlsb2FkLkRpc3RyaWJ1dGlvblJvdz4pIG1vZGVzLnZhbHVlKCk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDIsIG1vZGVSb3dzLnNpemUoKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCJGVDgiLCBtb2RlUm93cy5nZXQoMCkubGFiZWwoKSk7CgogICAgICAgIC8vIOacgOi/kemAmuiBlAogICAgICAgIFN0YXRzUGF5bG9hZC5TZWN0aW9uIHJlY2VudCA9IHNlY3Rpb25zLmdldCg1KTsKICAgICAgICBAU3VwcHJlc3NXYXJuaW5ncygidW5jaGVja2VkIikKICAgICAgICBMaXN0PFN0YXRzUGF5bG9hZC5SZWNlbnRSb3c+IHJlY2VudFJvd3MgPQogICAgICAgICAgICAoTGlzdDxTdGF0c1BheWxvYWQuUmVjZW50Um93PikgcmVjZW50LnZhbHVlKCk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDIsIHJlY2VudFJvd3Muc2l6ZSgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIk45RUFUIiwgcmVjZW50Um93cy5nZXQoMCkuY2FsbCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIjIwbSIsIHJlY2VudFJvd3MuZ2V0KDApLmJhbmQoKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCJTU0IiLCByZWNlbnRSb3dzLmdldCgwKS5tb2RlKCkpOwogICAgICAgIGFzc2VydEVxdWFscygiMjAyNi0wNi0xNiAxNzowNiIsIHJlY2VudFJvd3MuZ2V0KDApLnRpbWUoKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCIyMDI2LTA2LTE2IDEyOjA0IiwgcmVjZW50Um93cy5nZXQoMSkudGltZSgpKTsKICAgIH0KCiAgICBAVGVzdAogICAgdm9pZCBkaXN0cmlidXRpb25QZXJjZW50U3Vtc1RvSHVuZHJlZCgpIHRocm93cyBFeGNlcHRpb24gewogICAgICAgIExpc3Q8V2F2ZWxvZ1NldHRpbmdzLkl0ZW0+IGl0ZW1zID0gTGlzdC5vZigKICAgICAgICAgICAgbmV3IFdhdmVsb2dTZXR0aW5ncy5JdGVtKCJiYW5kcyIsICLms6LmrrUiLCB0cnVlLCAxMCkKICAgICAgICApOwogICAgICAgIExpc3Q8U3RhdHNQYXlsb2FkLlNlY3Rpb24+IHNlY3Rpb25zID0KICAgICAgICAgICAgUGF5bG9hZEJ1aWxkZXIuYnVpbGRTZWN0aW9ucyhzdGF0c05vZGUoKSwgbnVsbCwgaXRlbXMpOwogICAgICAgIEBTdXBwcmVzc1dhcm5pbmdzKCJ1bmNoZWNrZWQiKQogICAgICAgIExpc3Q8U3RhdHNQYXlsb2FkLkRpc3RyaWJ1dGlvblJvdz4gcm93cyA9CiAgICAgICAgICAgIChMaXN0PFN0YXRzUGF5bG9hZC5EaXN0cmlidXRpb25Sb3c+KSBzZWN0aW9ucy5nZXQoMCkudmFsdWUoKTsKICAgICAgICBkb3VibGUgc3VtID0gcm93cy5zdHJlYW0oKS5tYXBUb0RvdWJsZShTdGF0c1BheWxvYWQuRGlzdHJpYnV0aW9uUm93OjpwZXJjZW50KS5zdW0oKTsKICAgICAgICAvLyAxMi8yOCArIDgvMjggKyA1LzI4ICsgMy8yOCA9IDEwMO+8jOWbm+iIjeS6lOWFpeivr+W3ruWcqCAwLjUg5Lul5YaFCiAgICAgICAgYXNzZXJ0VHJ1ZShNYXRoLmFicyhzdW0gLSAxMDApIDwgMC41LCAicGVyY2VudCBzdW0gc2hvdWxkIGJlIH4xMDAsIGdvdCAiICsgc3VtKTsKICAgIH0KCiAgICBAVGVzdAogICAgdm9pZCBkaXNhYmxlZEFuZFVua25vd25JdGVtc0FyZVNraXBwZWQoKSB0aHJvd3MgRXhjZXB0aW9uIHsKICAgICAgICBMaXN0PFdhdmVsb2dTZXR0aW5ncy5JdGVtPiBpdGVtcyA9IExpc3Qub2YoCiAgICAgICAgICAgIG5ldyBXYXZlbG9nU2V0dGluZ3MuSXRlbSgidG90YWxfcXNvcyIsICLpgJrogZTmgLvmlbAiLCBmYWxzZSwgbnVsbCksCiAgICAgICAgICAgIG5ldyBXYXZlbG9nU2V0dGluZ3MuSXRlbSgidW5rbm93bl9rZXkiLCAi5pyq55+lIiwgdHJ1ZSwgbnVsbCksCiAgICAgICAgICAgIG5ldyBXYXZlbG9nU2V0dGluZ3MuSXRlbSgibW9kZXMiLCAi5qih5byPIiwgdHJ1ZSwgbnVsbCkKICAgICAgICApOwogICAgICAgIExpc3Q8U3RhdHNQYXlsb2FkLlNlY3Rpb24+IHNlY3Rpb25zID0KICAgICAgICAgICAgUGF5bG9hZEJ1aWxkZXIuYnVpbGRTZWN0aW9ucyhzdGF0c05vZGUoKSwgbnVsbCwgaXRlbXMpOwogICAgICAgIGFzc2VydEVxdWFscygxLCBzZWN0aW9ucy5zaXplKCkpOwogICAgICAgIGFzc2VydEVxdWFscygibW9kZXMiLCBzZWN0aW9ucy5nZXQoMCkua2V5KCkpOwogICAgfQoKICAgIEBUZXN0CiAgICB2b2lkIG51bGxTdGF0c05vZGVZaWVsZHNFbXB0eVNlY3Rpb25zKCkgewogICAgICAgIExpc3Q8U3RhdHNQYXlsb2FkLlNlY3Rpb24+IHNlY3Rpb25zID0gUGF5bG9hZEJ1aWxkZXIuYnVpbGRTZWN0aW9ucyhudWxsLCBudWxsLAogICAgICAgICAgICBMaXN0Lm9mKG5ldyBXYXZlbG9nU2V0dGluZ3MuSXRlbSgidG90YWxfcXNvcyIsICLpgJrogZTmgLvmlbAiLCB0cnVlLCBudWxsKSkpOwogICAgICAgIGFzc2VydFRydWUoc2VjdGlvbnMuaXNFbXB0eSgpKTsKICAgIH0KCiAgICBAVGVzdAogICAgdm9pZCBmb3JtYXRzRGF0ZVRpbWVWYXJpYW50cygpIHsKICAgICAgICBhc3NlcnRFcXVhbHMoIjIwMjYtMDYtMTYgMTc6MDYiLCBQYXlsb2FkQnVpbGRlci5mb3JtYXREYXRlVGltZSgiMjAyNi0wNi0xNiAxNzowNjowMCIpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIjIwMjYtMDYtMTYgMTc6MDYiLCBQYXlsb2FkQnVpbGRlci5mb3JtYXREYXRlVGltZSgiMjAyNi0wNi0xNlQxNzowNjowMFoiKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCIyMDI2LTA2LTE2IDE3OjA2IiwgUGF5bG9hZEJ1aWxkZXIuZm9ybWF0RGF0ZVRpbWUoIjIwMjYtMDYtMTZUMTc6MDYiKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCIyMDI2LTA2LTE2IiwgUGF5bG9hZEJ1aWxkZXIuZm9ybWF0RGF0ZVRpbWUoIjIwMjYtMDYtMTYiKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKCIiLCBQYXlsb2FkQnVpbGRlci5mb3JtYXREYXRlVGltZSgiIikpOwogICAgICAgIGFzc2VydEVxdWFscygiIiwgUGF5bG9hZEJ1aWxkZXIuZm9ybWF0RGF0ZVRpbWUobnVsbCkpOwogICAgfQp9Cg==
+package run.halo.qsostats;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
+/**
+ * {@link PayloadBuilder} 单元测试。
+ */
+class PayloadBuilderTest {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    /** Wavelog /api/v2/statistic?profile=qso 示例响应（来自官方文档） */
+    private static final String STATS_JSON = """
+        {
+          "data": {
+            "qso": {
+              "total": 28,
+              "activity": { "today": 2, "month": 5, "year": 7 },
+              "breakdown": {
+                "by_band": [
+                  { "band": "20m", "count": 12 },
+                  { "band": "40m", "count": 8 },
+                  { "band": "15m", "count": 5 },
+                  { "band": "10m", "count": 3 }
+                ],
+                "by_mode": [
+                  { "mode": "FT8", "count": 15 },
+                  { "mode": "CW", "count": 7 },
+                  { "mode": "SSB", "count": 6 }
+                ]
+              },
+              "dxcc": {
+                "worked": 15, "confirmed": 9, "confirmed_paper": 6,
+                "confirmed_lotw": 7, "available": 340,
+                "deleted": { "worked": 1, "confirmed_paper": 1, "confirmed_lotw": 0 }
+              }
+            }
+          },
+          "meta": { "profile": "qso", "admin": false }
+        }
+        """;
+
+    /** Wavelog /api/v2/qso?limit=... 示例响应 */
+    private static final String RECENT_JSON = """
+        {
+          "data": [
+            { "id": 4886, "call": "N9EAT", "band": "20m", "mode": "SSB",
+              "qso_date": "2026-06-16 17:06:00", "gridsquare": "EN42" },
+            { "id": 4885, "call": "W1AW", "band": "40m", "mode": "CW",
+              "qso_date": "2026-06-16T12:04:00Z", "gridsquare": "" }
+          ],
+          "meta": { "page": 1, "per_page": 50, "count": 2, "total": 2 }
+        }
+        """;
+
+    private JsonNode statsNode() throws Exception {
+        return MAPPER.readTree(STATS_JSON);
+    }
+
+    private JsonNode recentNode() throws Exception {
+        return MAPPER.readTree(RECENT_JSON);
+    }
+
+    @Test
+    void buildsAllDefaultSections() throws Exception {
+        List<WavelogSettings.Item> items = List.of(
+            new WavelogSettings.Item("total_qsos", "通联总数", true, null),
+            new WavelogSettings.Item("activity", "活跃度", true, null),
+            new WavelogSettings.Item("dxcc", "DXCC 字头", true, null),
+            new WavelogSettings.Item("bands", "波段分布", true, 3),
+            new WavelogSettings.Item("modes", "模式分布", true, 2),
+            new WavelogSettings.Item("recent", "最近通联", true, 5)
+        );
+
+        List<StatsPayload.Section> sections =
+            PayloadBuilder.buildSections(statsNode(), recentNode(), items);
+
+        assertEquals(6, sections.size());
+
+        StatsPayload.Section total = sections.get(0);
+        assertEquals("number", total.type());
+        assertEquals(28L, ((StatsPayload.NumberValue) total.value()).value());
+
+        StatsPayload.Section activity = sections.get(1);
+        StatsPayload.ActivityValue av = (StatsPayload.ActivityValue) activity.value();
+        assertEquals(2L, av.today());
+        assertEquals(5L, av.month());
+        assertEquals(7L, av.year());
+
+        StatsPayload.Section dxcc = sections.get(2);
+        StatsPayload.DxccValue dv = (StatsPayload.DxccValue) dxcc.value();
+        assertEquals(15L, dv.worked());
+        assertEquals(9L, dv.confirmed());
+        assertEquals(340L, dv.available());
+
+        // 波段分布按配置 limit=3 截断
+        StatsPayload.Section bands = sections.get(3);
+        @SuppressWarnings("unchecked")
+        List<StatsPayload.DistributionRow> bandRows =
+            (List<StatsPayload.DistributionRow>) bands.value();
+        assertEquals(3, bandRows.size());
+        assertEquals("20m", bandRows.get(0).label());
+        assertEquals(12L, bandRows.get(0).count());
+        assertEquals("15m", bandRows.get(2).label());
+
+        // 模式分布 limit=2
+        StatsPayload.Section modes = sections.get(4);
+        @SuppressWarnings("unchecked")
+        List<StatsPayload.DistributionRow> modeRows =
+            (List<StatsPayload.DistributionRow>) modes.value();
+        assertEquals(2, modeRows.size());
+        assertEquals("FT8", modeRows.get(0).label());
+
+        // 最近通联
+        StatsPayload.Section recent = sections.get(5);
+        @SuppressWarnings("unchecked")
+        List<StatsPayload.RecentRow> recentRows =
+            (List<StatsPayload.RecentRow>) recent.value();
+        assertEquals(2, recentRows.size());
+        assertEquals("N9EAT", recentRows.get(0).call());
+        assertEquals("20m", recentRows.get(0).band());
+        assertEquals("SSB", recentRows.get(0).mode());
+        assertEquals("2026-06-16 17:06", recentRows.get(0).time());
+        assertEquals("2026-06-16 12:04", recentRows.get(1).time());
+    }
+
+    @Test
+    void distributionPercentSumsToHundred() throws Exception {
+        List<WavelogSettings.Item> items = List.of(
+            new WavelogSettings.Item("bands", "波段", true, 10)
+        );
+        List<StatsPayload.Section> sections =
+            PayloadBuilder.buildSections(statsNode(), null, items);
+        @SuppressWarnings("unchecked")
+        List<StatsPayload.DistributionRow> rows =
+            (List<StatsPayload.DistributionRow>) sections.get(0).value();
+        double sum = rows.stream().mapToDouble(StatsPayload.DistributionRow::percent).sum();
+        // 12/28 + 8/28 + 5/28 + 3/28 = 100，四舍五入误差在 0.5 以内
+        assertTrue(Math.abs(sum - 100) < 0.5, "percent sum should be ~100, got " + sum);
+    }
+
+    @Test
+    void disabledAndUnknownItemsAreSkipped() throws Exception {
+        List<WavelogSettings.Item> items = List.of(
+            new WavelogSettings.Item("total_qsos", "通联总数", false, null),
+            new WavelogSettings.Item("unknown_key", "未知", true, null),
+            new WavelogSettings.Item("modes", "模式", true, null)
+        );
+        List<StatsPayload.Section> sections =
+            PayloadBuilder.buildSections(statsNode(), null, items);
+        assertEquals(1, sections.size());
+        assertEquals("modes", sections.get(0).key());
+    }
+
+    @Test
+    void nullStatsNodeYieldsEmptySections() {
+        List<StatsPayload.Section> sections = PayloadBuilder.buildSections(null, null,
+            List.of(new WavelogSettings.Item("total_qsos", "通联总数", true, null)));
+        assertTrue(sections.isEmpty());
+    }
+
+    @Test
+    void formatsDateTimeVariants() {
+        assertEquals("2026-06-16 17:06", PayloadBuilder.formatDateTime("2026-06-16 17:06:00"));
+        assertEquals("2026-06-16 17:06", PayloadBuilder.formatDateTime("2026-06-16T17:06:00Z"));
+        assertEquals("2026-06-16 17:06", PayloadBuilder.formatDateTime("2026-06-16T17:06"));
+        assertEquals("2026-06-16", PayloadBuilder.formatDateTime("2026-06-16"));
+        assertEquals("", PayloadBuilder.formatDateTime(""));
+        assertEquals("", PayloadBuilder.formatDateTime(null));
+    }
+}

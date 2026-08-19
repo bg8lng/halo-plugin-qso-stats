@@ -1,1 +1,153 @@
-IyDpgJrogZTnu5/orqHvvIhRc29TdGF0c++8iQoK5LiA5LiqIEhhbG8gMi54IOaPkuS7tu+8mumAmui/hyBbV2F2ZWxvZ10oaHR0cHM6Ly93d3cud2F2ZWxvZy5vcmcpIOaXpeW/l+W5s+WPsOeahCBBUEkgdjLvvIzlnKjkuKrkurrnvZHnq5nkuIrlsZXnpLrpgJrogZTkv6Hmga/nu5/orqHvvIhRU08g5oC75pWw44CBRFhDQyDlrZflpLTjgIHms6LmrrUv5qih5byP5YiG5biD44CB5pyA6L+R6YCa6IGU44CB5rS76LeD5bqm562J77yJ44CCCgotICoq57uf6K6h6aG555uu5Y+v5ZCO5Y+w5L+u5pS5KirvvJrlop7liKDjgIHlkK/lgZzjgIHmjpLluo/jgIHph43lkb3lkI3vvIzmr4/kuKrpobnnm67nmoTlsZXnpLrmnaHmlbDlj6/ljZXni6zorr7nva7vvJsKLSAqKkFQSSDlj6/lkI7lj7DphY3nva4qKu+8mldhdmVsb2cg56uZ54K55Zyw5Z2A5LiOIEFQSSBUb2tlbiDlnYflnKjmj5Lku7borr7nva7pobXphY3nva7vvIzml6DpnIDmlLnku6PnoIHvvJsKLSAqKuWxleekuuayv+eUqOS4u+mimOmjjuagvCoq77ya57uE5Lu25LulIENTUyDlj5jph4/pqbHliqjjgIHnu6fmib/kuLvpopjlrZfkvZPpopzoibLvvJvni6znq4vpobXpnaLlpI3nlKjkuLvpopjluIPlsYDvvIhIYWxvIOKJpSAyLjI277yJ77yM5Lmf5Y+v55u05o6l5bWM5YWl5Lu75oSP5Li76aKY6aG16Z2i44CCCgojIyDlip/og73kuIDop4gKCnwg57uf6K6h6aG555uuIHwg57G75Z6LIHwg6K+05piOIHwKfCAtLS0gfCAtLS0gfCAtLS0gfAp8IOmAmuiBlOaAu+aVsCB8IOWkp+aVsOWtlyB8IFdhdmVsb2cgYHN0YXRpc3RpYy5xc28udG90YWxgIHwKfCDmtLvot4PluqYgfCDkuInkuKrmjIfmoIcgfCDku4rml6UgLyDmnKzmnIggLyDku4rlubTpgJrogZTmlbAgfAp8IERYQ0Mg5a2X5aS0IHwg5LiJ5Liq5oyH5qCHIHwg5bey6YCa6IGUIC8g5bey56Gu6K6kIC8g5Y+v55So5a2X5aS05pWwIHwKfCDms6LmrrXliIbluIMgfCDmnaHlvaLliIbluIMgfCDlkITms6LmrrXpgJrogZTljaDmr5TvvIjlj6/orr7mnaHmlbDvvIkgfAp8IOaooeW8j+WIhuW4gyB8IOadoeW9ouWIhuW4gyB8IOWQhOaooeW8j+mAmuiBlOWNoOavlO+8iOWPr+iuvuadoeaVsO+8iSB8Cnwg5pyA6L+R6YCa6IGUIHwg5YiX6KGoIHwg5pyA6L+RIE4g5p2h6YCa6IGU77yI5ZG85Y+3IC8g5rOi5q61IC8g5qih5byPIC8g5pe26Ze077yJIHwKCiMjIOWuieijhQoKIyMjIOaWueW8j+S4gO+8muaehOW7uuWuieijhQoKYGBgYmFzaAojIOmcgOimgSBKREsgMTcrCi4vZ3JhZGxldyBidWlsZAojIOS6p+eJqe+8mmJ1aWxkL2xpYnMvcXNvLXN0YXRzLTEuMC4wLmphcgpgYGAKCueEtuWQjuWcqCBIYWxvIOWQjuWPsOOAjOaPkuS7tuOAjeKGkuOAjOWuieijheOAjeKGkiDkuIrkvKAgYHFzby1zdGF0cy0xLjAuMC5qYXJgIOW5tuWQr+eUqOOAggoKIyMjIOaWueW8j+S6jO+8muebtOaOpeS9v+eUqAoK5ZyoIFtSZWxlYXNlc10oLi4vLi4vcmVsZWFzZXMpIOS4i+i9veacgOaWsCBqYXLvvIzkuIrkvKDlronoo4XljbPlj6/jgIIKCiMjIOWJjee9ruWHhuWkh++8mldhdmVsb2cgQVBJIFRva2VuCgoxLiDnmbvlvZUgV2F2ZWxvZ++8jOi/m+WFpeeUqOaIt+iPnOWNleeahCAqKkFQSSoqIOmhtemdou+8mwoyLiDliJvlu7ogKipBUEkgdjIgVG9rZW4qKu+8iGB3bDJfYCDlvIDlpLTvvInvvIzmnYPpmZDli77pgInvvJoKICAgLSBgc3RhdGlzdGljOnJlYWRg77yI57uf6K6h5o6l5Y+j77yJCiAgIC0gYHFzbzpyZWFkYO+8iOacgOi/kemAmuiBlO+8iQozLiDlpI3liLblrozmlbQgVG9rZW7vvIjlj6rmmL7npLrkuIDmrKHvvIzor7fnq4vljbPkv53lrZjvvInjgIIKCj4g6KaB5rGCIFdhdmVsb2cg4omlIDMuMS4w77yIQVBJIHYyIOeahOacgOS9jueJiOacrO+8ieOAggoKIyMg5ZCO5Y+w6YWN572uCgrlkK/nlKjmj5Lku7blkI7vvIzov5vlhaXjgIzmj5Lku7bjgI3ihpLjgIzpgJrogZTnu5/orqHjgI3ihpLjgIzorr7nva7jgI3vvJoKCioq4pGgIFdhdmVsb2cgQVBJIOmFjee9rioqCi0gKipXYXZlbG9nIOermeeCueWcsOWdgCoq77ya5aaCIGBodHRwczovL2xvZy5leGFtcGxlLmNvbWDvvIjlj6/luKYgYC9pbmRleC5waHBg77yM5o+S5Lu25Lya6Ieq5Yqo5ou85o6l77yJ77ybCi0gKipBUEkgVG9rZW4qKu+8muS4iuS4gOatpeWIm+W7uueahCBgd2wyXy4uLmAgVG9rZW7vvJsKLSAqKue8k+WtmOaXtumXtCoq77yaV2F2ZWxvZyDmlbDmja7nvJPlrZjnp5LmlbDvvIzpu5jorqQgMzAw77yI6YG/5YWN5q+P5qyh6K6/6Zeu6YO96K+35rGC5pel5b+X5bmz5Y+w77yJ77ybCi0gKiror7fmsYLotoXml7YqKu+8mum7mOiupCAxMCDnp5LvvJsKLSAqKue7n+iuoemhtemdouagh+mimCoq77yaYC9xc28tc3RhdHNgIOmhtemdoueahOagh+mimOOAggoKKirikaEg57uf6K6h6aG555uuKioKLSDliJfooajlj6/lop7liKDjgIHmi5bmi73mjpLluo/jgIHlkK/lgZzvvJsKLSDmr4/pobnlj6/mlLnjgIzmmL7npLrmoIfpopjjgI3vvJvms6LmrrUv5qih5byPL+acgOi/kemAmuiBlOWPr+iuvuOAjOaYvuekuuadoeaVsOOAjeOAggoKKirikaIg5bGV56S66K6+572uKioKLSDmmK/lkKbmmL7npLrljLrlnZfmoIfpopjjgIHmoIfpopjmloflrZfjgIHmmK/lkKbmmL7npLrmm7TmlrDml7bpl7TjgIHliqDovb3lpLHotKXmj5DnpLrmlofmoYjjgIIKCiMjIOWJjeerr+aOpeWFpQoKIyMjIOaWueW8jyBB77ya5bWM5YWl5Lu75oSP5Li76aKY6aG16Z2i77yI5o6o6I2Q77yJCgrnu5/orqHnu4Tku7botYTmupDvvIhKUy9DU1PvvInnlLHmj5Lku7boh6rliqjms6jlhaXmiYDmnInkuLvpopjpobXpnaLvvIzkvaDlj6rpnIDlnKjnm67moIfkvY3nva7mlL7kuIDkuKrlrrnlmajvvJoKCmBgYGh0bWwKPGRpdiBjbGFzcz0icXNvLXN0YXRzLXdpZGdldCI+PC9kaXY+CmBgYAoKLSDlnKjjgIzmlofnq6Av54us56uL6aG16Z2i44CN55qE5q2j5paH5Lit77ya5YiH5YiwIEhUTUwg5rqQ56CB5qih5byP57KY6LS05Y2z5Y+v77ybCi0g5Zyo5Li76aKY5qih5p2/5Lit77ya55u05o6l5YaZ5Zyo5qih5p2/5paH5Lu26YeM77yM5oiW5L2/55So5o+S5Lu254mH5q6177yaCgpgYGBodG1sCjxkaXYgdGg6aW5zZXJ0PSJ+e3BsdWdpbjpRc29TdGF0czpmcmFnbWVudHMvcXNvLXN0YXRzIDo6IHFzby1zdGF0cy13aWRnZXR9Ij48L2Rpdj4KYGBgCgrlrrnlmajlj6/pgInlsZ7mgKfvvJoKCnwg5bGe5oCnIHwg6K+05piOIHwKfCAtLS0gfCAtLS0gfAp8IGBkYXRhLWVuZHBvaW50YCB8IOimhuebluaVsOaNruaOpeWPo+WcsOWdgO+8iOm7mOiupCBgL3Fzby1zdGF0cy9hcGkvc3RhdGlzdGljc2DvvIkgfAp8IGBkYXRhLXJlZnJlc2hgIHwg6Ieq5Yqo5Yi35paw6Ze06ZqU77yI56eS77yM4omlIDMwIOeUn+aViO+8jOm7mOiupOWFs+mXre+8iSB8CgojIyMg5pa55byPIELvvJrni6znq4vnu5/orqHpobXpnaIKCuebtOaOpeiuv+mXriBgL3Fzby1zdGF0c2DvvJoKCi0gKipIYWxvIOKJpSAyLjI2KirvvJrpobXpnaLlpI3nlKjlvZPliY3kuLvpopjluIPlsYDvvIjkuLvpopjmj5DkvpsgYHRlbXBsYXRlcy9sYXlvdXQuaHRtbGAg5pe25a6M5pW05aWX55So5Li76aKY6aG15aS06aG16ISa77yJ77ybCi0gKipIYWxvIDwgMi4yNioq77ya5L2/55So5o+S5Lu26Ieq5bim6aG16Z2i5aSW5aOz77yI5qC35byP5LiO57uE5Lu25LiA6Ie077yJ44CCCgo+IOS4u+mimOWPr+mAmui/h+aPkOS+m+WQjOWQjeaooeadvyBgcXNvLXN0YXRzLmh0bWxgIOWujOWFqOaOpeeuoeivpemhtemdouOAggoKIyMg5Li76aKY5a6a5Yi2Cgrnu4Tku7blhajpg6jmoLflvI/pgJrov4cgQ1NTIOWPmOmHj+aOp+WItu+8iOWdh+W4puS4reaAp+WFnOW6leWAvO+8jOm7mOiupOS4juS4u+mimOWtl+S9k+minOiJsuS4gOiHtO+8ieOAguS4u+mimOWPr+imhueblu+8mgoKYGBgY3NzCi5xc28tc3RhdHMtd2lkZ2V0IHsKICAtLXFzby1zdGF0cy1hY2NlbnQ6ICMyNTYzZWI7ICAgICAgICAgIC8qIOW8uuiwg+iJsu+8iOaVsOWAvOOAgei/m+W6puadoe+8iSAqLwogIC0tcXNvLXN0YXRzLWNhcmQtYmc6IHJnYmEoMTI3LDEyNywxMjcsLjA2KTsgICAvKiDljaHniYfog4zmma8gKi8KICAtLXFzby1zdGF0cy1jYXJkLWJvcmRlcjogcmdiYSgxMjcsMTI3LDEyNywuMTYpOyAvKiDljaHniYfovrnmoYYgKi8KICAtLXFzby1zdGF0cy1yYWRpdXM6IDEwcHg7ICAgICAgICAgICAgIC8qIOWchuinkiAqLwogIC0tcXNvLXN0YXRzLW11dGVkOiByZ2JhKDEyNywxMjcsMTI3LC44NSk7ICAgICAgLyog5qyh6KaB5paH5a2XICovCiAgLS1xc28tc3RhdHMtdHJhY2s6IHJnYmEoMTI3LDEyNywxMjcsLjE2KTsgICAgICAvKiDov5vluqbmnaHovajpgZMgKi8KfQpgYGAKCiMjIOW4uOingemXrumimAoKKipR77ya6aG16Z2i5pi+56S644CM5pyq6YWN572uIFdhdmVsb2cgQVBJIOWcsOWdgOaIliBUb2tlbuOAjSoqCuaPkuS7tuiuvue9ruS4reWhq+WGmSBXYXZlbG9nIOermeeCueWcsOWdgOWSjCBgd2wyX2AgVG9rZW4g5ZCO5L+d5a2Y5Y2z5Y+v44CCCgoqKlHvvJrmjqXlj6Pov5Tlm54gNDAxIC8gNDAzKioKVG9rZW4g5peg5pWI44CB6L+H5pyf5oiW57y65bCR5p2D6ZmQ44CC6K+356Gu6K6kIFRva2VuIOS7pSBgd2wyX2Ag5byA5aS044CB5pyq6L+H5pyf77yM5LiU5Yu+6YCJ5LqGIGBzdGF0aXN0aWM6cmVhZGDvvIjmnIDov5HpgJrogZTpnIDopoEgYHFzbzpyZWFkYO+8ieOAggoKKipR77ya5L+u5pS56K6+572u5ZCO5pWw5o2u5rKh5Y+Y5YyWKioK57uf6K6h5o6l5Y+j57uT5p6c5pyJ57yT5a2Y77yI6buY6K6kIDMwMCDnp5LvvInvvIzlj6/lnKjorr7nva7kuK3osIPkvY7jgIznvJPlrZjml7bpl7TjgI3jgIIKCioqUe+8mi9xc28tc3RhdHMg6aG16Z2i5rKh5pyJ5Li76aKY6aG15aS06aG16ISaKioKSGFsbyA8IDIuMjYg5pe25biD5bGA5aWR57qm5LiN5Y+v55So77yM5Lya5L2/55So6Ieq5bim5aSW5aOz77yb5Y2H57qnIEhhbG8g5oiW5pS555So44CM5pa55byPIEHjgI3ltYzlhaXjgIIKCioqUe+8muS4jeaDs+iuqee7hOS7tuWKoOi9veiEmuacrOazqOWFpeaJgOaciemhtemdoioqCue7hOS7tuiEmuacrOS7heWHoCBLQiDkuJTml6Dnu4Tku7bml7bkuI3muLLmn5Pku7vkvZXlhoXlrrnvvJvlpoLpnIDlvbvlupXnp7vpmaTvvIzlj6/lgZznlKjmj5Lku7bjgIIKCiMjIOacrOWcsOmihOiniAoK5peg6ZyAIEhhbG8g546v5aKD5Y2z5Y+v5p+l55yL57uE5Lu25pWI5p6c77yI5L2/55So5qih5ouf5pWw5o2u77yM5ZCr5LquL+aal+S4u+mimOS4pOenjeekuuS+i++8ie+8mgoKYGBgYmFzaApjZCBxc28tc3RhdHMKcHl0aG9uMyAtbSBodHRwLnNlcnZlciA4MDgwCiMg5rWP6KeI5Zmo5omT5byAIGh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9kZW1vL3ByZXZpZXcuaHRtbApgYGAKCiMjIOW8gOWPkQoKYGBgYmFzaAouL2dyYWRsZXcgYnVpbGQgICAgICAgICMg5p6E5bu6ICsg6L+Q6KGM5Y2V5YWD5rWL6K+VCi4vZ3JhZGxldyB0ZXN0ICAgICAgICAgIyDku4XmtYvor5UKYGBgCgotIOWQjuerr++8mkphdmEgMTcgLyBTcHJpbmcgV2ViRmx1eO+8iGBzcmMvbWFpbi9qYXZhYO+8iQotIOiuvue9ruihqOWNle+8mmBzcmMvbWFpbi9yZXNvdXJjZXMvZXh0ZW5zaW9ucy9zZXR0aW5ncy55YW1sYAotIOe7hOS7tuagt+W8jy/ohJrmnKzvvJpgc3JjL21haW4vcmVzb3VyY2VzL3N0YXRpYy9gCi0g6aG16Z2i5qih5p2/77yaYHNyYy9tYWluL3Jlc291cmNlcy90ZW1wbGF0ZXMvYAoKIyMg6K645Y+v6K+BCgpbR1BMLTMuMF0oTElDRU5TRSkgwqkgQkc4TE5HCg==
+# 通联统计（QsoStats）
+
+一个 Halo 2.x 插件：通过 [Wavelog](https://www.wavelog.org) 日志平台的 API v2，在个人网站上展示通联信息统计（QSO 总数、DXCC 字头、波段/模式分布、最近通联、活跃度等）。
+
+- **统计项目可后台修改**：增删、启停、排序、重命名，每个项目的展示条数可单独设置；
+- **API 可后台配置**：Wavelog 站点地址与 API Token 均在插件设置页配置，无需改代码；
+- **展示沿用主题风格**：组件以 CSS 变量驱动、继承主题字体颜色；独立页面复用主题布局（Halo ≥ 2.26），也可直接嵌入任意主题页面。
+
+## 功能一览
+
+| 统计项目 | 类型 | 说明 |
+| --- | --- | --- |
+| 通联总数 | 大数字 | Wavelog `statistic.qso.total` |
+| 活跃度 | 三个指标 | 今日 / 本月 / 今年通联数 |
+| DXCC 字头 | 三个指标 | 已通联 / 已确认 / 可用字头数 |
+| 波段分布 | 条形分布 | 各波段通联占比（可设条数） |
+| 模式分布 | 条形分布 | 各模式通联占比（可设条数） |
+| 最近通联 | 列表 | 最近 N 条通联（呼号 / 波段 / 模式 / 时间） |
+
+## 安装
+
+### 方式一：构建安装
+
+```bash
+# 需要 JDK 17+
+./gradlew build
+# 产物：build/libs/qso-stats-1.0.0.jar
+```
+
+然后在 Halo 后台「插件」→「安装」→ 上传 `qso-stats-1.0.0.jar` 并启用。
+
+### 方式二：直接使用
+
+在 [Releases](../../releases) 下载最新 jar，上传安装即可。
+
+## 前置准备：Wavelog API Token
+
+1. 登录 Wavelog，进入用户菜单的 **API** 页面；
+2. 创建 **API v2 Token**（`wl2_` 开头），权限勾选：
+   - `statistic:read`（统计接口）
+   - `qso:read`（最近通联）
+3. 复制完整 Token（只显示一次，请立即保存）。
+
+> 要求 Wavelog ≥ 3.1.0（API v2 的最低版本）。
+
+## 后台配置
+
+启用插件后，进入「插件」→「通联统计」→「设置」：
+
+**① Wavelog API 配置**
+- **Wavelog 站点地址**：如 `https://log.example.com`（可带 `/index.php`，插件会自动拼接）；
+- **API Token**：上一步创建的 `wl2_...` Token；
+- **缓存时间**：Wavelog 数据缓存秒数，默认 300（避免每次访问都请求日志平台）；
+- **请求超时**：默认 10 秒；
+- **统计页面标题**：`/qso-stats` 页面的标题。
+
+**② 统计项目**
+- 列表可增删、拖拽排序、启停；
+- 每项可改「显示标题」；波段/模式/最近通联可设「显示条数」。
+
+**③ 展示设置**
+- 是否显示区块标题、标题文字、是否显示更新时间、加载失败提示文案。
+
+## 前端接入
+
+### 方式 A：嵌入任意主题页面（推荐）
+
+统计组件资源（JS/CSS）由插件自动注入所有主题页面，你只需在目标位置放一个容器：
+
+```html
+<div class="qso-stats-widget"></div>
+```
+
+- 在「文章/独立页面」的正文中：切到 HTML 源码模式粘贴即可；
+- 在主题模板中：直接写在模板文件里，或使用插件片段：
+
+```html
+<div th:insert="~{plugin:QsoStats:fragments/qso-stats :: qso-stats-widget}"></div>
+```
+
+容器可选属性：
+
+| 属性 | 说明 |
+| --- | --- |
+| `data-endpoint` | 覆盖数据接口地址（默认 `/qso-stats/api/statistics`） |
+| `data-refresh` | 自动刷新间隔（秒，≥ 30 生效，默认关闭） |
+
+### 方式 B：独立统计页面
+
+直接访问 `/qso-stats`：
+
+- **Halo ≥ 2.26**：页面复用当前主题布局（主题提供 `templates/layout.html` 时完整套用主题页头页脚）；
+- **Halo < 2.26**：使用插件自带页面外壳（样式与组件一致）。
+
+> 主题可通过提供同名模板 `qso-stats.html` 完全接管该页面。
+
+## 主题定制
+
+组件全部样式通过 CSS 变量控制（均带中性兜底值，默认与主题字体颜色一致）。主题可覆盖：
+
+```css
+.qso-stats-widget {
+  --qso-stats-accent: #2563eb;          /* 强调色（数值、进度条） */
+  --qso-stats-card-bg: rgba(127,127,127,.06);   /* 卡片背景 */
+  --qso-stats-card-border: rgba(127,127,127,.16); /* 卡片边框 */
+  --qso-stats-radius: 10px;             /* 圆角 */
+  --qso-stats-muted: rgba(127,127,127,.85);      /* 次要文字 */
+  --qso-stats-track: rgba(127,127,127,.16);      /* 进度条轨道 */
+}
+```
+
+## 常见问题
+
+**Q：页面显示「未配置 Wavelog API 地址或 Token」**
+插件设置中填写 Wavelog 站点地址和 `wl2_` Token 后保存即可。
+
+**Q：接口返回 401 / 403**
+Token 无效、过期或缺少权限。请确认 Token 以 `wl2_` 开头、未过期，且勾选了 `statistic:read`（最近通联需要 `qso:read`）。
+
+**Q：修改设置后数据没变化**
+统计接口结果有缓存（默认 300 秒），可在设置中调低「缓存时间」。
+
+**Q：/qso-stats 页面没有主题页头页脚**
+Halo < 2.26 时布局契约不可用，会使用自带外壳；升级 Halo 或改用「方式 A」嵌入。
+
+**Q：不想让组件加载脚本注入所有页面**
+组件脚本仅几 KB 且无组件时不渲染任何内容；如需彻底移除，可停用插件。
+
+## 本地预览
+
+无需 Halo 环境即可查看组件效果（使用模拟数据，含亮/暗主题两种示例）：
+
+```bash
+cd qso-stats
+python3 -m http.server 8080
+# 浏览器打开 http://localhost:8080/demo/preview.html
+```
+
+## 开发
+
+```bash
+./gradlew build        # 构建 + 运行单元测试
+./gradlew test         # 仅测试
+```
+
+- 后端：Java 17 / Spring WebFlux（`src/main/java`）
+- 设置表单：`src/main/resources/extensions/settings.yaml`
+- 组件样式/脚本：`src/main/resources/static/`
+- 页面模板：`src/main/resources/templates/`
+
+## 许可证
+
+[GPL-3.0](LICENSE) © BG8LNG

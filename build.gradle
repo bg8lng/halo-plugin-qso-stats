@@ -1,1 +1,36 @@
-cGx1Z2lucyB7CiAgICBpZCAnamF2YScKICAgIGlkICJydW4uaGFsby5wbHVnaW4uZGV2dG9vbHMiIHZlcnNpb24gIjAuMi4wIgp9Cgpncm91cCAncnVuLmhhbG8ucXNvc3RhdHMnCnNvdXJjZUNvbXBhdGliaWxpdHkgPSBKYXZhVmVyc2lvbi5WRVJTSU9OXzE3CgpyZXBvc2l0b3JpZXMgewogICAgbWF2ZW4geyB1cmwgJ2h0dHBzOi8vbWF2ZW4uYWxpeXVuLmNvbS9yZXBvc2l0b3J5L3B1YmxpYycgfQogICAgbWF2ZW4geyB1cmwgJ2h0dHBzOi8vbWF2ZW4uYWxpeXVuLmNvbS9yZXBvc2l0b3J5L3NwcmluZycgfQogICAgbWF2ZW5DZW50cmFsKCkKICAgIG1hdmVuIHsgdXJsICdodHRwczovL3MwMS5vc3Muc29uYXR5cGUub3JnL2NvbnRlbnQvcmVwb3NpdG9yaWVzL3JlbGVhc2VzJyB9CiAgICBtYXZlbiB7IHVybCAnaHR0cHM6Ly9zMDEub3NzLnNvbmF0eXBlLm9yZy9jb250ZW50L3JlcG9zaXRvcmllcy9zbmFwc2hvdHMvJyB9CiAgICBtYXZlbiB7IHVybCAnaHR0cHM6Ly9yZXBvLnNwcmluZy5pby9taWxlc3RvbmUnIH0KfQoKZGVwZW5kZW5jaWVzIHsKICAgIGltcGxlbWVudGF0aW9uIHBsYXRmb3JtKCdydW4uaGFsby50b29scy5wbGF0Zm9ybTpwbHVnaW46Mi4yMC4yMCcpCiAgICBjb21waWxlT25seSAncnVuLmhhbG8uYXBwOmFwaScKCiAgICB0ZXN0SW1wbGVtZW50YXRpb24gJ3J1bi5oYWxvLmFwcDphcGknCiAgICB0ZXN0SW1wbGVtZW50YXRpb24gJ29yZy5zcHJpbmdmcmFtZXdvcmsuYm9vdDpzcHJpbmctYm9vdC1zdGFydGVyLXRlc3QnCn0KCnRlc3QgewogICAgdXNlSlVuaXRQbGF0Zm9ybSgpCn0KCnRhc2tzLndpdGhUeXBlKEphdmFDb21waWxlKS5jb25maWd1cmVFYWNoIHsKICAgIG9wdGlvbnMuZW5jb2RpbmcgPSAiVVRGLTgiCn0KCmhhbG8gewogICAgdmVyc2lvbiA9ICcyLjIwJwp9Cg==
+plugins {
+    id 'java'
+    id "run.halo.plugin.devtools" version "0.2.0"
+}
+
+group 'run.halo.qsostats'
+sourceCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url 'https://maven.aliyun.com/repository/spring' }
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/releases' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+    implementation platform('run.halo.tools.platform:plugin:2.20.20')
+    compileOnly 'run.halo.app:api'
+
+    testImplementation 'run.halo.app:api'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+halo {
+    version = '2.20'
+}

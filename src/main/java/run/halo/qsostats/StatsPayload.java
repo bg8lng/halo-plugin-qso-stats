@@ -1,1 +1,73 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBjb20uZmFzdGVyeG1sLmphY2tzb24uYW5ub3RhdGlvbi5Kc29uSWdub3JlUHJvcGVydGllczsKaW1wb3J0IGphdmEudXRpbC5MaXN0OwoKLyoqCiAqIOWJjeWPsOe7hOS7tu+8iHFzby1zdGF0cy5qc++8iea4suafk+aJgOmcgOeahOaVsOaNruaooeWei+OAggogKgogKiA8cD7pgJrov4cgL3Fzby1zdGF0cy9hcGkvc3RhdGlzdGljcyDku6UgSlNPTiDlvaLlvI/ovpPlh7rjgIIKICovCnB1YmxpYyBmaW5hbCBjbGFzcyBTdGF0c1BheWxvYWQgewoKICAgIHByaXZhdGUgU3RhdHNQYXlsb2FkKCkgewogICAgfQoKICAgIC8qKiDlrozmlbTovb3ojbcgKi8KICAgIEBKc29uSWdub3JlUHJvcGVydGllcyhpZ25vcmVVbmtub3duID0gdHJ1ZSkKICAgIHB1YmxpYyByZWNvcmQgUGF5bG9hZChMaXN0PFNlY3Rpb24+IHNlY3Rpb25zLCBTdHJpbmcgdXBkYXRlZEF0LCBTdHJpbmcgZXJyb3IsCiAgICAgICAgICAgICAgICAgICAgICAgICAgU3RyaW5nIHNlY3Rpb25UaXRsZSwgYm9vbGVhbiBzaG93U2VjdGlvblRpdGxlLAogICAgICAgICAgICAgICAgICAgICAgICAgIGJvb2xlYW4gc2hvd1VwZGF0ZWRBdCwgU3RyaW5nIGZhbGxiYWNrVGV4dCkgewogICAgfQoKICAgIC8qKiDkuIDkuKrnu5/orqHljLrlnZfvvIx0eXBlIOWGs+WumuWJjeerr+a4suafk+aWueW8jyAqLwogICAgQEpzb25JZ25vcmVQcm9wZXJ0aWVzKGlnbm9yZVVua25vd24gPSB0cnVlKQogICAgcHVibGljIHJlY29yZCBTZWN0aW9uKFN0cmluZyBrZXksIFN0cmluZyB0aXRsZSwgU3RyaW5nIHR5cGUsIE9iamVjdCB2YWx1ZSkgewogICAgfQoKICAgIC8qKiDljZXkuKrmlbDlgLzvvIjpgJrogZTmgLvmlbDvvIkgKi8KICAgIEBKc29uSWdub3JlUHJvcGVydGllcyhpZ25vcmVVbmtub3duID0gdHJ1ZSkKICAgIHB1YmxpYyByZWNvcmQgTnVtYmVyVmFsdWUobG9uZyB2YWx1ZSkgewogICAgfQoKICAgIC8qKiDmtLvot4PluqbvvJrku4rml6UgLyDmnKzmnIggLyDku4rlubQgKi8KICAgIEBKc29uSWdub3JlUHJvcGVydGllcyhpZ25vcmVVbmtub3duID0gdHJ1ZSkKICAgIHB1YmxpYyByZWNvcmQgQWN0aXZpdHlWYWx1ZShsb25nIHRvZGF5LCBsb25nIG1vbnRoLCBsb25nIHllYXIpIHsKICAgIH0KCiAgICAvKiogRFhDQ++8muW3sumAmuiBlCAvIOW3suehruiupCAvIOWPr+eUqOWtl+WktCAqLwogICAgQEpzb25JZ25vcmVQcm9wZXJ0aWVzKGlnbm9yZVVua25vd24gPSB0cnVlKQogICAgcHVibGljIHJlY29yZCBEeGNjVmFsdWUobG9uZyB3b3JrZWQsIGxvbmcgY29uZmlybWVkLCBsb25nIGF2YWlsYWJsZSkgewogICAgfQoKICAgIC8qKiDliIbluIPooYzvvIjms6LmrrUgLyDmqKHlvI/vvInvvIxwZXJjZW50IOS4uuWNoOavlO+8iDAtMTAw77yM5L+d55WZ5LiA5L2N5bCP5pWw77yJICovCiAgICBASnNvbklnbm9yZVByb3BlcnRpZXMoaWdub3JlVW5rbm93biA9IHRydWUpCiAgICBwdWJsaWMgcmVjb3JkIERpc3RyaWJ1dGlvblJvdyhTdHJpbmcgbGFiZWwsIGxvbmcgY291bnQsIGRvdWJsZSBwZXJjZW50KSB7CiAgICB9CgogICAgLyoqIOacgOi/kemAmuiBlOihjCAqLwogICAgQEpzb25JZ25vcmVQcm9wZXJ0aWVzKGlnbm9yZVVua25vd24gPSB0cnVlKQogICAgcHVibGljIHJlY29yZCBSZWNlbnRSb3coU3RyaW5nIGNhbGwsIFN0cmluZyBiYW5kLCBTdHJpbmcgbW9kZSwgU3RyaW5nIHRpbWUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBTdHJpbmcgZ3JpZHNxdWFyZSkgewogICAgfQoKICAgIC8qKiDpnZnmgIHlt6XljoLvvJrkvr/mjbfmnoTpgKAgKi8KICAgIHB1YmxpYyBzdGF0aWMgU2VjdGlvbiBzZWN0aW9uKFN0cmluZyBrZXksIFN0cmluZyB0aXRsZSwgU3RyaW5nIHR5cGUsIE9iamVjdCB2YWx1ZSkgewogICAgICAgIHJldHVybiBuZXcgU2VjdGlvbihrZXksIHRpdGxlLCB0eXBlLCB2YWx1ZSk7CiAgICB9CgogICAgcHVibGljIHN0YXRpYyBQYXlsb2FkIHN1Y2Nlc3MoTGlzdDxTZWN0aW9uPiBzZWN0aW9ucywgU3RyaW5nIHVwZGF0ZWRBdCwgRGlzcGxheUNvbmZpZyBkaXNwbGF5KSB7CiAgICAgICAgcmV0dXJuIG5ldyBQYXlsb2FkKHNlY3Rpb25zLCB1cGRhdGVkQXQsIG51bGwsIGRpc3BsYXkuc2VjdGlvblRpdGxlKCksCiAgICAgICAgICAgIGRpc3BsYXkuc2hvd1NlY3Rpb25UaXRsZSgpLCBkaXNwbGF5LnNob3dVcGRhdGVkQXQoKSwgZGlzcGxheS5mYWxsYmFja1RleHQoKSk7CiAgICB9CgogICAgcHVibGljIHN0YXRpYyBQYXlsb2FkIGVycm9yKFN0cmluZyBtZXNzYWdlLCBEaXNwbGF5Q29uZmlnIGRpc3BsYXkpIHsKICAgICAgICByZXR1cm4gbmV3IFBheWxvYWQoTGlzdC5vZigpLCBudWxsLCBtZXNzYWdlLCBkaXNwbGF5LnNlY3Rpb25UaXRsZSgpLAogICAgICAgICAgICBkaXNwbGF5LnNob3dTZWN0aW9uVGl0bGUoKSwgZGlzcGxheS5zaG93VXBkYXRlZEF0KCksIGRpc3BsYXkuZmFsbGJhY2tUZXh0KCkpOwogICAgfQoKICAgIC8qKiDlsZXnpLrorr7nva7nmoTlj6ror7vlv6vnhafvvIzpgb/lhY3lnKjovb3ojbfmnoTpgKDkuK3lj43lpI3or7vlj5YgKi8KICAgIHB1YmxpYyByZWNvcmQgRGlzcGxheUNvbmZpZyhTdHJpbmcgc2VjdGlvblRpdGxlLCBib29sZWFuIHNob3dTZWN0aW9uVGl0bGUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYm9vbGVhbiBzaG93VXBkYXRlZEF0LCBTdHJpbmcgZmFsbGJhY2tUZXh0KSB7CiAgICB9Cn0K
+package run.halo.qsostats;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+
+/**
+ * 前台组件（qso-stats.js）渲染所需的数据模型。
+ *
+ * <p>通过 /qso-stats/api/statistics 以 JSON 形式输出。
+ */
+public final class StatsPayload {
+
+    private StatsPayload() {
+    }
+
+    /** 完整载荷 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Payload(List<Section> sections, String updatedAt, String error,
+                          String sectionTitle, boolean showSectionTitle,
+                          boolean showUpdatedAt, String fallbackText) {
+    }
+
+    /** 一个统计区块，type 决定前端渲染方式 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Section(String key, String title, String type, Object value) {
+    }
+
+    /** 单个数值（通联总数） */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record NumberValue(long value) {
+    }
+
+    /** 活跃度：今日 / 本月 / 今年 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record ActivityValue(long today, long month, long year) {
+    }
+
+    /** DXCC：已通联 / 已确认 / 可用字头 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record DxccValue(long worked, long confirmed, long available) {
+    }
+
+    /** 分布行（波段 / 模式），percent 为占比（0-100，保留一位小数） */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record DistributionRow(String label, long count, double percent) {
+    }
+
+    /** 最近通联行 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RecentRow(String call, String band, String mode, String time,
+                            String gridsquare) {
+    }
+
+    /** 静态工厂：便捷构造 */
+    public static Section section(String key, String title, String type, Object value) {
+        return new Section(key, title, type, value);
+    }
+
+    public static Payload success(List<Section> sections, String updatedAt, DisplayConfig display) {
+        return new Payload(sections, updatedAt, null, display.sectionTitle(),
+            display.showSectionTitle(), display.showUpdatedAt(), display.fallbackText());
+    }
+
+    public static Payload error(String message, DisplayConfig display) {
+        return new Payload(List.of(), null, message, display.sectionTitle(),
+            display.showSectionTitle(), display.showUpdatedAt(), display.fallbackText());
+    }
+
+    /** 展示设置的只读快照，避免在载荷构造中反复读取 */
+    public record DisplayConfig(String sectionTitle, boolean showSectionTitle,
+                                boolean showUpdatedAt, String fallbackText) {
+    }
+}

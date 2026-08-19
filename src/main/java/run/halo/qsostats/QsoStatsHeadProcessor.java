@@ -1,1 +1,40 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLnN0ZXJlb3R5cGUuQ29tcG9uZW50OwppbXBvcnQgb3JnLnRoeW1lbGVhZi5jb250ZXh0LklUZW1wbGF0ZUNvbnRleHQ7CmltcG9ydCBvcmcudGh5bWVsZWFmLm1vZGVsLklNb2RlbDsKaW1wb3J0IG9yZy50aHltZWxlYWYubW9kZWwuSU1vZGVsRmFjdG9yeTsKaW1wb3J0IG9yZy50aHltZWxlYWYucHJvY2Vzc29yLmVsZW1lbnQuSUVsZW1lbnRNb2RlbFN0cnVjdHVyZUhhbmRsZXI7CmltcG9ydCByZWFjdG9yLmNvcmUucHVibGlzaGVyLk1vbm87CmltcG9ydCBydW4uaGFsby5hcHAucGx1Z2luLlBsdWdpbkNvbnRleHQ7CmltcG9ydCBydW4uaGFsby5hcHAudGhlbWUuZGlhbGVjdC5UZW1wbGF0ZUhlYWRQcm9jZXNzb3I7CgovKioKICog5ZCR5omA5pyJ5Li76aKY6aG16Z2i5rOo5YWl6YCa6IGU57uf6K6h57uE5Lu255qE6Z2Z5oCB6LWE5rqQ44CCCiAqCiAqIDxwPuWJjeerr+S7u+aEj+S9jee9ruaUvue9riB7QGNvZGUgPGRpdiBjbGFzcz0icXNvLXN0YXRzLXdpZGdldCI+PC9kaXY+fSDljbPlj6/muLLmn5Pnu4Tku7bvvJsKICogSlMg5LiOIENTUyDnlLHmnKzlpITnkIblmajnu5/kuIDms6jlhaXvvIzml6DpnIDmiYvlt6Xmt7vliqDjgIIKICovCkBDb21wb25lbnQKcHVibGljIGNsYXNzIFFzb1N0YXRzSGVhZFByb2Nlc3NvciBpbXBsZW1lbnRzIFRlbXBsYXRlSGVhZFByb2Nlc3NvciB7CgogICAgcHJpdmF0ZSBmaW5hbCBQbHVnaW5Db250ZXh0IHBsdWdpbkNvbnRleHQ7CgogICAgcHVibGljIFFzb1N0YXRzSGVhZFByb2Nlc3NvcihQbHVnaW5Db250ZXh0IHBsdWdpbkNvbnRleHQpIHsKICAgICAgICB0aGlzLnBsdWdpbkNvbnRleHQgPSBwbHVnaW5Db250ZXh0OwogICAgfQoKICAgIEBPdmVycmlkZQogICAgcHVibGljIE1vbm88Vm9pZD4gcHJvY2VzcyhJVGVtcGxhdGVDb250ZXh0IGNvbnRleHQsIElNb2RlbCBtb2RlbCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSUVsZW1lbnRNb2RlbFN0cnVjdHVyZUhhbmRsZXIgc3RydWN0dXJlSGFuZGxlcikgewogICAgICAgIElNb2RlbEZhY3RvcnkgbW9kZWxGYWN0b3J5ID0gY29udGV4dC5nZXRNb2RlbEZhY3RvcnkoKTsKICAgICAgICBTdHJpbmcgdmVyc2lvbiA9IHBsdWdpbkNvbnRleHQuZ2V0VmVyc2lvbigpOwogICAgICAgIG1vZGVsLmFkZChtb2RlbEZhY3RvcnkuY3JlYXRlVGV4dCgiIiIKICAgICAgICAgICAgPCEtLSBRc29TdGF0cyB3aWRnZXQgc3RhcnQgLS0+CiAgICAgICAgICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iL3BsdWdpbnMvUXNvU3RhdHMvYXNzZXRzL3N0YXRpYy9xc28tc3RhdHMuY3NzP3ZlcnNpb249JXMiIC8+CiAgICAgICAgICAgIDxzY3JpcHQgc3JjPSIvcGx1Z2lucy9Rc29TdGF0cy9hc3NldHMvc3RhdGljL3Fzby1zdGF0cy5qcz92ZXJzaW9uPSVzIiBkZWZlcj48L3NjcmlwdD4KICAgICAgICAgICAgPCEtLSBRc29TdGF0cyB3aWRnZXQgZW5kIC0tPgogICAgICAgICAgICAiIiIuZm9ybWF0dGVkKHZlcnNpb24sIHZlcnNpb24pKSk7CiAgICAgICAgcmV0dXJuIE1vbm8uZW1wdHkoKTsKICAgIH0KfQo=
+package run.halo.qsostats;
+
+import org.springframework.stereotype.Component;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.model.IModel;
+import org.thymeleaf.model.IModelFactory;
+import org.thymeleaf.processor.element.IElementModelStructureHandler;
+import reactor.core.publisher.Mono;
+import run.halo.app.plugin.PluginContext;
+import run.halo.app.theme.dialect.TemplateHeadProcessor;
+
+/**
+ * 向所有主题页面注入通联统计组件的静态资源。
+ *
+ * <p>前端任意位置放置 {@code <div class="qso-stats-widget"></div>} 即可渲染组件；
+ * JS 与 CSS 由本处理器统一注入，无需手工添加。
+ */
+@Component
+public class QsoStatsHeadProcessor implements TemplateHeadProcessor {
+
+    private final PluginContext pluginContext;
+
+    public QsoStatsHeadProcessor(PluginContext pluginContext) {
+        this.pluginContext = pluginContext;
+    }
+
+    @Override
+    public Mono<Void> process(ITemplateContext context, IModel model,
+                              IElementModelStructureHandler structureHandler) {
+        IModelFactory modelFactory = context.getModelFactory();
+        String version = pluginContext.getVersion();
+        model.add(modelFactory.createText("""
+            <!-- QsoStats widget start -->
+            <link rel="stylesheet" href="/plugins/QsoStats/assets/static/qso-stats.css?version=%s" />
+            <script src="/plugins/QsoStats/assets/static/qso-stats.js?version=%s" defer></script>
+            <!-- QsoStats widget end -->
+            """.formatted(version, version)));
+        return Mono.empty();
+    }
+}

@@ -1,1 +1,17 @@
-IyBHcmFkbGUKLmdyYWRsZS8KYnVpbGQvCgojIElERQouaWRlYS8KKi5pbWwKLnZzY29kZS8KCiMgT1MKLkRTX1N0b3JlClRodW1icy5kYgoKIyBOb2Rl77yI6Iul5pel5ZCO5byV5YWlIGNvbnNvbGUgVUnvvIkKbm9kZV9tb2R1bGVzLwp1aS9ub2RlX21vZHVsZXMvCnVpL2Rpc3QvCg==
+# Gradle
+.gradle/
+build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node（若日后引入 console UI）
+node_modules/
+ui/node_modules/
+ui/dist/

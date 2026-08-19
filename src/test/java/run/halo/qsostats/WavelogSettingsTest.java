@@ -1,1 +1,81 @@
-cGFja2FnZSBydW4uaGFsby5xc29zdGF0czsKCmltcG9ydCBzdGF0aWMgb3JnLmp1bml0Lmp1cGl0ZXIuYXBpLkFzc2VydGlvbnMuYXNzZXJ0RXF1YWxzOwppbXBvcnQgc3RhdGljIG9yZy5qdW5pdC5qdXBpdGVyLmFwaS5Bc3NlcnRpb25zLmFzc2VydEZhbHNlOwppbXBvcnQgc3RhdGljIG9yZy5qdW5pdC5qdXBpdGVyLmFwaS5Bc3NlcnRpb25zLmFzc2VydFRydWU7CgppbXBvcnQgY29tLmZhc3RlcnhtbC5qYWNrc29uLmRhdGFiaW5kLk9iamVjdE1hcHBlcjsKaW1wb3J0IG9yZy5qdW5pdC5qdXBpdGVyLmFwaS5UZXN0OwoKLyoqCiAqIOiuvue9ruaooeWei+WPjeW6j+WIl+WMluS4jum7mOiupOWAvOa1i+ivleOAggogKgogKiA8cD7pqozor4EgSGFsbyB7QGNvZGUgUmVhY3RpdmVTZXR0aW5nRmV0Y2hlci5mZXRjaChncm91cCwgY2xhenopfSDkvb/nlKjnmoQKICoge0Bjb2RlIEpzb25Ob2RlLmNvbnZlcnRWYWx1ZX0g6K+t5LmJ77yI5a2X5q6157y65aSxIOKGkiBudWxsIOKGkiDpu5jorqTlgLznlJ/mlYjvvInjgIIKICovCmNsYXNzIFdhdmVsb2dTZXR0aW5nc1Rlc3QgewoKICAgIHByaXZhdGUgZmluYWwgT2JqZWN0TWFwcGVyIG1hcHBlciA9IG5ldyBPYmplY3RNYXBwZXIoKTsKCiAgICBAVGVzdAogICAgdm9pZCBhcGlHcm91cEJpbmRpbmcoKSB0aHJvd3MgRXhjZXB0aW9uIHsKICAgICAgICBTdHJpbmcganNvbiA9ICIiIgogICAgICAgICAgICB7ImJhc2VVcmwiOiJodHRwczovL2xvZy5leGFtcGxlLmNvbSIsImFwaVRva2VuIjoid2wyX2FiYyIsCiAgICAgICAgICAgICAiY2FjaGVTZWNvbmRzIjozMDAsInRpbWVvdXRTZWNvbmRzIjoxMCwicGFnZVRpdGxlIjoi5oiR55qE6YCa6IGUIn0KICAgICAgICAgICAgIiIiOwogICAgICAgIFdhdmVsb2dTZXR0aW5ncy5BcGkgYXBpID0KICAgICAgICAgICAgbWFwcGVyLmNvbnZlcnRWYWx1ZShtYXBwZXIucmVhZFRyZWUoanNvbiksIFdhdmVsb2dTZXR0aW5ncy5BcGkuY2xhc3MpOwogICAgICAgIGFzc2VydEVxdWFscygiaHR0cHM6Ly9sb2cuZXhhbXBsZS5jb20iLCBhcGkuYmFzZVVybE9yRGVmYXVsdCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIndsMl9hYmMiLCBhcGkuYXBpVG9rZW5PckRlZmF1bHQoKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDMwMCwgYXBpLmNhY2hlU2Vjb25kc09yRGVmYXVsdCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoMTAsIGFwaS50aW1lb3V0U2Vjb25kc09yRGVmYXVsdCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIuaIkeeahOmAmuiBlCIsIGFwaS5wYWdlVGl0bGVPckRlZmF1bHQoKSk7CiAgICAgICAgYXNzZXJ0VHJ1ZShhcGkuaXNDb25maWd1cmVkKCkpOwogICAgfQoKICAgIEBUZXN0CiAgICB2b2lkIHN0YXRzSXRlbXNCaW5kaW5nKCkgdGhyb3dzIEV4Y2VwdGlvbiB7CiAgICAgICAgU3RyaW5nIGpzb24gPSAiIiIKICAgICAgICAgICAgeyJpdGVtcyI6W3sia2V5IjoiYmFuZHMiLCJ0aXRsZSI6IuazouautSIsImVuYWJsZWQiOnRydWUsImxpbWl0Ijo2fSwKICAgICAgICAgICAgICAgICAgICAgIHsia2V5IjoidG90YWxfcXNvcyIsInRpdGxlIjoi6YCa6IGU5oC75pWwIiwiZW5hYmxlZCI6dHJ1ZX1dfQogICAgICAgICAgICAiIiI7CiAgICAgICAgV2F2ZWxvZ1NldHRpbmdzLlN0YXRzIHN0YXRzID0KICAgICAgICAgICAgbWFwcGVyLmNvbnZlcnRWYWx1ZShtYXBwZXIucmVhZFRyZWUoanNvbiksIFdhdmVsb2dTZXR0aW5ncy5TdGF0cy5jbGFzcyk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDIsIHN0YXRzLml0ZW1zT3JEZWZhdWx0KCkuc2l6ZSgpKTsKICAgICAgICBXYXZlbG9nU2V0dGluZ3MuSXRlbSBiYW5kcyA9IHN0YXRzLml0ZW1zT3JEZWZhdWx0KCkuZ2V0KDApOwogICAgICAgIGFzc2VydEVxdWFscygiYmFuZHMiLCBiYW5kcy5rZXkoKSk7CiAgICAgICAgYXNzZXJ0VHJ1ZShiYW5kcy5lbmFibGVkT3JEZWZhdWx0KCkpOwogICAgICAgIGFzc2VydEVxdWFscyg2LCBiYW5kcy5saW1pdE9yRGVmYXVsdCg1KSk7CiAgICAgICAgLy8g5pyq6YWN572uIGxpbWl0IOeahOmhueebruS9v+eUqOm7mOiupOWAvAogICAgICAgIGFzc2VydEVxdWFscyg1LCBzdGF0cy5pdGVtc09yRGVmYXVsdCgpLmdldCgxKS5saW1pdE9yRGVmYXVsdCg1KSk7CiAgICB9CgogICAgQFRlc3QKICAgIHZvaWQgbWlzc2luZ0ZpZWxkc0ZhbGxCYWNrVG9EZWZhdWx0cygpIHRocm93cyBFeGNlcHRpb24gewogICAgICAgIFdhdmVsb2dTZXR0aW5ncy5BcGkgYXBpID0KICAgICAgICAgICAgbWFwcGVyLmNvbnZlcnRWYWx1ZShtYXBwZXIucmVhZFRyZWUoInt9IiksIFdhdmVsb2dTZXR0aW5ncy5BcGkuY2xhc3MpOwogICAgICAgIGFzc2VydEZhbHNlKGFwaS5pc0NvbmZpZ3VyZWQoKSk7CiAgICAgICAgYXNzZXJ0RXF1YWxzKDMwMCwgYXBpLmNhY2hlU2Vjb25kc09yRGVmYXVsdCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoMTAsIGFwaS50aW1lb3V0U2Vjb25kc09yRGVmYXVsdCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIumAmuiBlOe7n+iuoSIsIGFwaS5wYWdlVGl0bGVPckRlZmF1bHQoKSk7CgogICAgICAgIFdhdmVsb2dTZXR0aW5ncy5TdGF0cyBzdGF0cyA9CiAgICAgICAgICAgIG1hcHBlci5jb252ZXJ0VmFsdWUobWFwcGVyLnJlYWRUcmVlKCJ7fSIpLCBXYXZlbG9nU2V0dGluZ3MuU3RhdHMuY2xhc3MpOwogICAgICAgIGFzc2VydFRydWUoc3RhdHMuaXRlbXNPckRlZmF1bHQoKS5pc0VtcHR5KCkpOwoKICAgICAgICBXYXZlbG9nU2V0dGluZ3MuRGlzcGxheSBkaXNwbGF5ID0KICAgICAgICAgICAgbWFwcGVyLmNvbnZlcnRWYWx1ZShtYXBwZXIucmVhZFRyZWUoInt9IiksIFdhdmVsb2dTZXR0aW5ncy5EaXNwbGF5LmNsYXNzKTsKICAgICAgICBhc3NlcnRUcnVlKGRpc3BsYXkuc2hvd1NlY3Rpb25UaXRsZU9yRGVmYXVsdCgpKTsKICAgICAgICBhc3NlcnRUcnVlKGRpc3BsYXkuc2hvd1VwZGF0ZWRBdE9yRGVmYXVsdCgpKTsKICAgICAgICBhc3NlcnRFcXVhbHMoIumAmuiBlOe7n+iuoSIsIGRpc3BsYXkuc2VjdGlvblRpdGxlT3JEZWZhdWx0KCkpOwogICAgICAgIGFzc2VydEVxdWFscygi57uf6K6h5pWw5o2u5pqC5LiN5Y+v55So77yM6K+356iN5ZCO5YaN6K+VIiwgZGlzcGxheS5mYWxsYmFja1RleHRPckRlZmF1bHQoKSk7CiAgICB9CgogICAgQFRlc3QKICAgIHZvaWQgZGlzYWJsZWRGbGFnRGVmYXVsdHNUb0VuYWJsZWQoKSB0aHJvd3MgRXhjZXB0aW9uIHsKICAgICAgICBXYXZlbG9nU2V0dGluZ3MuSXRlbSBpdGVtID0KICAgICAgICAgICAgbWFwcGVyLmNvbnZlcnRWYWx1ZShtYXBwZXIucmVhZFRyZWUoIntcImtleVwiOlwiZHhjY1wifSIpLAogICAgICAgICAgICAgICAgV2F2ZWxvZ1NldHRpbmdzLkl0ZW0uY2xhc3MpOwogICAgICAgIGFzc2VydFRydWUoaXRlbS5lbmFibGVkT3JEZWZhdWx0KCkpOwogICAgfQp9Cg==
+package run.halo.qsostats;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+
+/**
+ * 设置模型反序列化与默认值测试。
+ *
+ * <p>验证 Halo {@code ReactiveSettingFetcher.fetch(group, clazz)} 使用的
+ * {@code JsonNode.convertValue} 语义（字段缺失 → null → 默认值生效）。
+ */
+class WavelogSettingsTest {
+
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    @Test
+    void apiGroupBinding() throws Exception {
+        String json = """
+            {"baseUrl":"https://log.example.com","apiToken":"wl2_abc",
+             "cacheSeconds":300,"timeoutSeconds":10,"pageTitle":"我的通联"}
+            """;
+        WavelogSettings.Api api =
+            mapper.convertValue(mapper.readTree(json), WavelogSettings.Api.class);
+        assertEquals("https://log.example.com", api.baseUrlOrDefault());
+        assertEquals("wl2_abc", api.apiTokenOrDefault());
+        assertEquals(300, api.cacheSecondsOrDefault());
+        assertEquals(10, api.timeoutSecondsOrDefault());
+        assertEquals("我的通联", api.pageTitleOrDefault());
+        assertTrue(api.isConfigured());
+    }
+
+    @Test
+    void statsItemsBinding() throws Exception {
+        String json = """
+            {"items":[{"key":"bands","title":"波段","enabled":true,"limit":6},
+                      {"key":"total_qsos","title":"通联总数","enabled":true}]}
+            """;
+        WavelogSettings.Stats stats =
+            mapper.convertValue(mapper.readTree(json), WavelogSettings.Stats.class);
+        assertEquals(2, stats.itemsOrDefault().size());
+        WavelogSettings.Item bands = stats.itemsOrDefault().get(0);
+        assertEquals("bands", bands.key());
+        assertTrue(bands.enabledOrDefault());
+        assertEquals(6, bands.limitOrDefault(5));
+        // 未配置 limit 的项目使用默认值
+        assertEquals(5, stats.itemsOrDefault().get(1).limitOrDefault(5));
+    }
+
+    @Test
+    void missingFieldsFallBackToDefaults() throws Exception {
+        WavelogSettings.Api api =
+            mapper.convertValue(mapper.readTree("{}"), WavelogSettings.Api.class);
+        assertFalse(api.isConfigured());
+        assertEquals(300, api.cacheSecondsOrDefault());
+        assertEquals(10, api.timeoutSecondsOrDefault());
+        assertEquals("通联统计", api.pageTitleOrDefault());
+
+        WavelogSettings.Stats stats =
+            mapper.convertValue(mapper.readTree("{}"), WavelogSettings.Stats.class);
+        assertTrue(stats.itemsOrDefault().isEmpty());
+
+        WavelogSettings.Display display =
+            mapper.convertValue(mapper.readTree("{}"), WavelogSettings.Display.class);
+        assertTrue(display.showSectionTitleOrDefault());
+        assertTrue(display.showUpdatedAtOrDefault());
+        assertEquals("通联统计", display.sectionTitleOrDefault());
+        assertEquals("统计数据暂不可用，请稍后再试", display.fallbackTextOrDefault());
+    }
+
+    @Test
+    void disabledFlagDefaultsToEnabled() throws Exception {
+        WavelogSettings.Item item =
+            mapper.convertValue(mapper.readTree("{\"key\":\"dxcc\"}"),
+                WavelogSettings.Item.class);
+        assertTrue(item.enabledOrDefault());
+    }
+}
