@@ -3,6 +3,7 @@ package run.halo.qsostats;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.Instant;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,8 @@ import run.halo.app.infra.utils.JsonUtils;
 import run.halo.app.plugin.ReactiveSettingFetcher;
 
 /**
- * 通联统计数据服务：读取插件配置，拉取并缓存 Wavelog 数据，构建前台组件载荷。
+ * 通联统计数据服务：读取插件配置，拉取并缓存 Wavelog 数据，构建前台组件载荷，
+ * 并提供呼号查询与 OQRS 申请能力。
  */
 @Service
 public class QsoStatsService {
@@ -21,6 +23,7 @@ public class QsoStatsService {
     private static final String GROUP_API = "api";
     private static final String GROUP_STATS = "stats";
     private static final String GROUP_DISPLAY = "display";
+    private static final String GROUP_SEARCH = "search";
 
     private final ReactiveSettingFetcher settingFetcher;
     private final WavelogClient wavelogClient;
@@ -38,9 +41,8 @@ public class QsoStatsService {
      * 空列表，不影响其他区块。
      */
     public Mono<StatsPayload.Payload> buildPayload() {
-        return fetchDisplay()
-            .flatMap(display -> fetchApi().flatMap(api -> {
-                StatsPayload.DisplayConfig config = displayConfig(display);
+        return fetchDisplayConfig()
+            .flatMap(config -> fetchApi().flatMap(api -> {
                 if (!api.isConfigured()) {
                     return Mono.just(StatsPayload.error(
                         "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。", config));
@@ -53,19 +55,56 @@ public class QsoStatsService {
             }));
     }
 
-    private Mono<List<StatsPayload.Section>> buildSections(WavelogSettings.Api api,
-                                                           JsonNode qsoNode,
-                                                           WavelogSettings.Stats stats) {
-        List<WavelogSettings.Item> items = stats.itemsOrDefault();
-        boolean needRecent = items.stream()
-            .anyMatch(item -> item.enabledOrDefault() && "recent".equals(item.key()));
-        if (!needRecent) {
-            return Mono.just(PayloadBuilder.buildSections(qsoNode, null, items));
+    /**
+     * 按呼号查询通联记录（供 /qso-stats/api/search 使用）。
+     *
+     * <p>结果按缓存策略复用，避免高频请求日志平台。
+     */
+    public Mono<StatsPayload.SearchPayload> searchQsos(String callsign) {
+        String call = StringUtils.trimToEmpty(callsign).toUpperCase(Locale.ROOT);
+        if (StringUtils.isBlank(call)) {
+            return Mono.just(StatsPayload.searchError("请输入要查询的呼号"));
         }
-        return fetchRecent(api)
-            .map(recentNode -> PayloadBuilder.buildSections(qsoNode, recentNode, items))
-            // 最近通联失败不拖垮整页，降级为空列表
-            .onErrorResume(e -> Mono.just(PayloadBuilder.buildSections(qsoNode, null, items)));
+        return fetchApi().flatMap(api -> {
+            if (!api.isConfigured()) {
+                return Mono.just(StatsPayload.searchError(
+                    "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。"));
+            }
+            return fetchSearch()
+                .flatMap(search -> cached(cacheKey("search", api, call),
+                    api.cacheSecondsOrDefault(),
+                    wavelogClient.fetchQsosByCallsign(api, call, search.maxResultsOrDefault())))
+                .map(node -> PayloadBuilder.buildSearchResult(call, node))
+                .onErrorResume(e -> Mono.just(StatsPayload.searchError(friendlyMessage(e))));
+        });
+    }
+
+    /**
+     * 提交 OQRS 卡片申请（供 POST /qso-stats/api/oqrs 使用）。
+     *
+     * <p>不缓存，直接转发给 Wavelog 公开申请端点。
+     */
+    public Mono<StatsPayload.OqrsResult> submitOqrs(StatsPayload.OqrsSubmitRequest request) {
+        if (StringUtils.isBlank(request.email())) {
+            return Mono.just(StatsPayload.oqrsResult(false, "请填写您的邮箱地址"));
+        }
+        if (request.qsos() == null || request.qsos().isEmpty()) {
+            return Mono.just(StatsPayload.oqrsResult(false, "没有可提交的通联记录"));
+        }
+        return fetchApi().flatMap(api -> {
+            if (!api.isConfigured()) {
+                return Mono.just(StatsPayload.oqrsResult(false,
+                    "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。"));
+            }
+            return wavelogClient.submitOqrsRequest(api,
+                    StringUtils.trimToEmpty(request.callsign()).toUpperCase(Locale.ROOT),
+                    StringUtils.trimToEmpty(request.email()),
+                    StringUtils.trimToEmpty(request.message()),
+                    StringUtils.defaultIfBlank(request.qslroute(), "B"),
+                    request.qsos())
+                .thenReturn(StatsPayload.oqrsResult(true, "OQRS 卡片申请已提交，感谢使用！"))
+                .onErrorResume(e -> Mono.just(StatsPayload.oqrsResult(false, friendlyMessage(e))));
+        });
     }
 
     /** /qso-stats 页面标题 */
@@ -93,10 +132,33 @@ public class QsoStatsService {
             .defaultIfEmpty(new WavelogSettings.Display(null, null, null, null));
     }
 
-    private static StatsPayload.DisplayConfig displayConfig(WavelogSettings.Display display) {
-        return new StatsPayload.DisplayConfig(display.sectionTitleOrDefault(),
-            display.showSectionTitleOrDefault(), display.showUpdatedAtOrDefault(),
-            display.fallbackTextOrDefault());
+    private Mono<WavelogSettings.Search> fetchSearch() {
+        return settingFetcher.fetch(GROUP_SEARCH, WavelogSettings.Search.class)
+            .onErrorResume(e -> Mono.empty())
+            .defaultIfEmpty(new WavelogSettings.Search(null, null));
+    }
+
+    private Mono<StatsPayload.DisplayConfig> fetchDisplayConfig() {
+        return fetchDisplay().zipWith(fetchSearch())
+            .map(t -> new StatsPayload.DisplayConfig(t.getT1().sectionTitleOrDefault(),
+                t.getT1().showSectionTitleOrDefault(), t.getT1().showUpdatedAtOrDefault(),
+                t.getT1().fallbackTextOrDefault(), t.getT2().enabledOrDefault(),
+                t.getT2().maxResultsOrDefault()));
+    }
+
+    private Mono<List<StatsPayload.Section>> buildSections(WavelogSettings.Api api,
+                                                           JsonNode qsoNode,
+                                                           WavelogSettings.Stats stats) {
+        List<WavelogSettings.Item> items = stats.itemsOrDefault();
+        boolean needRecent = items.stream()
+            .anyMatch(item -> item.enabledOrDefault() && "recent".equals(item.key()));
+        if (!needRecent) {
+            return Mono.just(PayloadBuilder.buildSections(qsoNode, null, items));
+        }
+        return fetchRecent(api)
+            .map(recentNode -> PayloadBuilder.buildSections(qsoNode, recentNode, items))
+            // 最近通联失败不拖垮整页，降级为空列表
+            .onErrorResume(e -> Mono.just(PayloadBuilder.buildSections(qsoNode, null, items)));
     }
 
     // ---------- Wavelog 数据（TTL 缓存，避免高频请求日志平台） ----------
@@ -114,6 +176,10 @@ public class QsoStatsService {
 
     private String cacheKey(String prefix, WavelogSettings.Api api) {
         return prefix + "|" + api.baseUrlOrDefault() + "|" + api.apiTokenOrDefault();
+    }
+
+    private String cacheKey(String prefix, WavelogSettings.Api api, String callsign) {
+        return cacheKey(prefix, api) + "|" + callsign;
     }
 
     private Mono<JsonNode> cached(String key, int ttlSeconds, Mono<JsonNode> loader) {
@@ -139,6 +205,10 @@ public class QsoStatsService {
                     JsonNode err = JsonUtils.mapper().readTree(body);
                     String code = err.path("error").path("code").asText("");
                     String message = err.path("error").path("message").asText("");
+                    // OQRS 等公开端点的校验错误形如 {"error":"..."}
+                    if (StringUtils.isBlank(message)) {
+                        message = err.path("error").asText("");
+                    }
                     if (StringUtils.isNotBlank(message)) {
                         return StringUtils.isNotBlank(code)
                             ? "Wavelog 接口错误（" + code + "）：" + message
@@ -158,7 +228,7 @@ public class QsoStatsService {
             || StringUtils.containsIgnoreCase(message, "UnknownHost")) {
             return "无法连接 Wavelog 服务，请检查站点地址与网络连接";
         }
-        return "获取通联统计失败：" + StringUtils.defaultString(message,
+        return "操作失败：" + StringUtils.defaultString(message,
             e.getClass().getSimpleName());
     }
 }

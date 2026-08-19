@@ -116,6 +116,30 @@ public final class PayloadBuilder {
     }
 
     /**
+     * 把 Wavelog /api/v2/qso?callsign=... 的响应转换为呼号查询结果。
+     *
+     * @param callsign 查询的呼号（原样回显给前端）
+     * @param qsoNode  /api/v2/qso 的完整响应，可为 null
+     */
+    public static StatsPayload.SearchPayload buildSearchResult(String callsign,
+                                                               JsonNode qsoNode) {
+        List<StatsPayload.QsoRow> rows = new ArrayList<>();
+        JsonNode data = qsoNode == null ? null : qsoNode.path("data");
+        if (data != null && data.isArray()) {
+            for (JsonNode node : data) {
+                String dateTime = formatDateTime(node.path("qso_date").asText(""));
+                rows.add(new StatsPayload.QsoRow(
+                    dateTime.length() >= 10 ? dateTime.substring(0, 10) : dateTime,
+                    dateTime.length() > 10 ? dateTime.substring(11) : "",
+                    node.path("band").asText(""),
+                    node.path("mode").asText(""),
+                    node.path("station_id").asLong(0)));
+            }
+        }
+        return new StatsPayload.SearchPayload(callsign, rows, null);
+    }
+
+    /**
      * 兼容 Wavelog 多种日期时间格式：{@code YYYY-MM-DD}、
      * {@code YYYY-MM-DD HH:MM[:SS]}、ISO-8601（{@code T} 分隔）等。
      * 统一输出 {@code YYYY-MM-DD HH:MM}。

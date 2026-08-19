@@ -2,10 +2,14 @@ package run.halo.qsostats;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.Duration;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
@@ -28,6 +32,9 @@ public class WavelogClient {
     private static final String STATISTIC_PATH = "/api/v2/statistic";
     private static final String QSO_PATH = "/api/v2/qso";
 
+    /** OQRS 公开申请端点（非 API v2；Wavelog 默认关闭 CSRF，可直接 POST 表单） */
+    private static final String OQRS_SAVE_PATH = "/oqrs/save_oqrs_request_grouped";
+
     /** 拉取统计（profile=qso，包含总数、活跃度、波段/模式分布、DXCC） */
     public Mono<JsonNode> fetchStatistics(WavelogSettings.Api api) {
         return webClient(api).get()
@@ -44,6 +51,52 @@ public class WavelogClient {
             .retrieve()
             .bodyToMono(String.class)
             .map(WavelogClient::parseJson);
+    }
+
+    /** 按呼号精确查询通联（newest first，大小写不敏感） */
+    public Mono<JsonNode> fetchQsosByCallsign(WavelogSettings.Api api, String callsign,
+                                              int limit) {
+        return webClient(api).get()
+            .uri(uri -> uri.path(QSO_PATH)
+                .queryParam("callsign", callsign)
+                .queryParam("limit", limit)
+                .build())
+            .retrieve()
+            .bodyToMono(String.class)
+            .map(WavelogClient::parseJson);
+    }
+
+    /**
+     * 向 Wavelog 提交 OQRS 卡片申请（公开端点，无需 Token）。
+     *
+     * <p>使用 grouped 接口，逐条 QSO 携带 station_id；表单字段与
+     * Wavelog 前端 {@code oqrs/save_oqrs_request_grouped} 一致：
+     * {@code qsos[i] = [date, time, band, mode, station_id]}。
+     *
+     * @return 成功时完成；失败时抛出 {@link org.springframework.web.reactive.function.client.WebClientResponseException}
+     */
+    public Mono<Void> submitOqrsRequest(WavelogSettings.Api api, String callsign, String email,
+                                        String message, String qslroute,
+                                        List<StatsPayload.OqrsQso> qsos) {
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("callsign", StringUtils.trimToEmpty(callsign));
+        form.add("email", StringUtils.trimToEmpty(email));
+        form.add("message", StringUtils.trimToEmpty(message));
+        form.add("qslroute", StringUtils.defaultIfBlank(qslroute, "B"));
+        for (int i = 0; i < qsos.size(); i++) {
+            StatsPayload.OqrsQso qso = qsos.get(i);
+            form.add("qsos[" + i + "][0]", StringUtils.trimToEmpty(qso.date()));
+            form.add("qsos[" + i + "][1]", StringUtils.trimToEmpty(qso.time()));
+            form.add("qsos[" + i + "][2]", StringUtils.trimToEmpty(qso.band()));
+            form.add("qsos[" + i + "][3]", StringUtils.trimToEmpty(qso.mode()));
+            form.add("qsos[" + i + "][4]", String.valueOf(qso.stationId()));
+        }
+        return webClient(api).post()
+            .uri(uri -> uri.path(OQRS_SAVE_PATH).build())
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters.fromFormData(form))
+            .retrieve()
+            .bodyToMono(Void.class);
     }
 
     private static JsonNode parseJson(String body) {

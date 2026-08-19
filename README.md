@@ -1,9 +1,10 @@
 # 通联统计（QsoStats）
 
-一个 Halo 2.x 插件：通过 [Wavelog](https://www.wavelog.org) 日志平台的 API v2，在个人网站上展示通联信息统计（QSO 总数、DXCC 字头、波段/模式分布、最近通联、活跃度等）。
+一个 Halo 2.x 插件：通过 [Wavelog](https://www.wavelog.org) 日志平台的 API v2，在个人网站上展示通联信息统计（QSO 总数、DXCC 字头、波段/模式分布、最近通联、活跃度等），并支持**按呼号查询通联记录**与**一键 OQRS 卡片申请**。
 
 - **统计项目可后台修改**：增删、启停、排序、重命名，每个项目的展示条数可单独设置；
 - **API 可后台配置**：Wavelog 站点地址与 API Token 均在插件设置页配置，无需改代码；
+- **呼号查询 + 一键 OQRS**：输入呼号即可检索通联（仅展示日期 / 模式 / 频段），一键提交 QSL 卡片申请（需填写邮箱）；OQRS 由插件后端转发到 Wavelog，无需暴露 Token；
 - **展示沿用主题风格**：组件以 CSS 变量驱动、继承主题字体颜色；独立页面复用主题布局（Halo ≥ 2.26），也可直接嵌入任意主题页面。
 
 ## 功能一览
@@ -16,6 +17,8 @@
 | 波段分布 | 条形分布 | 各波段通联占比（可设条数） |
 | 模式分布 | 条形分布 | 各模式通联占比（可设条数） |
 | 最近通联 | 列表 | 最近 N 条通联（呼号 / 波段 / 模式 / 时间） |
+| 呼号查询 | 搜索框 | 按呼号检索通联，展示日期 / 模式 / 频段 |
+| 一键 OQRS | 按钮 | 对查询结果一键提交 QSL 卡片申请（邮箱必填） |
 
 ## 安装
 
@@ -58,7 +61,16 @@
 - 列表可增删、拖拽排序、启停；
 - 每项可改「显示标题」；波段/模式/最近通联可设「显示条数」。
 
-**③ 展示设置**
+**③ 呼号查询与 OQRS**
+- **启用呼号查询与 OQRS**：是否在组件中显示呼号查询框（默认开启）；
+- **查询结果上限**：呼号查询最多返回并展示的条数（默认 50，按时间倒序）。
+
+> 呼号查询通过 API v2 的 `GET /api/v2/qso?callsign=...` 实现（需 `qso:read` 权限）；
+> 一键 OQRS 由插件后端转发到 Wavelog 的公开申请端点 `oqrs/save_oqrs_request_grouped`，
+> 不需要访问者持有任何 Token。前提是 Wavelog 站点已为对应电台位置**开启 OQRS**
+> （Wavelog「站点设置」中为电台位置启用 OQRS，并设置公开 slug）。
+
+**④ 展示设置**
 - 是否显示区块标题、标题文字、是否显示更新时间、加载失败提示文案。
 
 ## 前端接入
@@ -83,6 +95,8 @@
 | 属性 | 说明 |
 | --- | --- |
 | `data-endpoint` | 覆盖数据接口地址（默认 `/qso-stats/api/statistics`） |
+| `data-search-endpoint` | 覆盖呼号查询接口（默认 `/qso-stats/api/search`） |
+| `data-oqrs-endpoint` | 覆盖 OQRS 申请接口（默认 `/qso-stats/api/oqrs`） |
 | `data-refresh` | 自动刷新间隔（秒，≥ 30 生效，默认关闭） |
 
 ### 方式 B：独立统计页面
@@ -100,12 +114,16 @@
 
 ```css
 .qso-stats-widget {
-  --qso-stats-accent: #2563eb;          /* 强调色（数值、进度条） */
+  --qso-stats-accent: #2563eb;          /* 强调色（数值、进度条、按钮） */
+  --qso-stats-accent-2: #7c3aed;        /* 强调色渐变终点 */
   --qso-stats-card-bg: rgba(127,127,127,.06);   /* 卡片背景 */
   --qso-stats-card-border: rgba(127,127,127,.16); /* 卡片边框 */
-  --qso-stats-radius: 10px;             /* 圆角 */
+  --qso-stats-card-shadow: 0 1px 2px rgba(16,24,40,.05), 0 4px 16px rgba(16,24,40,.04);
+  --qso-stats-radius: 14px;             /* 圆角 */
   --qso-stats-muted: rgba(127,127,127,.85);      /* 次要文字 */
-  --qso-stats-track: rgba(127,127,127,.16);      /* 进度条轨道 */
+  --qso-stats-track: rgba(127,127,127,.16);      /* 进度条轨道 / 悬停背景 */
+  --qso-stats-danger: #dc2626;          /* 错误提示色 */
+  --qso-stats-success: #16a34a;         /* 成功提示色 */
 }
 ```
 
@@ -115,10 +133,16 @@
 插件设置中填写 Wavelog 站点地址和 `wl2_` Token 后保存即可。
 
 **Q：接口返回 401 / 403**
-Token 无效、过期或缺少权限。请确认 Token 以 `wl2_` 开头、未过期，且勾选了 `statistic:read`（最近通联需要 `qso:read`）。
+Token 无效、过期或缺少权限。请确认 Token 以 `wl2_` 开头、未过期，且勾选了 `statistic:read`（最近通联、呼号查询需要 `qso:read`）。
 
 **Q：修改设置后数据没变化**
 统计接口结果有缓存（默认 300 秒），可在设置中调低「缓存时间」。
+
+**Q：呼号查询提示「Wavelog 接口错误」**
+请确认 Token 已勾选 `qso:read` 权限；Wavelog 要求 Wavelog ≥ 3.1.0 才提供 API v2 的 QSO 查询。
+
+**Q：一键 OQRS 提交失败**
+请确认 Wavelog 站点已为该电台位置开启 OQRS，且站点开启了公开 slug；另外，如果 Wavelog 管理员开启了 CSRF 防护，公开申请端点会拒绝插件转发的请求（Wavelog 默认关闭 CSRF）。
 
 **Q：/qso-stats 页面没有主题页头页脚**
 Halo < 2.26 时布局契约不可用，会使用自带外壳；升级 Halo 或改用「方式 A」嵌入。

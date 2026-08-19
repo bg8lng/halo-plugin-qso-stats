@@ -33,14 +33,15 @@
 
     <!-- 亮色主题下的组件 -->
     <div class="qso-stats-widget" data-qso-stats-widget
-         data-endpoint="mock-stats.json" data-refresh="0"></div>
+         data-endpoint="mock-stats.json" data-search-endpoint="mock-search.json"
+         data-refresh="0"></div>
   </div>
 
   <div class="dark-theme-box">
     <h2>暗色主题覆盖示例（--qso-stats-* 变量）</h2>
     <!-- 暗色主题下的组件：外层容器定义覆盖变量 -->
     <div class="qso-stats-widget dark-theme" data-qso-stats-widget
-         data-endpoint="mock-stats.json"></div>
+         data-endpoint="mock-stats.json" data-search-endpoint="mock-search.json"></div>
   </div>
 
   <script src="../src/main/resources/static/qso-stats.js"></script>

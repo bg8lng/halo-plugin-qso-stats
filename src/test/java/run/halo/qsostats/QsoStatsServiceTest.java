@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ class QsoStatsServiceTest {
         });
         server.createContext("/index.php/api/v2/qso", exchange -> {
             byte[] body = """
-                {"data":[{"id":4886,"call":"N9EAT","band":"20m","mode":"SSB",
+                {"data":[{"id":4886,"station_id":1,"call":"N9EAT","band":"20m","mode":"SSB",
                   "qso_date":"2026-06-16 17:06:00","gridsquare":"EN42"}],"meta":{}}
                 """.getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().set("Content-Type", "application/json");
@@ -79,6 +80,8 @@ class QsoStatsServiceTest {
             ))));
         when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
             .thenReturn(Mono.just(new WavelogSettings.Display(true, "我的通联统计", true, "暂不可用")));
+        when(fetcher.fetch(eq("search"), eq(WavelogSettings.Search.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Search(true, 50)));
         return fetcher;
     }
 
@@ -145,6 +148,8 @@ class QsoStatsServiceTest {
                 new WavelogSettings.Item("total_qsos", "通联总数", true, null)))));
         when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
             .thenReturn(Mono.empty());
+        when(fetcher.fetch(eq("search"), eq(WavelogSettings.Search.class)))
+            .thenReturn(Mono.empty());
 
         QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
         StatsPayload.Payload payload = service.buildPayload().block();
@@ -166,5 +171,107 @@ class QsoStatsServiceTest {
         // 设置读取失败 → 视为未配置，返回友好错误而非 500
         assertNotNull(payload);
         assertTrue(payload.error().contains("未配置"));
+    }
+
+    // ---------- 呼号查询与 OQRS ----------
+
+    @Test
+    void searchQsosByCallsignReturnsRows() {
+        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
+        StatsPayload.SearchPayload payload = service.searchQsos("n9eat").block();
+
+        assertNotNull(payload);
+        assertEquals(null, payload.error());
+        assertEquals("N9EAT", payload.callsign());
+        assertEquals(1, payload.qsos().size());
+
+        StatsPayload.QsoRow row = payload.qsos().get(0);
+        assertEquals("2026-06-16", row.date());
+        assertEquals("17:06", row.time());
+        assertEquals("20m", row.band());
+        assertEquals("SSB", row.mode());
+        assertEquals(1L, row.stationId());
+    }
+
+    @Test
+    void blankCallsignReturnsFriendlyError() {
+        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
+        StatsPayload.SearchPayload payload = service.searchQsos("   ").block();
+
+        assertNotNull(payload);
+        assertNotNull(payload.error());
+        assertTrue(payload.error().contains("呼号"));
+        assertTrue(payload.qsos().isEmpty());
+    }
+
+    @Test
+    void unconfiguredApiSearchReturnsFriendlyError() {
+        ReactiveSettingFetcher fetcher = mock(ReactiveSettingFetcher.class);
+        when(fetcher.fetch(eq("api"), eq(WavelogSettings.Api.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Api("", "", null, null, null)));
+        when(fetcher.fetch(any(), any())).thenReturn(Mono.empty());
+
+        QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
+        StatsPayload.SearchPayload payload = service.searchQsos("BG8LNG").block();
+
+        assertNotNull(payload);
+        assertNotNull(payload.error());
+        assertTrue(payload.error().contains("未配置"));
+    }
+
+    @Test
+    void submitsOqrsRequestEndToEnd() throws Exception {
+        AtomicReference<String> capturedBody = new AtomicReference<>();
+        server.createContext("/index.php/oqrs/save_oqrs_request_grouped", exchange -> {
+            String body = new String(exchange.getRequestBody().readAllBytes(),
+                StandardCharsets.UTF_8);
+            capturedBody.set(body);
+            exchange.sendResponseHeaders(200, 0);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(new byte[0]);
+            }
+        });
+
+        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
+        StatsPayload.OqrsResult result = service.submitOqrs(new StatsPayload.OqrsSubmitRequest(
+            "bg8lng", "me@example.com", "你好，申请卡片", "B",
+            List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1)))).block();
+
+        assertNotNull(result);
+        assertTrue(result.success());
+
+        String body = capturedBody.get();
+        assertNotNull(body);
+        assertTrue(body.contains("callsign=BG8LNG"), body);
+        assertTrue(body.contains("email=me%40example.com"), body);
+        assertTrue(body.contains("qslroute=B"), body);
+        assertTrue(body.contains("qsos%5B0%5D%5B0%5D=2026-06-16"), body);
+        assertTrue(body.contains("qsos%5B0%5D%5B1%5D=17%3A06"), body);
+        assertTrue(body.contains("qsos%5B0%5D%5B2%5D=20m"), body);
+        assertTrue(body.contains("qsos%5B0%5D%5B3%5D=SSB"), body);
+        assertTrue(body.contains("qsos%5B0%5D%5B4%5D=1"), body);
+    }
+
+    @Test
+    void oqrsWithoutEmailReturnsError() {
+        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
+        StatsPayload.OqrsResult result = service.submitOqrs(new StatsPayload.OqrsSubmitRequest(
+            "BG8LNG", "  ", "", "B",
+            List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1)))).block();
+
+        assertNotNull(result);
+        assertTrue(!result.success());
+        assertTrue(result.message().contains("邮箱"));
+    }
+
+    @Test
+    void oqrsWithoutQsosReturnsError() {
+        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
+        StatsPayload.OqrsResult result = service.submitOqrs(new StatsPayload.OqrsSubmitRequest(
+            "BG8LNG", "me@example.com", "", "B", List.of())).block();
+
+        assertNotNull(result);
+        assertTrue(!result.success());
+        assertTrue(result.message().contains("通联"));
     }
 }

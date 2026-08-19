@@ -72,6 +72,20 @@ class WavelogSettingsTest {
     }
 
     @Test
+    void searchGroupBinding() throws Exception {
+        WavelogSettings.Search search = mapper.convertValue(
+            mapper.readTree("{\"enabled\":false,\"maxResults\":20}"),
+            WavelogSettings.Search.class);
+        assertFalse(search.enabledOrDefault());
+        assertEquals(20, search.maxResultsOrDefault());
+
+        WavelogSettings.Search defaults = mapper.convertValue(
+            mapper.readTree("{}"), WavelogSettings.Search.class);
+        assertTrue(defaults.enabledOrDefault());
+        assertEquals(50, defaults.maxResultsOrDefault());
+    }
+
+    @Test
     void disabledFlagDefaultsToEnabled() throws Exception {
         WavelogSettings.Item item =
             mapper.convertValue(mapper.readTree("{\"key\":\"dxcc\"}"),

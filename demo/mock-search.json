@@ -1,0 +1,11 @@
+{
+  "callsign": "BG8LNG",
+  "qsos": [
+    { "date": "2026-08-10", "time": "09:42", "band": "20m", "mode": "FT8", "stationId": 1 },
+    { "date": "2026-08-02", "time": "14:15", "band": "40m", "mode": "SSB", "stationId": 1 },
+    { "date": "2026-07-28", "time": "03:08", "band": "15m", "mode": "CW", "stationId": 1 },
+    { "date": "2026-07-19", "time": "11:33", "band": "10m", "mode": "FT8", "stationId": 1 },
+    { "date": "2026-06-30", "time": "22:51", "band": "SAT", "mode": "FM", "stationId": 2 }
+  ],
+  "error": null
+}

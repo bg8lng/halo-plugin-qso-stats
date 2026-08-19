@@ -174,4 +174,43 @@ class PayloadBuilderTest {
         assertEquals("", PayloadBuilder.formatDateTime(""));
         assertEquals("", PayloadBuilder.formatDateTime(null));
     }
+
+    @Test
+    void buildsSearchResultRows() throws Exception {
+        String json = """
+            {"data":[
+              {"id":4886,"station_id":1,"call":"N9EAT","band":"20m","mode":"SSB",
+               "qso_date":"2026-06-16 17:06:00","gridsquare":"EN42"},
+              {"id":4885,"station_id":2,"call":"N9EAT","band":"SAT","mode":"FM",
+               "qso_date":"2026-06-16T12:04:00Z","gridsquare":""}
+            ],"meta":{"total":2}}
+            """;
+        StatsPayload.SearchPayload result =
+            PayloadBuilder.buildSearchResult("N9EAT", MAPPER.readTree(json));
+
+        assertEquals(null, result.error());
+        assertEquals("N9EAT", result.callsign());
+        assertEquals(2, result.qsos().size());
+
+        StatsPayload.QsoRow first = result.qsos().get(0);
+        assertEquals("2026-06-16", first.date());
+        assertEquals("17:06", first.time());
+        assertEquals("20m", first.band());
+        assertEquals("SSB", first.mode());
+        assertEquals(1L, first.stationId());
+
+        StatsPayload.QsoRow second = result.qsos().get(1);
+        assertEquals("2026-06-16", second.date());
+        assertEquals("12:04", second.time());
+        assertEquals("SAT", second.band());
+        assertEquals("FM", second.mode());
+        assertEquals(2L, second.stationId());
+    }
+
+    @Test
+    void nullSearchNodeYieldsEmptyRows() {
+        StatsPayload.SearchPayload result = PayloadBuilder.buildSearchResult("BG8LNG", null);
+        assertEquals("BG8LNG", result.callsign());
+        assertTrue(result.qsos().isEmpty());
+    }
 }

@@ -56,6 +56,19 @@ public final class WavelogSettings {
         }
     }
 
+    /** search 分组：呼号查询与 OQRS */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Search(Boolean enabled, Integer maxResults) {
+
+        public boolean enabledOrDefault() {
+            return enabled == null || enabled;
+        }
+
+        public int maxResultsOrDefault() {
+            return maxResults != null && maxResults > 0 ? maxResults : 50;
+        }
+    }
+
     /** display 分组：展示设置 */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Display(Boolean showSectionTitle, String sectionTitle,

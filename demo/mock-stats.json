@@ -1,9 +1,10 @@
-/* 预览用的模拟统计载荷（与 Wavelog statistic API 结构一致） */
 {
   "sectionTitle": "通联统计",
   "showSectionTitle": true,
   "showUpdatedAt": true,
   "fallbackText": "统计数据暂不可用，请稍后再试",
+  "searchEnabled": true,
+  "searchMaxResults": 50,
   "updatedAt": "2026-08-19T10:30:00Z",
   "sections": [
     { "key": "total_qsos", "title": "通联总数", "type": "number", "value": { "value": 1234 } },

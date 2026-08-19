@@ -1,6 +1,7 @@
 package run.halo.qsostats;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 import java.util.Map;
@@ -11,12 +12,15 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import run.halo.app.infra.utils.JsonUtils;
 import run.halo.app.theme.TemplateNameResolver;
 
 /**
  * 前台路由：
  * <ul>
  *   <li>GET /qso-stats/api/statistics —— 展示组件的数据接口（公开，无需认证）</li>
+ *   <li>GET /qso-stats/api/search —— 按呼号查询通联（公开）</li>
+ *   <li>POST /qso-stats/api/oqrs —— 提交 OQRS 卡片申请（公开）</li>
  *   <li>GET /qso-stats —— 独立统计页面</li>
  * </ul>
  *
@@ -43,6 +47,8 @@ public class QsoStatsRouter {
     @Bean
     RouterFunction<ServerResponse> qsoStatsRouterFunction() {
         return route(GET("/qso-stats/api/statistics"), this::statistics)
+            .andRoute(GET("/qso-stats/api/search"), this::search)
+            .andRoute(POST("/qso-stats/api/oqrs"), this::oqrs)
             .andRoute(GET("/qso-stats"), this::page);
     }
 
@@ -51,6 +57,38 @@ public class QsoStatsRouter {
             .flatMap(payload -> ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(payload));
+    }
+
+    private Mono<ServerResponse> search(ServerRequest request) {
+        String callsign = request.queryParam("callsign").orElse("");
+        return qsoStatsService.searchQsos(callsign)
+            .flatMap(payload -> ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(payload));
+    }
+
+    private Mono<ServerResponse> oqrs(ServerRequest request) {
+        // 与 WavelogClient 一致：以字符串接收并手动解析，兼容 Halo 2.26 的 Jackson 3 核心
+        return request.bodyToMono(String.class)
+            .map(body -> parseOqrsRequest(body))
+            .defaultIfEmpty(null)
+            .flatMap(req -> {
+                if (req == null) {
+                    return Mono.just(StatsPayload.oqrsResult(false, "请求参数解析失败，请稍后再试"));
+                }
+                return qsoStatsService.submitOqrs(req);
+            })
+            .flatMap(result -> ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(result));
+    }
+
+    private StatsPayload.OqrsSubmitRequest parseOqrsRequest(String body) {
+        try {
+            return JsonUtils.mapper().readValue(body, StatsPayload.OqrsSubmitRequest.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private Mono<ServerResponse> page(ServerRequest request) {

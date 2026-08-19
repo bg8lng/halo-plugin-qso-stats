@@ -103,6 +103,22 @@ spec:
               if: "$value.key === 'bands' || $value.key === 'modes' || $value.key === 'recent'"
               help: "仅对波段分布、模式分布、最近通联生效。"
 
+    - group: search
+      label: 呼号查询与 OQRS
+      formSchema:
+        - $formkit: switch
+          name: enabled
+          label: 启用呼号查询与 OQRS
+          value: true
+          help: "在统计组件中显示呼号查询框，可按呼号检索通联记录并一键提交 OQRS 卡片申请。需要 Wavelog 站点已启用 OQRS（站点设置中为电台位置开启 OQRS），且 API Token 具备 qso:read 权限。"
+        - $formkit: number
+          name: maxResults
+          label: 查询结果上限
+          value: 50
+          min: 5
+          max: 200
+          help: "呼号查询最多返回并展示的通联条数（按时间倒序）。"
+
     - group: display
       label: 展示设置
       formSchema:
