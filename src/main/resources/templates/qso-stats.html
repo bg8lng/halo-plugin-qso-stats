@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{layout :: html(head = ~{::head}, content = ~{::content})}">
   <th:block th:fragment="head">
+    <!-- 组件静态资源由 QsoStatsHeadProcessor 统一注入（带版本号，避免 CDN 缓存旧版），此处不再重复引入 -->
     <title th:text="${title}">通联统计</title>
-    <link rel="stylesheet" th:href="@{/plugins/QsoStats/assets/static/qso-stats.css}" />
-    <script th:src="@{/plugins/QsoStats/assets/static/qso-stats.js}" defer></script>
   </th:block>
   <th:block th:fragment="content">
     <div class="qso-stats-page">
