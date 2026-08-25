@@ -102,8 +102,49 @@ public final class StatsPayload {
         return new SearchPayload(null, List.of(), message);
     }
 
+
+    public static DashboardPayload dashboard(Statistics statistics, List<RecentRow> recent,
+                                             String updatedAt, DisplayConfig display,
+                                             List<PanelConfig> layout) {
+        return new DashboardPayload(statistics, recent, updatedAt, null,
+            display.fallbackText(), display.searchEnabled(), display.searchMaxResults(), layout);
+    }
+
+    public static DashboardPayload dashboardError(String message, DisplayConfig display) {
+        return new DashboardPayload(null, List.of(), null, message,
+            display.fallbackText(), display.searchEnabled(), display.searchMaxResults(), List.of());
+    }
+
     public static OqrsResult oqrsResult(boolean success, String message) {
         return new OqrsResult(success, message);
+    }
+
+
+    /** 图表统计点（label + count） */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CountPoint(String label, long count) {
+    }
+
+    /** 仪表盘统计块：KPI + 日/月/历年/波段/模式 图表数据 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Statistics(int year, long total, long today, long month, long yearQso,
+                             long dxccWorked, long dxccConfirmed, long dxccAvailable,
+                             List<CountPoint> byDay, List<CountPoint> byMonth,
+                             List<CountPoint> byYear, List<CountPoint> byBand,
+                             List<CountPoint> byMode) {
+    }
+
+    /** 布局面板配置（key + 显隐 + 占位宽度），供前端按序渲染 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record PanelConfig(String key, boolean enabled, int span) {
+    }
+
+    /** /qso-stats/api/dashboard 的完整载荷（原生统计页面使用） */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record DashboardPayload(Statistics statistics, List<RecentRow> recent,
+                                   String updatedAt, String error, String fallbackText,
+                                   boolean searchEnabled, int searchMaxResults,
+                                   List<PanelConfig> layout) {
     }
 
     /** 展示设置的只读快照，避免在载荷构造中反复读取 */

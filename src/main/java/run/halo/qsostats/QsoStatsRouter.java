@@ -47,6 +47,7 @@ public class QsoStatsRouter {
     @Bean
     RouterFunction<ServerResponse> qsoStatsRouterFunction() {
         return route(GET("/qso-stats/api/statistics"), this::statistics)
+            .andRoute(GET("/qso-stats/api/dashboard"), this::dashboard)
             .andRoute(GET("/qso-stats/api/search"), this::search)
             .andRoute(POST("/qso-stats/api/oqrs"), this::oqrs)
             .andRoute(GET("/qso-stats"), this::page);
@@ -54,6 +55,13 @@ public class QsoStatsRouter {
 
     private Mono<ServerResponse> statistics(ServerRequest request) {
         return qsoStatsService.buildPayload()
+            .flatMap(payload -> ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(payload));
+    }
+
+    private Mono<ServerResponse> dashboard(ServerRequest request) {
+        return qsoStatsService.buildDashboard()
             .flatMap(payload -> ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(payload));

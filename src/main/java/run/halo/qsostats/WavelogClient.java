@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
@@ -31,6 +32,33 @@ public class WavelogClient {
 
     private static final String STATISTIC_PATH = "/api/v2/statistic";
     private static final String QSO_PATH = "/api/v2/qso";
+
+
+    /**
+     * 分页拉取 QSO 列表（newest first）。
+     *
+     * <p>支持 qso_since / qso_until 日期过滤（含当天，闭区间）；响应 meta 携带
+     * has_more 供调用方翻页，直至拉取全部数据。
+     */
+    public Mono<JsonNode> fetchQsosPage(WavelogSettings.Api api, int page, int perPage,
+                                        String since, String until) {
+        return webClient(api).get()
+            .uri(uri -> {
+                UriBuilder b = uri.path(QSO_PATH)
+                    .queryParam("page", page)
+                    .queryParam("per_page", perPage);
+                if (StringUtils.isNotBlank(since)) {
+                    b = b.queryParam("qso_since", since);
+                }
+                if (StringUtils.isNotBlank(until)) {
+                    b = b.queryParam("qso_until", until);
+                }
+                return b.build();
+            })
+            .retrieve()
+            .bodyToMono(String.class)
+            .map(WavelogClient::parseJson);
+    }
 
     /** OQRS 公开申请端点（非 API v2；Wavelog 默认关闭 CSRF，可直接 POST 表单） */
     private static final String OQRS_SAVE_PATH = "/oqrs/save_oqrs_request_grouped";
@@ -112,6 +140,11 @@ public class WavelogClient {
             .baseUrl(normalizeBase(api.baseUrlOrDefault()))
             .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + api.apiTokenOrDefault())
             .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+            // 拉取全部 QSO 的响应可能达到数 MB（如 5000 条/页），放宽内存缓冲上限，
+            // 避免超出 WebFlux 默认 256KB 导致 DataBufferLimitException
+            .exchangeStrategies(ExchangeStrategies.builder()
+                .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
+                .build())
             // 通过 filter 统一设置请求/响应超时，避免依赖底层连接器实现
             .filter((request, next) -> next.exchange(request)
                 .timeout(Duration.ofSeconds(api.timeoutSecondsOrDefault())))

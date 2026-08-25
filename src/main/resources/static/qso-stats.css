@@ -1,26 +1,28 @@
 /* ============================================================
    通联统计组件样式（QsoStats plugin）
-   设计原则：现代卡片式排版 —— 柔和阴影、渐变强调、圆角与留白，
-   跟随主题风格：继承页面字体与颜色，所有颜色走 CSS 变量且带中性兜底值；
-   主题可通过覆盖同名变量定制：
-     .qso-stats-widget {
-       --qso-stats-accent: #your-color;
-       --qso-stats-card-bg: ...;
-       ...
-     }
+   ------------------------------------------------------------------
+   设计语言：国内主流大厂风格（Ant Design / 字节 / 阿里系）
+   - 干净的白底卡片 + 细腻描边 + 柔和投影，圆角 12px
+   - 主色为 Ant 蓝（#1677ff），数值采用渐变大字、tabular-nums
+   - 通联总数 / 活跃度 / DXCC 字头等核心指标做大字放大呈现
+   - 全部走 CSS 变量且带中性兜底值，可适配任意主题
+     主题可覆盖以下变量定制：
+       .qso-stats-widget { --qso-stats-accent: #your-color; ... }
    ============================================================ */
 
 .qso-stats-widget {
-  --qso-stats-accent: #2563eb;
-  --qso-stats-accent-2: #7c3aed;
+  --qso-stats-accent: #1677ff;
+  --qso-stats-accent-2: #4096ff;
+  --qso-stats-accent-soft: rgba(22, 119, 255, 0.12);
   --qso-stats-card-bg: rgba(127, 127, 127, 0.055);
   --qso-stats-card-border: rgba(127, 127, 127, 0.16);
-  --qso-stats-card-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 4px 16px rgba(16, 24, 40, 0.04);
-  --qso-stats-radius: 14px;
+  --qso-stats-card-shadow: 0 1px 2px rgba(9, 30, 66, 0.04),
+                          0 4px 16px rgba(9, 30, 66, 0.06);
+  --qso-stats-radius: 12px;
   --qso-stats-text: inherit;
   --qso-stats-muted: rgba(127, 127, 127, 0.85);
   --qso-stats-track: rgba(127, 127, 127, 0.14);
-  --qso-stats-danger: #dc2626;
+  --qso-stats-danger: #f5222d;
   --qso-stats-success: #16a34a;
   --qso-stats-gap: 1rem;
 
@@ -29,116 +31,156 @@
   line-height: 1.6;
 }
 
+/* 容器网格：自适应卡片 */
 .qso-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: var(--qso-stats-gap);
+  align-items: stretch;
 }
 
+/* 区块标题（仅嵌入场景显示，独立页面由主题接管标题） */
 .qso-stats__header {
   grid-column: 1 / -1;
-  font-size: 1.25em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05em;
   font-weight: 700;
   letter-spacing: 0.01em;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.15rem;
+  color: var(--qso-stats-text);
 }
 
-/* 卡片：柔和渐变背景 + 阴影 + 悬浮效果 */
+.qso-stats__header::before {
+  content: "";
+  width: 4px;
+  height: 1em;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
+  flex: none;
+}
+
+/* 卡片：白底 + 描边 + 柔和投影 + 悬浮 */
 .qso-stats__card {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 1.15rem 1.25rem 1.25rem;
+  gap: 0.45rem;
+  padding: 1.05rem 1.15rem 1.2rem;
   background: var(--qso-stats-card-bg);
   border: 1px solid var(--qso-stats-card-border);
   border-radius: var(--qso-stats-radius);
   box-shadow: var(--qso-stats-card-shadow);
   min-width: 0;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease,
+              border-color 0.18s ease;
 }
 
 @media (hover: hover) {
   .qso-stats__card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.06), 0 10px 24px rgba(16, 24, 40, 0.08);
+    box-shadow: 0 2px 6px rgba(9, 30, 66, 0.06),
+                0 10px 28px rgba(9, 30, 66, 0.10);
     border-color: var(--qso-stats-accent);
+    border-color: color-mix(in srgb, var(--qso-stats-accent) 45%, var(--qso-stats-card-border));
   }
 }
 
+/* 关键指标卡片（通联总数 / 活跃度 / DXCC）：微强调背景突出核心数据 */
+.qso-stats__card--key {
+  background: linear-gradient(180deg, var(--qso-stats-accent-soft), var(--qso-stats-card-bg));
+  border-color: var(--qso-stats-accent);
+  border-color: color-mix(in srgb, var(--qso-stats-accent) 26%, var(--qso-stats-card-border));
+}
+
+/* 卡片标题：小号、灰阶、大写字距，突出下方数字 */
 .qso-stats__card-title {
-  font-size: 0.82em;
+  font-size: 0.78em;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  opacity: 0.6;
+  color: var(--qso-stats-muted);
   margin: 0;
 }
 
 .qso-stats__card-body {
   min-width: 0;
+  flex: 1;
 }
 
-/* 大数字卡片 */
+/* ---------- 大数字卡片（通联总数）----------- */
 .qso-stats__number {
-  font-size: 2.2rem;
+  display: block;
+  font-size: clamp(2.5rem, 9vw, 3.4rem);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
-  background: linear-gradient(135deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
+  background: linear-gradient(120deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: var(--qso-stats-accent);
 }
 
-/* 活跃度 / DXCC：多个小指标并排 */
+/* ---------- 活跃度 / DXCC：多指标并排（大数放大） ---------- */
 .qso-stats__metrics {
-  display: flex;
-  gap: 1.4rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 0.9rem 1rem;
+  align-items: end;
 }
 
 .qso-stats__metric {
   display: flex;
   flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
 }
 
 .qso-stats__metric-value {
-  font-size: 1.3rem;
-  font-weight: 750;
-  color: var(--qso-stats-accent);
+  font-size: clamp(1.8rem, 7vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
+  background: linear-gradient(120deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--qso-stats-accent);
 }
 
 .qso-stats__metric-label {
-  font-size: 0.76em;
-  opacity: 0.65;
+  font-size: 0.78em;
+  color: var(--qso-stats-muted);
 }
 
-/* 分布条形图 */
+/* ---------- 分布条形图 ---------- */
 .qso-stats__rows {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.6rem;
 }
 
 .qso-stats__row {
   display: grid;
-  grid-template-columns: minmax(3.5em, auto) 1fr auto;
+  grid-template-columns: minmax(3.2em, auto) 1fr auto;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.88em;
+  gap: 0.65rem;
+  font-size: 0.9em;
 }
 
 .qso-stats__row-label {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--qso-stats-text);
 }
 
 .qso-stats__row-bar {
-  height: 7px;
-  border-radius: 4px;
+  height: 8px;
+  border-radius: 999px;
   background: var(--qso-stats-track);
   overflow: hidden;
 }
@@ -146,18 +188,18 @@
 .qso-stats__row-bar-fill {
   display: block;
   height: 100%;
-  border-radius: 4px;
+  border-radius: 999px;
   background: linear-gradient(90deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
   transition: width 0.5s ease;
 }
 
 .qso-stats__row-count {
   font-variant-numeric: tabular-nums;
-  opacity: 0.85;
+  color: var(--qso-stats-muted);
   white-space: nowrap;
 }
 
-/* 最近通联 */
+/* ---------- 最近通联 ---------- */
 .qso-stats__recent {
   display: flex;
   flex-direction: column;
@@ -170,20 +212,20 @@
   align-items: center;
   gap: 0.5rem;
   min-width: 0;
-  padding: 0.35rem 0.45rem;
-  margin: 0 -0.45rem;
+  padding: 0.4rem 0.5rem;
+  margin: 0 -0.5rem;
   border-radius: 8px;
   transition: background 0.15s ease;
 }
 
 @media (hover: hover) {
   .qso-stats__recent-row:hover {
-    background: var(--qso-stats-track);
+    background: var(--qso-stats-accent-soft);
   }
 }
 
 .qso-stats__recent-call {
-  font-weight: 650;
+  font-weight: 700;
   color: var(--qso-stats-accent);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -199,44 +241,43 @@
 
 .qso-stats__recent-time {
   margin-left: auto;
-  opacity: 0.6;
+  color: var(--qso-stats-muted);
   font-size: 0.85em;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
-/* 模式 / 频段徽标 */
+/* ---------- 模式 / 频段徽标 ---------- */
 .qso-stats__badge {
   display: inline-block;
-  padding: 0.1em 0.55em;
+  padding: 0.12em 0.6em;
   border-radius: 999px;
-  font-size: 0.78em;
+  font-size: 0.76em;
   font-weight: 600;
-  line-height: 1.6;
+  line-height: 1.5;
   white-space: nowrap;
 }
 
 .qso-stats__badge-mode {
   color: var(--qso-stats-accent);
-  background: rgba(127, 127, 127, 0.12);
-  background: color-mix(in srgb, var(--qso-stats-accent) 14%, transparent);
+  background: var(--qso-stats-accent-soft);
 }
 
 .qso-stats__badge-band {
   color: var(--qso-stats-accent-2);
-  background: rgba(127, 127, 127, 0.1);
-  border: 1px solid var(--qso-stats-card-border);
+  background: rgba(22, 119, 255, 0.08);
+  border: 1px solid rgba(22, 119, 255, 0.18);
 }
 
-/* ---------------- 呼号查询与一键 OQRS ---------------- */
+/* ================= 呼号查询与一键 OQRS ================= */
 
 .qso-stats__search {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  padding: 1.15rem 1.25rem 1.25rem;
-  background: linear-gradient(180deg, var(--qso-stats-card-bg), transparent);
+  gap: 0.85rem;
+  padding: 1.05rem 1.15rem 1.2rem;
+  background: var(--qso-stats-card-bg);
   border: 1px solid var(--qso-stats-card-border);
   border-radius: var(--qso-stats-radius);
   box-shadow: var(--qso-stats-card-shadow);
@@ -251,20 +292,25 @@
 .qso-stats__search-input {
   flex: 1;
   min-width: 0;
-  padding: 0.55rem 0.9rem;
+  padding: 0.6rem 0.95rem;
   font: inherit;
   color: inherit;
-  background: var(--qso-stats-card-bg);
-  border: 1px solid var(--qso-stats-card-border);
+  background: var(--qso-stats-track);
+  border: 1px solid transparent;
   border-radius: 10px;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+              background 0.15s ease;
+}
+
+.qso-stats__search-input::placeholder {
+  color: var(--qso-stats-muted);
 }
 
 .qso-stats__search-input:focus {
+  background: var(--qso-stats-card-bg);
   border-color: var(--qso-stats-accent);
-  box-shadow: 0 0 0 3px rgba(127, 127, 127, 0.16);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qso-stats-accent) 18%, transparent);
+  box-shadow: 0 0 0 3px var(--qso-stats-accent-soft);
 }
 
 .qso-stats__search-btn,
@@ -276,16 +322,21 @@
   font: inherit;
   font-weight: 600;
   border-radius: 10px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+              opacity 0.12s ease;
   white-space: nowrap;
 }
 
 .qso-stats__search-btn {
-  padding: 0.55rem 1.4rem;
+  padding: 0.6rem 1.5rem;
   color: #fff;
   background: linear-gradient(135deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
-  box-shadow: 0 2px 8px rgba(127, 127, 127, 0.3);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--qso-stats-accent) 35%, transparent);
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.30);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--qso-stats-accent) 32%, transparent);
+}
+
+.qso-stats__search-btn:hover {
+  opacity: 0.92;
 }
 
 .qso-stats__search-btn:active,
@@ -296,35 +347,36 @@
 
 .qso-stats__search-hint {
   font-size: 0.82em;
-  opacity: 0.6;
+  color: var(--qso-stats-muted);
 }
 
 .qso-stats__search-body {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.65rem;
   min-width: 0;
 }
 
 .qso-stats__search-status {
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1rem;
   border-radius: 10px;
   font-size: 0.9em;
-  background: var(--qso-stats-card-bg);
+  background: var(--qso-stats-track);
   border: 1px dashed var(--qso-stats-card-border);
-  opacity: 0.85;
+  color: var(--qso-stats-muted);
 }
 
 .qso-stats__search-error {
   color: var(--qso-stats-danger);
   border-color: var(--qso-stats-danger);
-  opacity: 1;
+  background: rgba(245, 34, 45, 0.06);
 }
 
+/* 搜索结果表格 */
 .qso-stats__result {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.75rem;
   min-width: 0;
 }
 
@@ -339,7 +391,7 @@
 
 .qso-stats__result-table th,
 .qso-stats__result-table td {
-  padding: 0.5rem 0.85rem;
+  padding: 0.55rem 0.85rem;
   text-align: left;
 }
 
@@ -347,8 +399,8 @@
   font-size: 0.8em;
   font-weight: 600;
   letter-spacing: 0.04em;
-  opacity: 0.6;
-  background: var(--qso-stats-card-bg);
+  color: var(--qso-stats-muted);
+  background: var(--qso-stats-track);
   border-bottom: 1px solid var(--qso-stats-card-border);
 }
 
@@ -362,7 +414,7 @@
 
 @media (hover: hover) {
   .qso-stats__result-table tbody tr:hover {
-    background: var(--qso-stats-track);
+    background: var(--qso-stats-accent-soft);
   }
 }
 
@@ -381,22 +433,23 @@
 
 .qso-stats__result-count {
   font-size: 0.85em;
-  opacity: 0.7;
+  color: var(--qso-stats-muted);
 }
 
 .qso-stats__oqrs-btn {
-  padding: 0.5rem 1.3rem;
+  padding: 0.55rem 1.4rem;
   color: #fff;
   background: linear-gradient(135deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
-  box-shadow: 0 2px 8px rgba(127, 127, 127, 0.3);
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.30);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--qso-stats-accent) 32%, transparent);
 }
 
 /* OQRS 申请表单 */
 .qso-stats__oqrs-form {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.9rem 1rem;
+  gap: 0.65rem;
+  padding: 0.95rem 1.05rem;
   background: var(--qso-stats-card-bg);
   border: 1px solid var(--qso-stats-card-border);
   border-radius: 12px;
@@ -404,26 +457,31 @@
 }
 
 .qso-stats__oqrs-title {
-  margin: 0;
+  margin: 0 0 0.1rem;
   font-size: 0.9em;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .qso-stats__oqrs-input {
-  padding: 0.5rem 0.8rem;
+  padding: 0.55rem 0.8rem;
   font: inherit;
   color: inherit;
-  background: transparent;
-  border: 1px solid var(--qso-stats-card-border);
+  background: var(--qso-stats-track);
+  border: 1px solid transparent;
   border-radius: 9px;
   outline: none;
   min-width: 0;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+.qso-stats__oqrs-input::placeholder {
+  color: var(--qso-stats-muted);
+}
+
 .qso-stats__oqrs-input:focus {
+  background: var(--qso-stats-card-bg);
   border-color: var(--qso-stats-accent);
-  box-shadow: 0 0 0 3px rgba(127, 127, 127, 0.16);
+  box-shadow: 0 0 0 3px var(--qso-stats-accent-soft);
 }
 
 .qso-stats__oqrs-message {
@@ -440,7 +498,7 @@
 }
 
 .qso-stats__oqrs-route-label {
-  opacity: 0.7;
+  color: var(--qso-stats-muted);
 }
 
 .qso-stats__oqrs-route {
@@ -450,15 +508,21 @@
   cursor: pointer;
 }
 
+.qso-stats__oqrs-route input[type="radio"] {
+  accent-color: var(--qso-stats-accent);
+}
+
 .qso-stats__oqrs-actions {
   display: flex;
   gap: 0.5rem;
 }
 
 .qso-stats__oqrs-submit {
-  padding: 0.45rem 1.2rem;
+  padding: 0.5rem 1.25rem;
   color: #fff;
   background: linear-gradient(135deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.30);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--qso-stats-accent) 32%, transparent);
 }
 
 .qso-stats__oqrs-submit:disabled {
@@ -467,8 +531,8 @@
 }
 
 .qso-stats__oqrs-cancel {
-  padding: 0.45rem 1.1rem;
-  color: inherit;
+  padding: 0.5rem 1.15rem;
+  color: var(--qso-stats-text);
   background: var(--qso-stats-track);
 }
 
@@ -485,7 +549,7 @@
   color: var(--qso-stats-danger);
 }
 
-/* 状态区 */
+/* ---------- 状态区 ---------- */
 .qso-stats__error,
 .qso-stats__loading {
   grid-column: 1 / -1;
@@ -500,35 +564,38 @@
 .qso-stats__error-detail {
   margin-top: 0.4rem;
   font-size: 0.82em;
-  opacity: 0.65;
+  opacity: 0.7;
   word-break: break-all;
+  color: var(--qso-stats-danger);
 }
 
 .qso-stats__empty {
   font-size: 0.88em;
-  opacity: 0.6;
+  color: var(--qso-stats-muted);
 }
 
 .qso-stats__footer {
   grid-column: 1 / -1;
   font-size: 0.78em;
-  opacity: 0.6;
+  color: var(--qso-stats-muted);
   text-align: right;
 }
 
-/* 独立统计页面（/qso-stats） */
+/* ---------- 独立统计页面（/qso-stats） ---------- */
 .qso-stats-page {
-  max-width: 980px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 1.5rem 1.25rem 3rem;
 }
 
 .qso-stats-page__title {
   font-size: 1.6rem;
-  margin: 0 0 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0 0 1.15rem;
 }
 
-/* 小屏优化 */
+/* ---------- 小屏优化 ---------- */
 @media (max-width: 480px) {
   .qso-stats {
     grid-template-columns: 1fr;
@@ -546,5 +613,218 @@
   .qso-stats__result-foot {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+/* ============================================================
+   统计仪表盘（/qso-stats 独立统计页面）
+   - 单页展示：KPI 卡片 + 图表面板（ECharts）+ 分布列表
+   - 与上方卡片体系同风格：12px 圆角、柔和投影、Ant 蓝主色
+   ============================================================ */
+
+.qso-stats--dash {
+  display: block;
+}
+
+/* KPI 指标卡片行 */
+.qs-dash__kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--qso-stats-gap);
+  margin-bottom: var(--qso-stats-gap);
+}
+
+.qs-dash__kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+  background: var(--qso-stats-card-bg);
+  border: 1px solid var(--qso-stats-card-border);
+  border-radius: var(--qso-stats-radius);
+  box-shadow: var(--qso-stats-card-shadow);
+  min-width: 0;
+}
+
+.qs-dash__kpi--key {
+  background: linear-gradient(180deg, var(--qso-stats-accent-soft), var(--qso-stats-card-bg));
+  border-color: color-mix(in srgb, var(--qso-stats-accent) 30%, var(--qso-stats-card-border));
+}
+
+.qs-dash__kpi-title {
+  font-size: 0.76em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--qso-stats-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qs-dash__kpi-value {
+  font-size: clamp(1.35rem, 4.5vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  color: var(--qso-stats-text);
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.qs-dash__kpi--key .qs-dash__kpi-value {
+  background: linear-gradient(90deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.qs-dash__kpi-sub {
+  font-size: 0.7em;
+  font-weight: 400;
+  color: var(--qso-stats-muted);
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+
+/* 图表面板网格（配置驱动：所有面板按后台布局顺序放入同一网格） */
+.qs-dash__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--qso-stats-gap);
+  margin-bottom: var(--qso-stats-gap);
+}
+
+.qs-dash__grid--flow {
+  align-items: start;
+}
+
+.qs-dash__slot {
+  min-width: 0;
+}
+
+.qs-dash__slot--full,
+.qs-dash__panel--full {
+  grid-column: 1 / -1;
+}
+
+.qs-dash__panel--full .qs-dash__chart {
+  height: 300px;
+}
+
+.qs-dash__slot .qso-stats__search {
+  padding: 1.1rem 1.15rem;
+  background: var(--qso-stats-card-bg);
+  border: 1px solid var(--qso-stats-card-border);
+  border-radius: var(--qso-stats-radius);
+  box-shadow: var(--qso-stats-card-shadow);
+}
+
+.qs-dash__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem 1.1rem 1.1rem;
+  background: var(--qso-stats-card-bg);
+  border: 1px solid var(--qso-stats-card-border);
+  border-radius: var(--qso-stats-radius);
+  box-shadow: var(--qso-stats-card-shadow);
+  min-width: 0;
+}
+
+.qs-dash__panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92em;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0;
+  color: var(--qso-stats-text);
+}
+
+.qs-dash__panel-title::before {
+  content: "";
+  width: 4px;
+  height: 0.95em;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
+  flex: none;
+}
+
+.qs-dash__chart {
+  width: 100%;
+  height: 250px;
+  min-height: 0;
+}
+
+.qs-dash__chart--donut {
+  height: 270px;
+}
+
+/* 分布列表（图表旁） */
+.qs-dash__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.qs-dash__list-item {
+  display: grid;
+  grid-template-columns: 72px 1fr 56px;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82em;
+}
+
+.qs-dash__list-label {
+  color: var(--qso-stats-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.qs-dash__list-bar {
+  height: 7px;
+  border-radius: 4px;
+  background: var(--qso-stats-track);
+  overflow: hidden;
+}
+
+.qs-dash__list-fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--qso-stats-accent), var(--qso-stats-accent-2));
+  min-width: 2px;
+}
+
+.qs-dash__list-count {
+  text-align: right;
+  color: var(--qso-stats-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 面板内最近通联紧凑化 */
+.qs-dash__panel .qso-stats__recent-row {
+  padding: 0.45rem 0;
+}
+
+/* 移动端：面板单列 */
+@media (max-width: 720px) {
+  .qs-dash__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .qs-dash__kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .qs-dash__chart {
+    height: 230px;
   }
 }

@@ -14,6 +14,7 @@
   var DEFAULT_ENDPOINT = '/qso-stats/api/statistics';
   var SEARCH_ENDPOINT = '/qso-stats/api/search';
   var OQRS_ENDPOINT = '/qso-stats/api/oqrs';
+  var DASHBOARD_ENDPOINT = '/qso-stats/api/dashboard';
   var MIN_REFRESH = 30;
 
   function esc(value) {
@@ -37,6 +38,10 @@
 
   function card(section) {
     var cardEl = el('div', 'qso-stats__card');
+    // 关键指标（通联总数 / 活跃度 / DXCC 字头）：加高亮修饰，突出核心数据
+    if (section.type === 'number' || section.type === 'activity' || section.type === 'dxcc') {
+      cardEl.className = 'qso-stats__card qso-stats__card--key';
+    }
     cardEl.appendChild(el('p', 'qso-stats__card-title', section.title || ''));
 
     var body = el('div', 'qso-stats__card-body');
@@ -393,13 +398,507 @@
     });
   }
 
+  // 若页面已有与区块标题完全同文的标题（如文章/独立页标题），
+  // 不再重复输出区块标题，避免「双重标题」。
+  function headingMatches(root, title) {
+    var text = String(title == null ? '' : title).replace(/\s+/g, ' ').trim();
+    if (!text) {
+      return false;
+    }
+    var headings = document.querySelectorAll('h1, h2, h3, h4');
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      if (root.contains(h)) {
+        continue;
+      }
+      if ((h.textContent || '').replace(/\s+/g, ' ').trim() === text) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /* ============================================================
+     统计仪表盘（独立统计页面 /qso-stats）
+     - 数据源：/qso-stats/api/dashboard（服务端已聚合日/月/历年/波段/模式）
+     - 图表：ECharts（若未加载则回退为纯 CSS 条形分布）
+     - 单页展示，无分页
+     ============================================================ */
+
+  var DASH_ACCENT = '#4096ff';
+  var DASH_PALETTE = ['#4096ff', '#36cfc9', '#ffc53d', '#ff7a45', '#9254de',
+    '#5cdbd3', '#ff4d4f', '#597ef7', '#ff9c6e', '#b37feb', '#13c2c2', '#f759ab'];
+  var dashRoots = [];
+
+  function isDarkMode() {
+    var root = document.documentElement;
+    if (root.classList.contains('dark')) {
+      return true;
+    }
+    if (root.classList.contains('light')) {
+      return false;
+    }
+    return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+
+  function dashText() {
+    return isDarkMode() ? 'rgba(255,255,255,0.88)' : '#3d4757';
+  }
+
+  function dashSubText() {
+    return isDarkMode() ? 'rgba(255,255,255,0.55)' : '#8a94a6';
+  }
+
+  function dashAxis() {
+    return isDarkMode() ? 'rgba(255,255,255,0.14)' : '#e3e8ef';
+  }
+
+  function dashGrid() {
+    return isDarkMode() ? 'rgba(255,255,255,0.05)' : 'rgba(64,150,255,0.06)';
+  }
+
+  function kpiCard(title, value, sub, key) {
+    var cardEl = el('div', 'qs-dash__kpi' + (key ? ' qs-dash__kpi--key' : ''));
+    cardEl.appendChild(el('span', 'qs-dash__kpi-title', title));
+    var num = el('div', 'qs-dash__kpi-value', fmtNumber(value));
+    if (sub) {
+      num.appendChild(el('span', 'qs-dash__kpi-sub', sub));
+    }
+    cardEl.appendChild(num);
+    return cardEl;
+  }
+
+  function dashPanel(title, chartKey, listKey, full) {
+    var panel = el('section', 'qs-dash__panel' + (full ? ' qs-dash__panel--full' : ''));
+    panel.appendChild(el('h3', 'qs-dash__panel-title', title));
+    if (chartKey) {
+      var chart = el('div', 'qs-dash__chart' + (chartKey === 'mode' ? ' qs-dash__chart--donut' : ''));
+      chart.setAttribute('data-dash-chart', chartKey);
+      panel.appendChild(chart);
+    }
+    if (listKey) {
+      var list = el('ul', 'qs-dash__list');
+      list.setAttribute('data-dash-list', listKey);
+      panel.appendChild(list);
+    }
+    return panel;
+  }
+
+  function barOption(categories, counts, opts) {
+    opts = opts || {};
+    var gradient = {
+      type: 'linear',
+      x: 0, y: 0, x2: 0, y2: 1,
+      colorStops: [
+        { offset: 0, color: 'rgba(64,150,255,0.95)' },
+        { offset: 1, color: 'rgba(64,150,255,0.45)' }
+      ]
+    };
+    return {
+      animationDuration: 500,
+      grid: { left: 42, right: 12, top: 24, bottom: 26 },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: isDarkMode() ? 'rgba(30,34,42,0.92)' : 'rgba(255,255,255,0.96)',
+        borderColor: dashAxis(),
+        textStyle: { color: dashText(), fontSize: 12 },
+        axisPointer: { type: 'shadow', shadowStyle: { color: dashGrid() } }
+      },
+      xAxis: {
+        type: 'category',
+        data: categories,
+        axisLine: { lineStyle: { color: dashAxis() } },
+        axisTick: { show: false },
+        axisLabel: { color: dashSubText(), fontSize: 11, interval: opts.xInterval || 0 }
+      },
+      yAxis: {
+        type: 'value',
+        minInterval: 1,
+        splitLine: { lineStyle: { color: dashAxis() } },
+        axisLabel: { color: dashSubText(), fontSize: 11 }
+      },
+      series: [{
+        type: 'bar',
+        data: counts,
+        barWidth: opts.barWidth || '62%',
+        itemStyle: {
+          borderRadius: [4, 4, 0, 0],
+          color: opts.gradient === false ? DASH_ACCENT : gradient
+        },
+        emphasis: { itemStyle: { color: opts.gradient === false ? '#1677ff' : '#1677ff' } }
+      }]
+    };
+  }
+
+  function donutOption(labels, values) {
+    return {
+      animationDuration: 500,
+      color: DASH_PALETTE,
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: isDarkMode() ? 'rgba(30,34,42,0.92)' : 'rgba(255,255,255,0.96)',
+        borderColor: dashAxis(),
+        textStyle: { color: dashText(), fontSize: 12 }
+      },
+      legend: {
+        orient: 'vertical',
+        right: 0,
+        top: 'middle',
+        itemWidth: 10,
+        itemHeight: 10,
+        icon: 'circle',
+        textStyle: { color: dashSubText(), fontSize: 11 }
+      },
+      series: [{
+        type: 'pie',
+        radius: ['46%', '72%'],
+        center: ['34%', '50%'],
+        avoidLabelOverlap: true,
+        itemStyle: { borderRadius: 4, borderColor: isDarkMode() ? '#1e222a' : '#fff', borderWidth: 2 },
+        label: { show: true, formatter: '{d}%', color: dashSubText(), fontSize: 10 },
+        labelLine: { lineStyle: { color: dashAxis() } },
+        data: labels.map(function (l, i) {
+          return { name: l, value: values[i] };
+        })
+      }]
+    };
+  }
+
+  function hbarOption(labels, counts) {
+    return {
+      animationDuration: 500,
+      grid: { left: 8, right: 40, top: 10, bottom: 24 },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow', shadowStyle: { color: dashGrid() } },
+        backgroundColor: isDarkMode() ? 'rgba(30,34,42,0.92)' : 'rgba(255,255,255,0.96)',
+        borderColor: dashAxis(),
+        textStyle: { color: dashText(), fontSize: 12 }
+      },
+      xAxis: {
+        type: 'value',
+        minInterval: 1,
+        splitLine: { lineStyle: { color: dashAxis() } },
+        axisLabel: { color: dashSubText(), fontSize: 11 }
+      },
+      yAxis: {
+        type: 'category',
+        data: labels,
+        axisLine: { lineStyle: { color: dashAxis() } },
+        axisTick: { show: false },
+        axisLabel: { color: dashText(), fontSize: 11 }
+      },
+      series: [{
+        type: 'bar',
+        data: counts,
+        barWidth: '62%',
+        itemStyle: {
+          borderRadius: [0, 4, 4, 0],
+          color: {
+            type: 'linear',
+            x: 0, y: 0, x2: 1, y2: 0,
+            colorStops: [
+              { offset: 0, color: 'rgba(64,150,255,0.45)' },
+              { offset: 1, color: 'rgba(64,150,255,0.95)' }
+            ]
+          }
+        }
+      }]
+    };
+  }
+
+  function renderDashChart(container, option) {
+    if (!container) {
+      return null;
+    }
+    if (!window.echarts) {
+      return null;
+    }
+    var chart = window.echarts.init(container, null, { renderer: 'canvas' });
+    chart.setOption(option);
+    return chart;
+  }
+
+  function dashBarFallback(container, items) {
+    // 无 ECharts 时的 CSS 回退：复用分布条样式
+    if (!container || !items || !items.length) {
+      return;
+    }
+    var wrap = el('div', 'qso-stats__rows');
+    var max = 1;
+    items.forEach(function (it) {
+      if (it.count > max) {
+        max = it.count;
+      }
+    });
+    items.forEach(function (it) {
+      var rowEl = el('div', 'qso-stats__row');
+      rowEl.appendChild(el('span', 'qso-stats__row-label', it.label));
+      var bar = el('span', 'qso-stats__row-bar');
+      var fill = el('span', 'qso-stats__row-bar-fill');
+      fill.style.width = Math.min(100, Math.round(it.count * 100 / max)) + '%';
+      bar.appendChild(fill);
+      rowEl.appendChild(bar);
+      rowEl.appendChild(el('span', 'qso-stats__row-count', fmtNumber(it.count)));
+      wrap.appendChild(rowEl);
+    });
+    container.appendChild(wrap);
+  }
+
+  function dashPieFallback(container, items) {
+    if (!container || !items || !items.length) {
+      return;
+    }
+    var wrap = el('div', 'qso-stats__rows');
+    items.forEach(function (it, i) {
+      var rowEl = el('div', 'qso-stats__row');
+      rowEl.appendChild(el('span', 'qso-stats__row-label', it.label));
+      var bar = el('span', 'qso-stats__row-bar');
+      var fill = el('span', 'qso-stats__row-bar-fill');
+      fill.style.width = Math.min(100, it.percent || 0) + '%';
+      bar.appendChild(fill);
+      rowEl.appendChild(bar);
+      rowEl.appendChild(el('span', 'qso-stats__row-count', fmtNumber(it.count)));
+      wrap.appendChild(rowEl);
+    });
+    container.appendChild(wrap);
+  }
+
+  function dashList(listEl, items, max) {
+    if (!listEl) {
+      return;
+    }
+    listEl.innerHTML = '';
+    var top = max && items.length > max ? items.slice(0, max) : items;
+    var peak = 1;
+    top.forEach(function (it) {
+      if (it.count > peak) {
+        peak = it.count;
+      }
+    });
+    top.forEach(function (it) {
+      var li = el('li', 'qs-dash__list-item');
+      li.appendChild(el('span', 'qs-dash__list-label', it.label));
+      var bar = el('span', 'qs-dash__list-bar');
+      var fill = el('span', 'qs-dash__list-fill');
+      fill.style.width = Math.min(100, Math.round(it.count * 100 / peak)) + '%';
+      bar.appendChild(fill);
+      li.appendChild(bar);
+      li.appendChild(el('span', 'qs-dash__list-count', fmtNumber(it.count)));
+      listEl.appendChild(li);
+    });
+  }
+
+  function percentOf(count, total) {
+    return total > 0 ? Math.round(count * 1000 / total) / 10 : 0;
+  }
+
+  function renderDashRecent(panel, rows) {
+    var wrap = el('div', 'qso-stats__recent');
+    (rows || []).forEach(function (row) {
+      var rowEl = el('div', 'qso-stats__recent-row');
+      rowEl.appendChild(el('span', 'qso-stats__recent-call', row.call));
+      var meta = el('span', 'qso-stats__recent-meta');
+      if (row.mode) {
+        meta.appendChild(el('span', 'qso-stats__badge qso-stats__badge-mode', row.mode));
+      }
+      if (row.band) {
+        meta.appendChild(el('span', 'qso-stats__badge qso-stats__badge-band', row.band));
+      }
+      rowEl.appendChild(meta);
+      rowEl.appendChild(el('span', 'qso-stats__recent-time', row.time || ''));
+      wrap.appendChild(rowEl);
+    });
+    if (!rows || !rows.length) {
+      wrap.appendChild(el('div', 'qso-stats__empty', '暂无通联记录'));
+    }
+    panel.appendChild(wrap);
+  }
+
+  function renderDashCharts(root, stats) {
+    var totalQso = stats ? stats.total : 0;
+
+    // 日统计
+    var dayChart = root.querySelector('[data-dash-chart="day"]');
+    if (dayChart) {
+      var dayLabels = (stats.byDay || []).map(function (p) { return p.label; });
+      var dayCounts = (stats.byDay || []).map(function (p) { return p.count; });
+      var dayOpt = barOption(dayLabels, dayCounts, { xInterval: 4 });
+      if (!renderDashChart(dayChart, dayOpt)) {
+        dashBarFallback(dayChart, stats.byDay || []);
+      }
+    }
+
+    // 月统计
+    var monthChart = root.querySelector('[data-dash-chart="month"]');
+    if (monthChart) {
+      var mOpt = barOption((stats.byMonth || []).map(function (p) { return p.label; }),
+        (stats.byMonth || []).map(function (p) { return p.count; }), { xInterval: 0 });
+      if (!renderDashChart(monthChart, mOpt)) {
+        dashBarFallback(monthChart, stats.byMonth || []);
+      }
+    }
+
+    // 历年统计
+    var yearChart = root.querySelector('[data-dash-chart="year"]');
+    if (yearChart) {
+      var yOpt = barOption((stats.byYear || []).map(function (p) { return p.label; }),
+        (stats.byYear || []).map(function (p) { return p.count; }), { xInterval: 0, barWidth: '38%' });
+      if (!renderDashChart(yearChart, yOpt)) {
+        dashBarFallback(yearChart, stats.byYear || []);
+      }
+    }
+
+    // 模式分布
+    var modeChart = root.querySelector('[data-dash-chart="mode"]');
+    if (modeChart) {
+      var mItems = stats.byMode || [];
+      if (!renderDashChart(modeChart, donutOption(
+        mItems.map(function (p) { return p.label; }),
+        mItems.map(function (p) { return p.count; })))) {
+        dashPieFallback(modeChart, mItems.map(function (p) {
+          return { label: p.label, count: p.count, percent: percentOf(p.count, totalQso) };
+        }));
+      }
+    }
+    dashList(root.querySelector('[data-dash-list="mode"]'), stats.byMode || [], 12);
+
+    // 频段分布
+    var bandChart = root.querySelector('[data-dash-chart="band"]');
+    if (bandChart) {
+      var bItems = stats.byBand || [];
+      var topBands = bItems.slice(0, 14);
+      if (!renderDashChart(bandChart, hbarOption(
+        topBands.map(function (p) { return p.label; }),
+        topBands.map(function (p) { return p.count; })))) {
+        dashBarFallback(bandChart, bItems.map(function (p) {
+          return { label: p.label, count: p.count };
+        }));
+      }
+    }
+    dashList(root.querySelector('[data-dash-list="band"]'), stats.byBand || [], 12);
+  }
+
+  var DEFAULT_LAYOUT = [
+    { key: 'search', span: 2 },
+    { key: 'kpi', span: 2 },
+    { key: 'day', span: 1 },
+    { key: 'month', span: 1 },
+    { key: 'mode', span: 1 },
+    { key: 'band', span: 1 },
+    { key: 'year', span: 1 },
+    { key: 'recent', span: 1 }
+  ];
+
+  function normalizeLayout(layout) {
+    if (!layout || !layout.length) {
+      return DEFAULT_LAYOUT.slice();
+    }
+    var out = [];
+    layout.forEach(function (item) {
+      if (item && item.enabled !== false) {
+        out.push({ key: String(item.key || ''), span: Number(item.span) === 2 ? 2 : 1 });
+      }
+    });
+    return out.length ? out : DEFAULT_LAYOUT.slice();
+  }
+
+  function kpisView(stats) {
+    var kpis = el('div', 'qs-dash__kpis');
+    kpis.appendChild(kpiCard('通联总数', stats.total, '全部 QSO', true));
+    kpis.appendChild(kpiCard('今日', stats.today, 'UTC 自然日'));
+    kpis.appendChild(kpiCard('本月', stats.month, stats.year + ' 年 ' + (new Date().getMonth() + 1) + ' 月'));
+    kpis.appendChild(kpiCard('今年', stats.yearQso, stats.year + ' 年度'));
+    kpis.appendChild(kpiCard('DXCC 已确认', stats.dxccConfirmed, stats.dxccWorked + ' 已通联'));
+    kpis.appendChild(kpiCard('DXCC 可用', stats.dxccAvailable, '字头总量'));
+    return kpis;
+  }
+
+  function renderDashboard(root, data) {
+    root.innerHTML = '';
+    var wrap = el('div', 'qso-stats qso-stats--dash');
+
+    if (data.error) {
+      var err = el('div', 'qso-stats__error', data.fallbackText || '统计数据暂不可用，请稍后再试');
+      err.appendChild(el('div', 'qso-stats__error-detail', data.error));
+      wrap.appendChild(err);
+      root.appendChild(wrap);
+      return;
+    }
+
+    var stats = data.statistics || {};
+    // 面板顺序由后台布局配置决定（默认：呼号查询 → KPI → 日/月 → 模式/频段 → 历年/最近）
+    var layout = normalizeLayout(data.layout);
+    var grid = el('div', 'qs-dash__grid qs-dash__grid--flow');
+
+    layout.forEach(function (item) {
+      var full = item.span === 2;
+      var panelEl = null;
+      switch (item.key) {
+        case 'search':
+          if (data.searchEnabled) {
+            panelEl = el('div', 'qs-dash__slot' + (full ? ' qs-dash__slot--full' : ''));
+            searchSection(root, panelEl, Number(data.searchMaxResults) || 50);
+          }
+          break;
+        case 'kpi':
+          panelEl = el('div', 'qs-dash__slot' + (full ? ' qs-dash__slot--full' : ''));
+          panelEl.appendChild(kpisView(stats));
+          break;
+        case 'day':
+          panelEl = dashPanel('近 30 日通联（日统计）', 'day', null, full);
+          break;
+        case 'month':
+          panelEl = dashPanel('本年每月通联（月统计）', 'month', null, full);
+          break;
+        case 'year':
+          panelEl = dashPanel('历年通联', 'year', null, full);
+          break;
+        case 'mode':
+          panelEl = dashPanel('模式分布', 'mode', 'mode', full);
+          break;
+        case 'band':
+          panelEl = dashPanel('频段分布', 'band', 'band', full);
+          break;
+        case 'recent':
+          panelEl = dashPanel('最近通联', null, null, full);
+          renderDashRecent(panelEl, data.recent || []);
+          break;
+      }
+      if (panelEl) {
+        grid.appendChild(panelEl);
+      }
+    });
+
+    wrap.appendChild(grid);
+
+    if (data.updatedAt) {
+      wrap.appendChild(el('div', 'qso-stats__footer',
+        '更新于 ' + data.updatedAt.replace('T', ' ').slice(0, 16)));
+    }
+
+    root.appendChild(wrap);
+
+    // 记录仪表盘数据，供主题深浅色切换后重绘图表
+    root.setAttribute('data-qso-stats-dash', '1');
+    root.__qsStats = data;
+    dashRoots = dashRoots.filter(function (r) { return r !== root; });
+    dashRoots.push(root);
+    renderDashCharts(root, stats);
+  }
+
   /* ---------------- 渲染入口 ---------------- */
 
   function render(root, data) {
     root.innerHTML = '';
     var wrap = el('div', 'qso-stats');
 
-    if (data.sectionTitle && data.showSectionTitle) {
+    // 独立统计页面（data-qso-stats-page="1"）时由主题/页面标题接管，
+    // 不再渲染组件内嵌的区块标题，避免与页面标题重复（双重标题）。
+    var isDedicatedPage = root.getAttribute('data-qso-stats-page') === '1';
+    if (data.sectionTitle && data.showSectionTitle && !isDedicatedPage
+        && !headingMatches(root, data.sectionTitle)) {
       wrap.appendChild(el('h2', 'qso-stats__header', data.sectionTitle));
     }
 
@@ -442,7 +941,9 @@
     }
     root.setAttribute('data-qso-stats-init', '1');
 
-    var endpoint = root.getAttribute('data-endpoint') || DEFAULT_ENDPOINT;
+    var isDedicatedPage = root.getAttribute('data-qso-stats-page') === '1';
+    var endpoint = root.getAttribute(isDedicatedPage ? 'data-dashboard-endpoint' : 'data-endpoint')
+      || (isDedicatedPage ? DASHBOARD_ENDPOINT : DEFAULT_ENDPOINT);
     var refresh = parseInt(root.getAttribute('data-refresh') || '0', 10);
 
     function load() {
@@ -454,7 +955,11 @@
           return res.json();
         })
         .then(function (data) {
-          render(root, data);
+          if (isDedicatedPage) {
+            renderDashboard(root, data);
+          } else {
+            render(root, data);
+          }
         })
         .catch(function (err) {
           renderFailure(root, err);
@@ -486,5 +991,44 @@
       boot();
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // 主题深浅色切换时重绘图表
+    var themeObserver = new MutationObserver(function () {
+      dashRoots.forEach(function (dashRoot) {
+        if (!document.body.contains(dashRoot)) {
+          return;
+        }
+        dashRoot.querySelectorAll('[data-dash-chart]').forEach(function (chartEl) {
+          var inst = window.echarts && window.echarts.getInstanceByDom
+            ? window.echarts.getInstanceByDom(chartEl) : null;
+          if (inst) {
+            inst.dispose();
+          }
+          chartEl.innerHTML = '';
+        });
+        var stats = dashRoot.__qsStats && dashRoot.__qsStats.statistics;
+        renderDashCharts(dashRoot, stats);
+      });
+    });
+    themeObserver.observe(document.documentElement,
+      { attributes: true, attributeFilter: ['class'] });
+  }
+
+  // 窗口尺寸变化时自适应图表
+  if (window.addEventListener && window.echarts) {
+    window.addEventListener('resize', function () {
+      dashRoots.forEach(function (dashRoot) {
+        if (!document.body.contains(dashRoot)) {
+          return;
+        }
+        dashRoot.querySelectorAll('[data-dash-chart]').forEach(function (chartEl) {
+          var inst = window.echarts.getInstanceByDom
+            ? window.echarts.getInstanceByDom(chartEl) : null;
+          if (inst) {
+            inst.resize();
+          }
+        });
+      });
+    });
   }
 })();

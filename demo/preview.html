@@ -7,19 +7,26 @@
   <!-- 直接引用插件内的组件静态资源 -->
   <link rel="stylesheet" href="../src/main/resources/static/qso-stats.css" />
   <style>
-    body { margin: 0; padding: 3rem 1.25rem; background: #f6f7f9; color: #1f2328;
+    body { margin: 0; padding: 2.5rem 1.25rem; background: #f6f7f9; color: #1f2328;
            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
            "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
     .page { max-width: 980px; margin: 0 auto; }
-    h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
-    .hint { font-size: .85rem; color: #6b7280; margin-bottom: 2rem; }
+    h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+    h2.sect { font-size: 1.1rem; margin: 2.5rem 0 0.5rem; }
+    .hint { font-size: .85rem; color: #6b7280; margin-bottom: 1.25rem; }
     .hint code { background: #eceef1; padding: .1em .4em; border-radius: 4px; }
     /* 模拟暗色主题下组件的表现 */
-    .dark-theme { --qso-stats-accent: #60a5fa; --qso-stats-card-bg: rgba(255,255,255,.06);
-                  --qso-stats-card-border: rgba(255,255,255,.14); --qso-stats-muted: rgba(255,255,255,.7);
+    .dark-theme { --qso-stats-accent: #60a5fa; --qso-stats-accent-2: #93c5fd;
+                  --qso-stats-card-bg: rgba(255,255,255,.06);
+                  --qso-stats-card-border: rgba(255,255,255,.14);
+                  --qso-stats-muted: rgba(255,255,255,.7);
                   --qso-stats-track: rgba(255,255,255,.18); }
-    .dark-theme-box { margin-top: 3rem; padding: 2rem 1.25rem; background: #111827; border-radius: 12px; }
-    .dark-theme-box h2 { color: #f9fafb; font-size: 1.1rem; margin: 0 0 1rem; }
+    .dark-theme-box { margin-top: 1rem; padding: 1.5rem 1.25rem; background: #111827; border-radius: 12px; }
+    .dark-theme-box h2 { color: #f9fafb; font-size: 1.05rem; margin: 0 0 0.75rem; }
+    /* 独立页面模式：模拟主题布局已渲染的页面标题 */
+    .demo-page { background: #fff; border: 1px solid #eceff3; border-radius: 12px;
+                 padding: 1.5rem 1.25rem; box-shadow: 0 1px 4px rgba(0,21,41,.04); }
+    .demo-page .demo-page-title { font-size: 1.4rem; font-weight: 700; margin: 0 0 1rem; }
   </style>
 </head>
 <body>
@@ -31,17 +38,28 @@
       属性示例：<code>data-endpoint</code> 指向 <code>mock-stats.json</code>。
     </p>
 
-    <!-- 亮色主题下的组件 -->
+    <!-- 亮色主题下的嵌入式组件（显示内嵌「区块标题」） -->
+    <h2 class="sect">① 嵌入式组件（显示区块标题）</h2>
     <div class="qso-stats-widget" data-qso-stats-widget
          data-endpoint="mock-stats.json" data-search-endpoint="mock-search.json"
          data-refresh="0"></div>
-  </div>
 
-  <div class="dark-theme-box">
-    <h2>暗色主题覆盖示例（--qso-stats-* 变量）</h2>
-    <!-- 暗色主题下的组件：外层容器定义覆盖变量 -->
-    <div class="qso-stats-widget dark-theme" data-qso-stats-widget
-         data-endpoint="mock-stats.json" data-search-endpoint="mock-search.json"></div>
+    <!-- 独立页面模式：标题由主题渲染，组件不再重复输出（避免双重标题） -->
+    <h2 class="sect">② 独立统计页面（/qso-stats，data-qso-stats-page）</h2>
+    <div class="demo-page">
+      <!-- 模拟主题布局渲染出的页面标题 -->
+      <div class="demo-page-title">通联统计</div>
+      <div class="qso-stats-widget" data-qso-stats-widget data-qso-stats-page="1"
+           data-endpoint="mock-stats.json" data-search-endpoint="mock-search.json"></div>
+    </div>
+
+    <!-- 暗色主题下的组件 -->
+    <h2 class="sect">③ 暗色主题覆盖示例（--qso-stats-* 变量）</h2>
+    <div class="dark-theme-box">
+      <h2>暗色主题下的组件</h2>
+      <div class="qso-stats-widget dark-theme" data-qso-stats-widget
+           data-endpoint="mock-stats.json" data-search-endpoint="mock-search.json"></div>
+    </div>
   </div>
 
   <script src="../src/main/resources/static/qso-stats.js"></script>

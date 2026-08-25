@@ -3,11 +3,15 @@
   <th:block th:fragment="head">
     <!-- 组件静态资源由 QsoStatsHeadProcessor 统一注入（带版本号，避免 CDN 缓存旧版），此处不再重复引入 -->
     <title th:text="${title}">通联统计</title>
+    <!-- ECharts 图表库（本地化，满足站点 CSP），先于组件 JS 加载 -->
+    <script src="/plugins/QsoStats/assets/static/echarts.min.js?version=1.3.0" defer></script>
   </th:block>
   <th:block th:fragment="content">
+    <!-- 独立统计页面：标题由插件提供（主题通常不渲染插件路由标题），
+         组件内嵌区块标题由 data-qso-stats-page 抑制，避免双重标题。 -->
     <div class="qso-stats-page">
       <h1 class="qso-stats-page__title" th:text="${title}">通联统计</h1>
-      <div class="qso-stats-widget" data-qso-stats-widget></div>
+      <div class="qso-stats-widget" data-qso-stats-widget data-qso-stats-page="1"></div>
     </div>
   </th:block>
 </html>

@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title th:text="${title}">通联统计</title>
   <link rel="stylesheet" th:href="@{/plugins/QsoStats/assets/static/qso-stats.css}" />
+  <script th:src="@{/plugins/QsoStats/assets/static/echarts.min.js}" defer></script>
 </head>
 <body>
   <div class="qso-stats-page">
     <h1 class="qso-stats-page__title" th:text="${title}">通联统计</h1>
-    <div class="qso-stats-widget" data-qso-stats-widget></div>
+    <!-- data-qso-stats-page 让组件跳过内嵌区块标题，仅保留本页标题，避免双重标题 -->
+    <div class="qso-stats-widget" data-qso-stats-widget data-qso-stats-page="1"></div>
   </div>
   <script th:src="@{/plugins/QsoStats/assets/static/qso-stats.js}" defer></script>
 </body>

@@ -126,6 +126,7 @@ spec:
           name: showSectionTitle
           label: 显示区块标题
           value: true
+          help: "仅对嵌入式组件生效；独立统计页面的标题由主题渲染，插件会自动隐藏区块标题，避免双重标题。"
         - $formkit: text
           name: sectionTitle
           label: 区块标题
@@ -139,3 +140,75 @@ spec:
           name: fallbackText
           label: 加载失败提示文案
           value: "统计数据暂不可用，请稍后再试"
+
+    - group: layout
+      label: 统计页面布局
+      formSchema:
+        - $formkit: array
+          name: panels
+          label: 面板顺序与显隐
+          value:
+            - key: search
+              enabled: true
+              span: 2
+            - key: kpi
+              enabled: true
+              span: 2
+            - key: day
+              enabled: true
+              span: 1
+            - key: month
+              enabled: true
+              span: 1
+            - key: mode
+              enabled: true
+              span: 1
+            - key: band
+              enabled: true
+              span: 1
+            - key: year
+              enabled: true
+              span: 1
+            - key: recent
+              enabled: true
+              span: 1
+          itemLabels:
+            - type: text
+              label: $value.key
+          help: "自定义统计页面的展示顺序与显隐：搜索、KPI、日/月/历年、模式/频段、最近通联。可拖拽排序、停用不需要的面板；「整行/半行」控制图表面板占位宽度（默认两两并排）。"
+          children:
+            - $formkit: select
+              name: key
+              label: 面板
+              value: search
+              options:
+                - label: 呼号查询
+                  value: search
+                - label: 核心指标（KPI）
+                  value: kpi
+                - label: 日统计（近 30 日）
+                  value: day
+                - label: 月统计（本年每月）
+                  value: month
+                - label: 模式分布
+                  value: mode
+                - label: 频段分布
+                  value: band
+                - label: 历年通联
+                  value: year
+                - label: 最近通联
+                  value: recent
+            - $formkit: switch
+              name: enabled
+              label: 启用
+              value: true
+            - $formkit: select
+              name: span
+              label: 占位
+              value: 1
+              options:
+                - label: 半行（与其他面板并排）
+                  value: 1
+                - label: 整行（独占一行）
+                  value: 2
+              help: "搜索与 KPI 恒为整行，此项仅对图表面板生效。"

@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * 插件设置模型，对应 resources/extensions/settings.yaml 中的三个分组：
- * api（Wavelog API 配置）、stats（统计项目）、display（展示设置）。
+ * 插件设置模型，对应 resources/extensions/settings.yaml 中的分组：
+ * api（Wavelog API 配置）、stats（统计项目）、display（展示设置）、layout（页面布局）。
  *
  * <p>由 {@link run.halo.app.plugin.ReactiveSettingFetcher} 按分组反序列化，
  * 字段名与表单 name 一致。
@@ -88,6 +88,31 @@ public final class WavelogSettings {
 
         public String fallbackTextOrDefault() {
             return StringUtils.defaultIfBlank(fallbackText, "统计数据暂不可用，请稍后再试");
+        }
+    }
+
+
+
+    /** layout 分组：统计页面面板顺序与显隐 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Layout(List<Panel> panels) {
+
+        public List<Panel> panelsOrDefault() {
+            return panels == null ? List.of() : panels;
+        }
+    }
+
+    /** 单个布局面板 */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Panel(String key, Boolean enabled, Integer span) {
+
+        public boolean enabledOrDefault() {
+            return enabled == null || enabled;
+        }
+
+        /** 1 = 半行（并排），2 = 整行；非法值回落为 1 */
+        public int spanOrDefault() {
+            return span != null && span >= 1 && span <= 2 ? span : 1;
         }
     }
 

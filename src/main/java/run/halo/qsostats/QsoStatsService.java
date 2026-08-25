@@ -2,6 +2,8 @@ package run.halo.qsostats;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,10 +26,15 @@ public class QsoStatsService {
     private static final String GROUP_STATS = "stats";
     private static final String GROUP_DISPLAY = "display";
     private static final String GROUP_SEARCH = "search";
+    private static final String GROUP_LAYOUT = "layout";
 
     private final ReactiveSettingFetcher settingFetcher;
     private final WavelogClient wavelogClient;
+    private static final int DASHBOARD_PER_PAGE = 5000;
+    private static final int DASHBOARD_MAX_PAGES = 20;
+
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
+    private final Map<String, CacheListEntry> rowsCache = new ConcurrentHashMap<>();
 
     public QsoStatsService(ReactiveSettingFetcher settingFetcher, WavelogClient wavelogClient) {
         this.settingFetcher = settingFetcher;
@@ -52,6 +59,37 @@ public class QsoStatsService {
                         .flatMap(stats -> buildSections(api, qsoNode, stats)))
                     .map(sections -> StatsPayload.success(sections, Instant.now().toString(), config))
                     .onErrorResume(e -> Mono.just(StatsPayload.error(friendlyMessage(e), config)));
+            }));
+    }
+
+
+    /**
+     * 构建 /qso-stats/api/dashboard 的完整载荷（原生统计页面）。
+     *
+     * <p>包含 KPI（总数/活跃度/DXCC）与图表数据（近 30 日、当年各月、历年、
+     * 波段/模式分布）以及最近通联。QSO 列表分页拉取并在服务端聚合，
+     * 一次性输出到单个页面，避免前端分页。
+     */
+    public Mono<StatsPayload.DashboardPayload> buildDashboard() {
+        return fetchDisplayConfig()
+            .flatMap(config -> fetchApi().flatMap(api -> {
+                if (!api.isConfigured()) {
+                    return Mono.just(StatsPayload.dashboardError(
+                        "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。", config));
+                }
+                return fetchStats(api)
+                    .flatMap(qsoNode -> fetchAllQsoRows(api)
+                        .flatMap(rows -> fetchLayout().map(layout ->
+                            new StatsPayload.DashboardPayload(
+                                buildStatistics(qsoNode, rows),
+                                buildRecent(rows, 10),
+                                Instant.now().toString(),
+                                null,
+                                config.fallbackText(),
+                                config.searchEnabled(),
+                                config.searchMaxResults(),
+                                resolveLayout(layout.panelsOrDefault())))))
+                    .onErrorResume(e -> Mono.just(StatsPayload.dashboardError(friendlyMessage(e), config)));
             }));
     }
 
@@ -138,6 +176,34 @@ public class QsoStatsService {
             .defaultIfEmpty(new WavelogSettings.Search(null, null));
     }
 
+    private Mono<WavelogSettings.Layout> fetchLayout() {
+        return settingFetcher.fetch(GROUP_LAYOUT, WavelogSettings.Layout.class)
+            .onErrorResume(e -> Mono.empty())
+            .defaultIfEmpty(new WavelogSettings.Layout(null));
+    }
+
+    /** 读取布局配置；未配置时返回默认顺序（呼号查询最前） */
+    private List<StatsPayload.PanelConfig> resolveLayout(List<WavelogSettings.Panel> panels) {
+        if (panels == null || panels.isEmpty()) {
+            return defaultLayout();
+        }
+        List<StatsPayload.PanelConfig> out = new ArrayList<>();
+        for (WavelogSettings.Panel p : panels) {
+            out.add(new StatsPayload.PanelConfig(StringUtils.defaultString(p.key()),
+                p.enabledOrDefault(), p.spanOrDefault()));
+        }
+        return out;
+    }
+
+    private List<StatsPayload.PanelConfig> defaultLayout() {
+        String[] keys = {"search", "kpi", "day", "month", "mode", "band", "year", "recent"};
+        List<StatsPayload.PanelConfig> out = new ArrayList<>();
+        for (String k : keys) {
+            out.add(new StatsPayload.PanelConfig(k, true, "search".equals(k) || "kpi".equals(k) ? 2 : 1));
+        }
+        return out;
+    }
+
     private Mono<StatsPayload.DisplayConfig> fetchDisplayConfig() {
         return fetchDisplay().zipWith(fetchSearch())
             .map(t -> new StatsPayload.DisplayConfig(t.getT1().sectionTitleOrDefault(),
@@ -174,6 +240,77 @@ public class QsoStatsService {
             wavelogClient.fetchRecentQsos(api, 50));
     }
 
+
+    /**
+     * 分页拉取全部 QSO（newest first），聚合统计图表数据。
+     * 结果按 API 缓存策略复用，避免高频请求日志平台。
+     */
+    private Mono<List<JsonNode>> fetchAllQsoRows(WavelogSettings.Api api) {
+        String key = cacheKey("qso-rows", api);
+        long now = System.currentTimeMillis();
+        CacheListEntry entry = rowsCache.get(key);
+        if (entry != null && entry.expiresAt() > now) {
+            return Mono.just(entry.rows());
+        }
+        return fetchAllQsos(api)
+            .doOnNext(rows -> rowsCache.put(key,
+                new CacheListEntry(rows, now + api.cacheSecondsOrDefault() * 1000L)));
+    }
+
+    private Mono<List<JsonNode>> fetchAllQsos(WavelogSettings.Api api) {
+        return fetchQsosPageRecursive(api, 1, new ArrayList<>());
+    }
+
+    private Mono<List<JsonNode>> fetchQsosPageRecursive(WavelogSettings.Api api, int page,
+                                                        List<JsonNode> acc) {
+        if (page > DASHBOARD_MAX_PAGES) {
+            return Mono.just(acc);
+        }
+        return wavelogClient.fetchQsosPage(api, page, DASHBOARD_PER_PAGE, null, null)
+            .flatMap(node -> {
+                JsonNode data = node.path("data");
+                if (data != null && data.isArray()) {
+                    for (JsonNode qso : data) {
+                        acc.add(qso);
+                    }
+                }
+                boolean hasMore = node.path("meta").path("has_more").asBoolean(false);
+                return hasMore ? fetchQsosPageRecursive(api, page + 1, acc) : Mono.just(acc);
+            });
+    }
+
+    /** KPI 取自 statistic 接口，图表数据取自 QSO 列表聚合结果 */
+    private StatsPayload.Statistics buildStatistics(JsonNode qsoNode, List<JsonNode> rows) {
+        JsonNode qso = qsoNode.path("data").path("qso");
+        JsonNode activity = qso.path("activity");
+        JsonNode dxcc = qso.path("dxcc");
+        int year = LocalDate.now().getYear();
+        StatsPayload.Statistics agg = StatsAggregator.aggregate(rows, year, LocalDate.now(), 10);
+        return new StatsPayload.Statistics(
+            year,
+            qso.path("total").asLong(agg.total()),
+            activity.path("today").asLong(0),
+            activity.path("month").asLong(0),
+            activity.path("year").asLong(0),
+            dxcc.path("worked").asLong(0),
+            dxcc.path("confirmed").asLong(0),
+            dxcc.path("available").asLong(0),
+            agg.byDay(), agg.byMonth(), agg.byYear(), agg.byBand(), agg.byMode());
+    }
+
+    private List<StatsPayload.RecentRow> buildRecent(List<JsonNode> rows, int limit) {
+        List<StatsPayload.RecentRow> recent = new ArrayList<>();
+        for (int i = 0; i < rows.size() && recent.size() < limit; i++) {
+            JsonNode node = rows.get(i);
+            recent.add(new StatsPayload.RecentRow(node.path("call").asText("—"),
+                node.path("band").asText(""),
+                node.path("mode").asText(""),
+                PayloadBuilder.formatDateTime(node.path("qso_date").asText("")),
+                node.path("gridsquare").asText("")));
+        }
+        return recent;
+    }
+
     private String cacheKey(String prefix, WavelogSettings.Api api) {
         return prefix + "|" + api.baseUrlOrDefault() + "|" + api.apiTokenOrDefault();
     }
@@ -193,6 +330,9 @@ public class QsoStatsService {
     }
 
     private record CacheEntry(JsonNode value, long expiresAt) {
+    }
+
+    private record CacheListEntry(List<JsonNode> rows, long expiresAt) {
     }
 
     // ---------- 错误信息（不泄露 Token） ----------
@@ -218,7 +358,9 @@ public class QsoStatsService {
                     // 响应体不是 JSON，走通用文案
                 }
             }
-            return "Wavelog 接口返回 HTTP " + wcre.getStatusCode().value();
+            return "Wavelog 接口返回 HTTP " + wcre.getStatusCode().value()
+                + "（" + e.getClass().getSimpleName() + ": "
+                + StringUtils.abbreviate(StringUtils.defaultString(wcre.getMessage()), 120) + "）";
         }
         String message = StringUtils.defaultString(e.getMessage());
         if (StringUtils.containsIgnoreCase(message, "timed out")) {
