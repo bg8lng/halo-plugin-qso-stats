@@ -431,6 +431,43 @@
     '#5cdbd3', '#ff4d4f', '#597ef7', '#ff9c6e', '#b37feb', '#13c2c2', '#f759ab'];
   var dashRoots = [];
 
+  // 图表容器尺寸变化时自动 resize，避免在主题进场动画/响应式断点切换后图表失真
+  var chartResizeObserver = null;
+  function getChartResizeObserver() {
+    if (chartResizeObserver) {
+      return chartResizeObserver;
+    }
+    if (typeof ResizeObserver === 'undefined') {
+      return null;
+    }
+    chartResizeObserver = new ResizeObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        var target = entries[i].target;
+        var inst = window.echarts && window.echarts.getInstanceByDom
+          ? window.echarts.getInstanceByDom(target) : null;
+        if (inst && inst.resize) {
+          inst.resize();
+        }
+      }
+    });
+    return chartResizeObserver;
+  }
+
+  function hexToRgba(hex, alpha) {
+    hex = String(hex || '').replace('#', '');
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    var n = parseInt(hex, 16);
+    if (isNaN(n)) {
+      return 'rgba(64,150,255,' + alpha + ')';
+    }
+    var r = (n >> 16) & 255;
+    var g = (n >> 8) & 255;
+    var b = n & 255;
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
+
   function isDarkMode() {
     var root = document.documentElement;
     if (root.classList.contains('dark')) {
@@ -458,9 +495,17 @@
     return isDarkMode() ? 'rgba(255,255,255,0.05)' : 'rgba(64,150,255,0.06)';
   }
 
-  function kpiCard(title, value, sub, key) {
-    var cardEl = el('div', 'qs-dash__kpi' + (key ? ' qs-dash__kpi--key' : ''));
-    cardEl.appendChild(el('span', 'qs-dash__kpi-title', title));
+  function kpiCard(title, value, sub, opts) {
+    opts = opts || {};
+    var cardEl = el('div', 'qs-dash__kpi' + (opts.key ? ' qs-dash__kpi--key' : ''));
+    cardEl.setAttribute('data-tone', opts.tone || 'blue');
+    if (opts.color) {
+      cardEl.style.setProperty('--qs-kpi-color', opts.color);
+    }
+    var head = el('div', 'qs-dash__kpi-head');
+    head.appendChild(el('span', 'qs-dash__kpi-title', title));
+    head.appendChild(el('span', 'qs-dash__kpi-spark', ''));
+    cardEl.appendChild(head);
     var num = el('div', 'qs-dash__kpi-value', fmtNumber(value));
     if (sub) {
       num.appendChild(el('span', 'qs-dash__kpi-sub', sub));
@@ -487,21 +532,23 @@
 
   function barOption(categories, counts, opts) {
     opts = opts || {};
+    var base = opts.color || DASH_ACCENT;
     var gradient = {
       type: 'linear',
       x: 0, y: 0, x2: 0, y2: 1,
       colorStops: [
-        { offset: 0, color: 'rgba(64,150,255,0.95)' },
-        { offset: 1, color: 'rgba(64,150,255,0.45)' }
+        { offset: 0, color: hexToRgba(base, 0.95) },
+        { offset: 1, color: hexToRgba(base, 0.40) }
       ]
     };
     return {
-      animationDuration: 500,
-      grid: { left: 42, right: 12, top: 24, bottom: 26 },
+      animationDuration: 700,
+      animationEasing: 'cubicOut',
+      grid: { left: 42, right: 14, top: 28, bottom: 28 },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: isDarkMode() ? 'rgba(30,34,42,0.92)' : 'rgba(255,255,255,0.96)',
-        borderColor: dashAxis(),
+        backgroundColor: isDarkMode() ? 'rgba(30,34,42,0.92)' : 'rgba(255,255,255,0.98)',
+        borderColor: hexToRgba(base, 0.35),
         textStyle: { color: dashText(), fontSize: 12 },
         axisPointer: { type: 'shadow', shadowStyle: { color: dashGrid() } }
       },
@@ -520,13 +567,18 @@
       },
       series: [{
         type: 'bar',
-        data: counts,
-        barWidth: opts.barWidth || '62%',
+        data: counts.map(function (c) {
+          return { value: c, itemStyle: { borderRadius: [6, 6, 0, 0] } };
+        }),
+        barWidth: opts.barWidth || '58%',
+        barMaxWidth: 34,
         itemStyle: {
-          borderRadius: [4, 4, 0, 0],
-          color: opts.gradient === false ? DASH_ACCENT : gradient
+          borderRadius: [6, 6, 0, 0],
+          color: opts.gradient === false ? base : gradient
         },
-        emphasis: { itemStyle: { color: opts.gradient === false ? '#1677ff' : '#1677ff' } }
+        emphasis: {
+          itemStyle: { color: hexToRgba(base, 1), shadowBlur: 10, shadowColor: hexToRgba(base, 0.4) }
+        }
       }]
     };
   }
@@ -552,12 +604,31 @@
       },
       series: [{
         type: 'pie',
-        radius: ['46%', '72%'],
-        center: ['34%', '50%'],
+        radius: ['48%', '74%'],
+        center: ['36%', '50%'],
         avoidLabelOverlap: true,
-        itemStyle: { borderRadius: 4, borderColor: isDarkMode() ? '#1e222a' : '#fff', borderWidth: 2 },
-        label: { show: true, formatter: '{d}%', color: dashSubText(), fontSize: 10 },
-        labelLine: { lineStyle: { color: dashAxis() } },
+        padAngle: 1,
+        minAngle: 2,
+        itemStyle: {
+          borderRadius: 6,
+          borderColor: isDarkMode() ? '#1e222a' : '#fff',
+          borderWidth: 3,
+          shadowBlur: 14,
+          shadowColor: isDarkMode() ? 'rgba(0,0,0,0.4)' : 'rgba(22,119,255,0.15)'
+        },
+        label: {
+          show: true,
+          formatter: '{d}%',
+          color: dashSubText(),
+          fontSize: 10,
+          fontWeight: 600
+        },
+        labelLine: { length: 10, length2: 8, lineStyle: { color: dashAxis() } },
+        emphasis: {
+          scale: true,
+          scaleSize: 6,
+          itemStyle: { shadowBlur: 22, shadowColor: 'rgba(0,0,0,0.30)' }
+        },
         data: labels.map(function (l, i) {
           return { name: l, value: values[i] };
         })
@@ -565,15 +636,18 @@
     };
   }
 
-  function hbarOption(labels, counts) {
+  function hbarOption(labels, counts, opts) {
+    opts = opts || {};
+    var base = opts.color || DASH_ACCENT;
     return {
-      animationDuration: 500,
-      grid: { left: 8, right: 40, top: 10, bottom: 24 },
+      animationDuration: 700,
+      animationEasing: 'cubicOut',
+      grid: { left: 8, right: 44, top: 10, bottom: 24 },
       tooltip: {
         trigger: 'axis',
         axisPointer: { type: 'shadow', shadowStyle: { color: dashGrid() } },
-        backgroundColor: isDarkMode() ? 'rgba(30,34,42,0.92)' : 'rgba(255,255,255,0.96)',
-        borderColor: dashAxis(),
+        backgroundColor: isDarkMode() ? 'rgba(30,34,42,0.92)' : 'rgba(255,255,255,0.98)',
+        borderColor: hexToRgba(base, 0.35),
         textStyle: { color: dashText(), fontSize: 12 }
       },
       xAxis: {
@@ -591,33 +665,93 @@
       },
       series: [{
         type: 'bar',
-        data: counts,
+        data: counts.map(function (c) {
+          return { value: c };
+        }),
         barWidth: '62%',
+        barMaxWidth: 22,
         itemStyle: {
-          borderRadius: [0, 4, 4, 0],
+          borderRadius: [0, 6, 6, 0],
           color: {
             type: 'linear',
             x: 0, y: 0, x2: 1, y2: 0,
             colorStops: [
-              { offset: 0, color: 'rgba(64,150,255,0.45)' },
-              { offset: 1, color: 'rgba(64,150,255,0.95)' }
+              { offset: 0, color: hexToRgba(base, 0.40) },
+              { offset: 1, color: hexToRgba(base, 0.95) }
             ]
           }
-        }
+        },
+        emphasis: { itemStyle: { shadowBlur: 12, shadowColor: hexToRgba(base, 0.45) } }
       }]
     };
   }
 
-  function renderDashChart(container, option) {
+  /**
+   * 稳健地初始化图表：只有等容器真正具备有效尺寸时才 init ECharts，
+   * 避免在样式未就绪 / 布局未稳定 / 主题进场动画进行中时以 0 尺寸渲染成空白。
+   * 若容器迟迟没有尺寸或 ECharts 不可用、初始化异常，则回退为纯 CSS 展示，
+   * 确保面板绝不出现「空白无数据」。
+   */
+  function renderDashChart(container, option, fallback) {
     if (!container) {
+      if (fallback) {
+        fallback();
+      }
       return null;
     }
     if (!window.echarts) {
+      if (fallback) {
+        fallback();
+      }
       return null;
     }
-    var chart = window.echarts.init(container, null, { renderer: 'canvas' });
-    chart.setOption(option);
-    return chart;
+    var tries = 0;
+    var MAX_TRIES = 90; // ~1.5s@60fps，足够覆盖主题进场动画与样式加载
+    function attempt() {
+      var w = container.clientWidth;
+      var h = container.clientHeight;
+      if (!w || !h) {
+        tries++;
+        if (tries <= MAX_TRIES) {
+          requestAnimationFrame(attempt);
+          return null;
+        }
+        if (fallback) {
+          fallback();
+        }
+        return null;
+      }
+      var chart = null;
+      try {
+        var existing = window.echarts.getInstanceByDom
+          ? window.echarts.getInstanceByDom(container) : null;
+        if (existing) {
+          existing.setOption(option, true);
+          chart = existing;
+        } else {
+          chart = window.echarts.init(container, null, { renderer: 'canvas' });
+          chart.setOption(option);
+        }
+        var ro = getChartResizeObserver();
+        if (ro) {
+          ro.observe(container);
+        }
+      } catch (e) {
+        // 初始化异常（如过渡期间容器被替换）：灰条回退，绝不空白
+        if (fallback) {
+          fallback();
+        }
+        return null;
+      }
+      // 首帧后再补一次 resize，确保 canvas 拉满容器
+      requestAnimationFrame(function () {
+        if (chart && chart.resize) {
+          chart.resize();
+        }
+      });
+      return chart;
+    }
+    return attempt();
   }
 
   function dashBarFallback(container, items) {
@@ -717,65 +851,69 @@
   }
 
   function renderDashCharts(root, stats) {
-    var totalQso = stats ? stats.total : 0;
+    if (!stats) {
+      return;
+    }
+    var totalQso = stats.total;
 
-    // 日统计
+    // 日统计（蓝）
     var dayChart = root.querySelector('[data-dash-chart="day"]');
     if (dayChart) {
       var dayLabels = (stats.byDay || []).map(function (p) { return p.label; });
       var dayCounts = (stats.byDay || []).map(function (p) { return p.count; });
-      var dayOpt = barOption(dayLabels, dayCounts, { xInterval: 4 });
-      if (!renderDashChart(dayChart, dayOpt)) {
-        dashBarFallback(dayChart, stats.byDay || []);
-      }
+      renderDashChart(dayChart, barOption(dayLabels, dayCounts, {
+        xInterval: 4, color: '#4096ff'
+      }), function () { dashBarFallback(dayChart, stats.byDay || []); });
     }
 
-    // 月统计
+    // 月统计（青）
     var monthChart = root.querySelector('[data-dash-chart="month"]');
     if (monthChart) {
-      var mOpt = barOption((stats.byMonth || []).map(function (p) { return p.label; }),
-        (stats.byMonth || []).map(function (p) { return p.count; }), { xInterval: 0 });
-      if (!renderDashChart(monthChart, mOpt)) {
+      renderDashChart(monthChart, barOption(
+        (stats.byMonth || []).map(function (p) { return p.label; }),
+        (stats.byMonth || []).map(function (p) { return p.count; }),
+        { xInterval: 0, color: '#36cfc9' }), function () {
         dashBarFallback(monthChart, stats.byMonth || []);
-      }
+      });
     }
 
-    // 历年统计
+    // 历年统计（紫）
     var yearChart = root.querySelector('[data-dash-chart="year"]');
     if (yearChart) {
-      var yOpt = barOption((stats.byYear || []).map(function (p) { return p.label; }),
-        (stats.byYear || []).map(function (p) { return p.count; }), { xInterval: 0, barWidth: '38%' });
-      if (!renderDashChart(yearChart, yOpt)) {
+      renderDashChart(yearChart, barOption(
+        (stats.byYear || []).map(function (p) { return p.label; }),
+        (stats.byYear || []).map(function (p) { return p.count; }),
+        { xInterval: 0, barWidth: '40%', color: '#9254de' }), function () {
         dashBarFallback(yearChart, stats.byYear || []);
-      }
+      });
     }
 
-    // 模式分布
+    // 模式分布（环图）
     var modeChart = root.querySelector('[data-dash-chart="mode"]');
     if (modeChart) {
       var mItems = stats.byMode || [];
-      if (!renderDashChart(modeChart, donutOption(
+      renderDashChart(modeChart, donutOption(
         mItems.map(function (p) { return p.label; }),
-        mItems.map(function (p) { return p.count; })))) {
+        mItems.map(function (p) { return p.count; })), function () {
         dashPieFallback(modeChart, mItems.map(function (p) {
           return { label: p.label, count: p.count, percent: percentOf(p.count, totalQso) };
         }));
-      }
+      });
     }
     dashList(root.querySelector('[data-dash-list="mode"]'), stats.byMode || [], 12);
 
-    // 频段分布
+    // 频段分布（横向条形，橙）
     var bandChart = root.querySelector('[data-dash-chart="band"]');
     if (bandChart) {
       var bItems = stats.byBand || [];
       var topBands = bItems.slice(0, 14);
-      if (!renderDashChart(bandChart, hbarOption(
+      renderDashChart(bandChart, hbarOption(
         topBands.map(function (p) { return p.label; }),
-        topBands.map(function (p) { return p.count; })))) {
+        topBands.map(function (p) { return p.count; }), { color: '#ff7a45' }), function () {
         dashBarFallback(bandChart, bItems.map(function (p) {
           return { label: p.label, count: p.count };
         }));
-      }
+      });
     }
     dashList(root.querySelector('[data-dash-list="band"]'), stats.byBand || [], 12);
   }
@@ -806,12 +944,12 @@
 
   function kpisView(stats) {
     var kpis = el('div', 'qs-dash__kpis');
-    kpis.appendChild(kpiCard('通联总数', stats.total, '全部 QSO', true));
-    kpis.appendChild(kpiCard('今日', stats.today, 'UTC 自然日'));
-    kpis.appendChild(kpiCard('本月', stats.month, stats.year + ' 年 ' + (new Date().getMonth() + 1) + ' 月'));
-    kpis.appendChild(kpiCard('今年', stats.yearQso, stats.year + ' 年度'));
-    kpis.appendChild(kpiCard('DXCC 已确认', stats.dxccConfirmed, stats.dxccWorked + ' 已通联'));
-    kpis.appendChild(kpiCard('DXCC 可用', stats.dxccAvailable, '字头总量'));
+    kpis.appendChild(kpiCard('通联总数', stats.total, '全部 QSO', { key: true, tone: 'blue' }));
+    kpis.appendChild(kpiCard('今日', stats.today, 'UTC 自然日', { tone: 'green' }));
+    kpis.appendChild(kpiCard('本月', stats.month, stats.year + ' 年 ' + (new Date().getMonth() + 1) + ' 月', { tone: 'cyan' }));
+    kpis.appendChild(kpiCard('今年', stats.yearQso, stats.year + ' 年度', { tone: 'violet' }));
+    kpis.appendChild(kpiCard('DXCC 已确认', stats.dxccConfirmed, stats.dxccWorked + ' 已通联', { tone: 'coral' }));
+    kpis.appendChild(kpiCard('DXCC 可用', stats.dxccAvailable, '字头总量', { tone: 'amber' }));
     return kpis;
   }
 
@@ -874,8 +1012,11 @@
     wrap.appendChild(grid);
 
     if (data.updatedAt) {
-      wrap.appendChild(el('div', 'qso-stats__footer',
+      var foot = el('div', 'qso-stats__footer');
+      foot.appendChild(el('span', 'qso-stats__live', ''));
+      foot.appendChild(el('span', 'qso-stats__footer-text',
         '更新于 ' + data.updatedAt.replace('T', ' ').slice(0, 16)));
+      wrap.appendChild(foot);
     }
 
     root.appendChild(wrap);
@@ -998,6 +1139,10 @@
         if (!document.body.contains(dashRoot)) {
           return;
         }
+        var stats = dashRoot.__qsStats && dashRoot.__qsStats.statistics;
+        if (!stats) {
+          return; // 无统计数据时不重绘，避免把已渲染图表清成空白
+        }
         dashRoot.querySelectorAll('[data-dash-chart]').forEach(function (chartEl) {
           var inst = window.echarts && window.echarts.getInstanceByDom
             ? window.echarts.getInstanceByDom(chartEl) : null;
@@ -1006,7 +1151,6 @@
           }
           chartEl.innerHTML = '';
         });
-        var stats = dashRoot.__qsStats && dashRoot.__qsStats.statistics;
         renderDashCharts(dashRoot, stats);
       });
     });

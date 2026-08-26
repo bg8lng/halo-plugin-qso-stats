@@ -1,10 +1,10 @@
 # 通联统计（QsoStats）
 
-![Version](https://img.shields.io/badge/version-1.3.0-1677ff)
+![Version](https://img.shields.io/badge/version-1.4.0-1677ff)
 ![Halo](https://img.shields.io/badge/Halo-2.20%2B-00b42a)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
-> 🆕 **v1.3.0**：统计仪表盘 + 后台自定义布局（面板顺序 / 显隐 / 列宽），详见 [CHANGELOG](CHANGELOG.md)。
+> 🆕 **v1.4.0**：修复统计页偶发无数据/图表空白，仪表盘 UI 焕新（KPI 专属主色、渐变图表、入场动画、实时脉冲指示），详见 [CHANGELOG](CHANGELOG.md)。
 >
 > 🌐 在线演示：<https://bg8lng.com/qso-stats>
 
