@@ -79,9 +79,8 @@ class QsoStatsServiceTest {
                 new WavelogSettings.Item("modes", "模式分布", false, null)
             ))));
         when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
-            .thenReturn(Mono.just(new WavelogSettings.Display(true, "我的通联统计", true, "暂不可用")));
-        when(fetcher.fetch(eq("search"), eq(WavelogSettings.Search.class)))
-            .thenReturn(Mono.just(new WavelogSettings.Search(true, 50)));
+            .thenReturn(Mono.just(new WavelogSettings.Display(
+                true, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto")));
         return fetcher;
     }
 
@@ -147,8 +146,6 @@ class QsoStatsServiceTest {
             .thenReturn(Mono.just(new WavelogSettings.Stats(List.of(
                 new WavelogSettings.Item("total_qsos", "通联总数", true, null)))));
         when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
-            .thenReturn(Mono.empty());
-        when(fetcher.fetch(eq("search"), eq(WavelogSettings.Search.class)))
             .thenReturn(Mono.empty());
 
         QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());

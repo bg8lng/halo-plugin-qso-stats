@@ -107,12 +107,14 @@ public final class StatsPayload {
                                              String updatedAt, DisplayConfig display,
                                              List<PanelConfig> layout) {
         return new DashboardPayload(statistics, recent, updatedAt, null,
-            display.fallbackText(), display.searchEnabled(), display.searchMaxResults(), layout);
+            display.fallbackText(), display.searchEnabled(), display.searchMaxResults(),
+            display.displayStyle(), display.defaultTheme(), layout);
     }
 
     public static DashboardPayload dashboardError(String message, DisplayConfig display) {
         return new DashboardPayload(null, List.of(), null, message,
-            display.fallbackText(), display.searchEnabled(), display.searchMaxResults(), List.of());
+            display.fallbackText(), display.searchEnabled(), display.searchMaxResults(),
+            display.displayStyle(), display.defaultTheme(), List.of());
     }
 
     public static OqrsResult oqrsResult(boolean success, String message) {
@@ -144,12 +146,14 @@ public final class StatsPayload {
     public record DashboardPayload(Statistics statistics, List<RecentRow> recent,
                                    String updatedAt, String error, String fallbackText,
                                    boolean searchEnabled, int searchMaxResults,
+                                   String displayStyle, String defaultTheme,
                                    List<PanelConfig> layout) {
     }
 
     /** 展示设置的只读快照，避免在载荷构造中反复读取 */
     public record DisplayConfig(String sectionTitle, boolean showSectionTitle,
                                 boolean showUpdatedAt, String fallbackText,
-                                boolean searchEnabled, int searchMaxResults) {
+                                boolean searchEnabled, int searchMaxResults,
+                                String displayStyle, String defaultTheme) {
     }
 }

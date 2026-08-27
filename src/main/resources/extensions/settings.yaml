@@ -103,25 +103,45 @@ spec:
               if: "$value.key === 'bands' || $value.key === 'modes' || $value.key === 'recent'"
               help: "仅对波段分布、模式分布、最近通联生效。"
 
-    - group: search
-      label: 呼号查询与 OQRS
+    - group: display
+      label: 展示与交互
       formSchema:
+        # 数据展示样式选择（新增）
+        - $formkit: select
+          name: displayStyle
+          label: 数据展示样式
+          value: modern
+          options:
+            - label: 现代仪表盘（Bento · 推荐）
+              value: modern
+            - label: 经典卡片
+              value: classic
+          help: "选择 /qso-stats 统计页面的展示风格。现代仪表盘包含贯穿横幅、玻璃拟态查询卡与 Bento 指标网格；经典卡片为精简网格卡片。"
+        - $formkit: select
+          name: defaultTheme
+          label: 默认主题
+          value: auto
+          options:
+            - label: 跟随站点主题色（推荐）
+              value: auto
+            - label: 浅色
+              value: light
+            - label: 深色
+              value: dark
+          help: "统计页面默认的亮 / 暗主题；「跟随站点主题色」会随站点主题自动适配，也可强制指定浅色或深色。"
+        # 呼号查询与 OQRS（原「呼号查询与 OQRS」分组并入本分组）
         - $formkit: switch
-          name: enabled
+          name: searchEnabled
           label: 启用呼号查询与 OQRS
           value: true
           help: "在统计组件中显示呼号查询框，可按呼号检索通联记录并一键提交 OQRS 卡片申请。需要 Wavelog 站点已启用 OQRS（站点设置中为电台位置开启 OQRS），且 API Token 具备 qso:read 权限。"
         - $formkit: number
-          name: maxResults
+          name: searchMaxResults
           label: 查询结果上限
           value: 50
           min: 5
           max: 200
           help: "呼号查询最多返回并展示的通联条数（按时间倒序）。"
-
-    - group: display
-      label: 展示设置
-      formSchema:
         - $formkit: switch
           name: showSectionTitle
           label: 显示区块标题

@@ -25,7 +25,6 @@ public class QsoStatsService {
     private static final String GROUP_API = "api";
     private static final String GROUP_STATS = "stats";
     private static final String GROUP_DISPLAY = "display";
-    private static final String GROUP_SEARCH = "search";
     private static final String GROUP_LAYOUT = "layout";
 
     private final ReactiveSettingFetcher settingFetcher;
@@ -88,6 +87,8 @@ public class QsoStatsService {
                                 config.fallbackText(),
                                 config.searchEnabled(),
                                 config.searchMaxResults(),
+                                config.displayStyle(),
+                                config.defaultTheme(),
                                 resolveLayout(layout.panelsOrDefault())))))
                     .onErrorResume(e -> Mono.just(StatsPayload.dashboardError(friendlyMessage(e), config)));
             }));
@@ -108,10 +109,10 @@ public class QsoStatsService {
                 return Mono.just(StatsPayload.searchError(
                     "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。"));
             }
-            return fetchSearch()
-                .flatMap(search -> cached(cacheKey("search", api, call),
+            return fetchSearchMaxResults()
+                .flatMap(maxResults -> cached(cacheKey("search", api, call),
                     api.cacheSecondsOrDefault(),
-                    wavelogClient.fetchQsosByCallsign(api, call, search.maxResultsOrDefault())))
+                    wavelogClient.fetchQsosByCallsign(api, call, maxResults)))
                 .map(node -> PayloadBuilder.buildSearchResult(call, node))
                 .onErrorResume(e -> Mono.just(StatsPayload.searchError(friendlyMessage(e))));
         });
@@ -167,13 +168,12 @@ public class QsoStatsService {
     private Mono<WavelogSettings.Display> fetchDisplay() {
         return settingFetcher.fetch(GROUP_DISPLAY, WavelogSettings.Display.class)
             .onErrorResume(e -> Mono.empty())
-            .defaultIfEmpty(new WavelogSettings.Display(null, null, null, null));
+            .defaultIfEmpty(new WavelogSettings.Display(null, null, null, null, null, null, null, null));
     }
 
-    private Mono<WavelogSettings.Search> fetchSearch() {
-        return settingFetcher.fetch(GROUP_SEARCH, WavelogSettings.Search.class)
-            .onErrorResume(e -> Mono.empty())
-            .defaultIfEmpty(new WavelogSettings.Search(null, null));
+    /** 呼号查询结果上限已并入 display 分组（searchMaxResults） */
+    private Mono<Integer> fetchSearchMaxResults() {
+        return fetchDisplay().map(WavelogSettings.Display::searchMaxResultsOrDefault);
     }
 
     private Mono<WavelogSettings.Layout> fetchLayout() {
@@ -205,11 +205,12 @@ public class QsoStatsService {
     }
 
     private Mono<StatsPayload.DisplayConfig> fetchDisplayConfig() {
-        return fetchDisplay().zipWith(fetchSearch())
-            .map(t -> new StatsPayload.DisplayConfig(t.getT1().sectionTitleOrDefault(),
-                t.getT1().showSectionTitleOrDefault(), t.getT1().showUpdatedAtOrDefault(),
-                t.getT1().fallbackTextOrDefault(), t.getT2().enabledOrDefault(),
-                t.getT2().maxResultsOrDefault()));
+        return fetchDisplay()
+            .map(d -> new StatsPayload.DisplayConfig(d.sectionTitleOrDefault(),
+                d.showSectionTitleOrDefault(), d.showUpdatedAtOrDefault(),
+                d.fallbackTextOrDefault(), d.searchEnabledOrDefault(),
+                d.searchMaxResultsOrDefault(), d.displayStyleOrDefault(),
+                d.defaultThemeOrDefault()));
     }
 
     private Mono<List<StatsPayload.Section>> buildSections(WavelogSettings.Api api,

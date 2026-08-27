@@ -1,10 +1,11 @@
 # 通联统计（QsoStats）
 
-![Version](https://img.shields.io/badge/version-1.4.0-1677ff)
+![Version](https://img.shields.io/badge/version-1.5.0-1677ff)
 ![Halo](https://img.shields.io/badge/Halo-2.20%2B-00b42a)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
-> 🆕 **v1.4.0**：修复统计页偶发无数据/图表空白，仪表盘 UI 焕新（KPI 专属主色、渐变图表、入场动画、实时脉冲指示），详见 [CHANGELOG](CHANGELOG.md)。
+> 🆕 **v1.5.0**：统计页 UI 全面重构为现代仪表盘（贯穿横幅 + Bento KPI + 玻璃拟态查询卡），新增「数据展示样式」选择（现代仪表盘 / 经典卡片）与「默认主题」设置，详见 [CHANGELOG](CHANGELOG.md)。
+> **v1.4.0**：修复统计页偶发无数据/图表空白，仪表盘 UI 焕新。
 >
 > 🌐 在线演示：<https://bg8lng.com/qso-stats>
 

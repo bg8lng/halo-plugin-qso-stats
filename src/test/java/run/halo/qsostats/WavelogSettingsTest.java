@@ -69,20 +69,24 @@ class WavelogSettingsTest {
         assertTrue(display.showUpdatedAtOrDefault());
         assertEquals("通联统计", display.sectionTitleOrDefault());
         assertEquals("统计数据暂不可用，请稍后再试", display.fallbackTextOrDefault());
+        assertEquals("modern", display.displayStyleOrDefault());
+        assertEquals("auto", display.defaultThemeOrDefault());
     }
 
     @Test
-    void searchGroupBinding() throws Exception {
-        WavelogSettings.Search search = mapper.convertValue(
-            mapper.readTree("{\"enabled\":false,\"maxResults\":20}"),
-            WavelogSettings.Search.class);
-        assertFalse(search.enabledOrDefault());
-        assertEquals(20, search.maxResultsOrDefault());
+    void displaySearchBinding() throws Exception {
+        WavelogSettings.Display display = mapper.convertValue(
+            mapper.readTree("{\"searchEnabled\":false,\"searchMaxResults\":20}"),
+            WavelogSettings.Display.class);
+        assertFalse(display.searchEnabledOrDefault());
+        assertEquals(20, display.searchMaxResultsOrDefault());
 
-        WavelogSettings.Search defaults = mapper.convertValue(
-            mapper.readTree("{}"), WavelogSettings.Search.class);
-        assertTrue(defaults.enabledOrDefault());
-        assertEquals(50, defaults.maxResultsOrDefault());
+        WavelogSettings.Display defaults = mapper.convertValue(
+            mapper.readTree("{}"), WavelogSettings.Display.class);
+        assertTrue(defaults.searchEnabledOrDefault());
+        assertEquals(50, defaults.searchMaxResultsOrDefault());
+        assertEquals("modern", defaults.displayStyleOrDefault());
+        assertEquals("auto", defaults.defaultThemeOrDefault());
     }
 
     @Test

@@ -6,7 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 插件设置模型，对应 resources/extensions/settings.yaml 中的分组：
- * api（Wavelog API 配置）、stats（统计项目）、display（展示设置）、layout（页面布局）。
+ * api（Wavelog API 配置）、stats（统计项目）、display（展示与交互）、layout（页面布局）。
+ *
+ * <p>「呼号查询与 OQRS」已并入 display（展示与交互）分组，字段为 searchEnabled /
+ * searchMaxResults；display 分组另含数据展示样式 displayStyle（modern / classic）
+ * 与默认主题 defaultTheme（auto / light / dark）。
  *
  * <p>由 {@link run.halo.app.plugin.ReactiveSettingFetcher} 按分组反序列化，
  * 字段名与表单 name 一致。
@@ -56,23 +60,20 @@ public final class WavelogSettings {
         }
     }
 
-    /** search 分组：呼号查询与 OQRS */
+    /** display 分组：展示与交互（含数据展示样式、默认主题、呼号查询开关） */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Search(Boolean enabled, Integer maxResults) {
+    public record Display(Boolean searchEnabled, Integer searchMaxResults,
+                          Boolean showSectionTitle, String sectionTitle,
+                          Boolean showUpdatedAt, String fallbackText,
+                          String displayStyle, String defaultTheme) {
 
-        public boolean enabledOrDefault() {
-            return enabled == null || enabled;
+        public boolean searchEnabledOrDefault() {
+            return searchEnabled == null || searchEnabled;
         }
 
-        public int maxResultsOrDefault() {
-            return maxResults != null && maxResults > 0 ? maxResults : 50;
+        public int searchMaxResultsOrDefault() {
+            return searchMaxResults != null && searchMaxResults > 0 ? searchMaxResults : 50;
         }
-    }
-
-    /** display 分组：展示设置 */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Display(Boolean showSectionTitle, String sectionTitle,
-                          Boolean showUpdatedAt, String fallbackText) {
 
         public boolean showSectionTitleOrDefault() {
             return showSectionTitle == null || showSectionTitle;
@@ -89,9 +90,15 @@ public final class WavelogSettings {
         public String fallbackTextOrDefault() {
             return StringUtils.defaultIfBlank(fallbackText, "统计数据暂不可用，请稍后再试");
         }
+
+        public String displayStyleOrDefault() {
+            return StringUtils.defaultIfBlank(displayStyle, "modern");
+        }
+
+        public String defaultThemeOrDefault() {
+            return StringUtils.defaultIfBlank(defaultTheme, "auto");
+        }
     }
-
-
 
     /** layout 分组：统计页面面板顺序与显隐 */
     @JsonIgnoreProperties(ignoreUnknown = true)
