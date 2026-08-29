@@ -1,6 +1,7 @@
 package run.halo.qsostats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -271,4 +272,76 @@ class QsoStatsServiceTest {
         assertTrue(!result.success());
         assertTrue(result.message().contains("通联"));
     }
+
+    // ---------- 变更检测缓存 ----------
+
+    /**
+     * 验证缓存策略：
+     * 1. 缓存有效期内直接命中，不请求 Wavelog，「更新于」时间不变；
+     * 2. TTL 到期后数据无变化 → 保留原「更新于」时间，仅延长有效期；
+     * 3. TTL 到期后数据有变化 → 更新缓存与「更新于」时间。
+     */
+    @Test
+    void cacheKeepsUpdatedAtWhenDataUnchangedAndRefreshesOnChange() throws Exception {
+        AtomicReference<String> statBody = new AtomicReference<>("""
+            {"data":{"qso":{"total":100,"activity":{"today":1,"month":2,"year":3},
+              "breakdown":{"by_band":[{"band":"20m","count":12}],
+                           "by_mode":[{"mode":"FT8","count":12}]},
+              "dxcc":{"worked":1,"confirmed":1,"available":340}}},"meta":{}}
+            """);
+        AtomicReference<String> qsoBody = new AtomicReference<>(
+            "{\"data\":[{\"id\":1,\"station_id\":1,\"call\":\"N9EAT\","
+                + "\"band\":\"20m\",\"mode\":\"SSB\","
+                + "\"qso_date\":\"2026-06-16 17:06:00\",\"gridsquare\":\"EN42\"}],\"meta\":{}}");
+        server.removeContext("/index.php/api/v2/statistic");
+        server.removeContext("/index.php/api/v2/qso");
+        server.createContext("/index.php/api/v2/statistic", exchange -> {
+            byte[] b = statBody.get().getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, b.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(b);
+            }
+        });
+        server.createContext("/index.php/api/v2/qso", exchange -> {
+            byte[] b = qsoBody.get().getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, b.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(b);
+            }
+        });
+
+        ReactiveSettingFetcher fetcher = mock(ReactiveSettingFetcher.class);
+        when(fetcher.fetch(eq("api"), eq(WavelogSettings.Api.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Api(
+                "http://localhost:" + port, "wl2_test", 1, 5, "我的通联")));
+        when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Display(
+                true, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto")));
+        when(fetcher.fetch(eq("layout"), eq(WavelogSettings.Layout.class)))
+            .thenReturn(Mono.empty());
+
+        QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
+        StatsPayload.DashboardPayload first = service.buildDashboard().block();
+        assertNotNull(first);
+        String firstUpdatedAt = first.updatedAt();
+
+        // 1) 缓存有效期内：第二次请求直接命中缓存，更新时间不变
+        StatsPayload.DashboardPayload cached = service.buildDashboard().block();
+        assertEquals(firstUpdatedAt, cached.updatedAt());
+
+        // 2) TTL 到期后数据无变化：保留原「更新于」时间
+        Thread.sleep(1200);
+        StatsPayload.DashboardPayload unchanged = service.buildDashboard().block();
+        assertEquals(firstUpdatedAt, unchanged.updatedAt());
+
+        // 3) TTL 到期后数据有变化：更新缓存与「更新于」时间
+        statBody.set(statBody.get().replace("\"total\":100", "\"total\":101"));
+        Thread.sleep(1200);
+        StatsPayload.DashboardPayload changed = service.buildDashboard().block();
+        assertNotEquals(firstUpdatedAt, changed.updatedAt());
+    }
 }
+
+

@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import run.halo.app.infra.utils.JsonUtils;
+import run.halo.app.plugin.PluginContext;
 import run.halo.app.theme.TemplateNameResolver;
 
 /**
@@ -37,11 +38,14 @@ public class QsoStatsRouter {
 
     private final QsoStatsService qsoStatsService;
     private final TemplateNameResolver templateNameResolver;
+    private final PluginContext pluginContext;
 
     public QsoStatsRouter(QsoStatsService qsoStatsService,
-                          TemplateNameResolver templateNameResolver) {
+                          TemplateNameResolver templateNameResolver,
+                          PluginContext pluginContext) {
         this.qsoStatsService = qsoStatsService;
         this.templateNameResolver = templateNameResolver;
+        this.pluginContext = pluginContext;
     }
 
     @Bean
@@ -103,7 +107,10 @@ public class QsoStatsRouter {
         String viewName = PAGE_LAYOUT_SUPPORTED ? "qso-stats" : "qso-stats-standalone";
         return templateNameResolver.resolveTemplateNameOrDefault(request.exchange(), viewName)
             .flatMap(name -> qsoStatsService.pageTitle()
-                .flatMap(title -> ServerResponse.ok().render(name, Map.of("title", title))));
+                .flatMap(title -> ServerResponse.ok().render(name, Map.of(
+                    "title", title,
+                    // 供模板中的 echarts.min.js 等静态资源携带版本号，避免 CDN 缓存旧版
+                    "version", pluginContext.getVersion()))));
     }
 
     private static boolean isPageLayoutSupported() {

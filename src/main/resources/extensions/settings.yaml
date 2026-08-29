@@ -23,7 +23,7 @@ spec:
           value: 300
           min: 10
           max: 86400
-          help: "Wavelog 数据缓存时长，避免每次访问都请求日志平台。"
+          help: "Wavelog 数据缓存时长，避免每次访问都请求日志平台。缓存到期后会检测数据是否有更新：有更新才刷新缓存与「更新于」时间，无更新则沿用原缓存。"
         - $formkit: number
           name: timeoutSeconds
           label: 请求超时（秒）

@@ -324,9 +324,12 @@
 
     cancelBtn.addEventListener('click', function () {
       container.innerHTML = '';
-      // 恢复按钮由外层保留：将原一键按钮重新挂回
+      // 恢复「条数汇总 + 一键按钮」（与查询结果尾部布局一致）
+      var countNote = el('span', 'qso-stats__result-count',
+        '共 ' + ctx.qsos.length + ' 条');
       var btn = el('button', 'qso-stats__oqrs-btn', '一键 OQRS 申请');
       btn.type = 'button';
+      container.appendChild(countNote);
       container.appendChild(btn);
       btn.addEventListener('click', function () {
         renderOqrsForm(container, ctx);
@@ -650,7 +653,8 @@
     return {
       animationDuration: 700,
       animationEasing: 'cubicOut',
-      grid: { left: 8, right: 44, top: 10, bottom: 24 },
+      // 频段横向条形图：左侧留出频段名（y 轴分类标签）空间，右侧留出数值标签空间
+      grid: { left: 48, right: 30, top: 10, bottom: 24 },
       tooltip: {
         trigger: 'axis',
         axisPointer: { type: 'shadow', shadowStyle: { color: dashGrid() } },
@@ -1265,7 +1269,7 @@
   function modernModePanel(full) {
     var panel = el('article', 'qs-dash__panel' + (full ? ' qs-dash__panel--full' : ''));
     panel.setAttribute('data-tone', 'violet');
-    panel.appendChild(modernPanelHead('模式分布', '环形图 + 明细', 'violet'));
+    panel.appendChild(modernPanelHead('模式分布', '各模式通联数量与占比', 'violet'));
     var wrap = el('div', 'qs-dash__donut-wrap');
     var chart = el('div', 'qs-dash__chart qs-dash__chart--tall');
     chart.setAttribute('data-dash-chart', 'mode');
@@ -1280,7 +1284,7 @@
   function modernRecentPanel(full, rows) {
     var panel = el('article', 'qs-dash__panel' + (full ? ' qs-dash__panel--full' : ''));
     panel.setAttribute('data-tone', 'amber');
-    panel.appendChild(modernPanelHead('最近通联', '最新通联', 'amber'));
+    panel.appendChild(modernPanelHead('最近通联', '最新 10 条通联记录', 'amber'));
     renderDashRecent(panel, rows || []);
     return panel;
   }
@@ -1291,19 +1295,19 @@
       var full = item.span === 2;
       switch (item.key) {
         case 'day':
-          grid.appendChild(modernPanel('近 30 日通联', 'day', '日统计 · 面积图', 'blue', full));
+          grid.appendChild(modernPanel('近 30 日通联', 'day', '近 30 日每日通联数量', 'blue', full));
           break;
         case 'month':
-          grid.appendChild(modernPanel('本年每月通联', 'month', '月统计 · 柱状图', 'cyan', full));
+          grid.appendChild(modernPanel('本年每月通联', 'month', '本年各月通联数量', 'cyan', full));
           break;
         case 'mode':
           grid.appendChild(modernModePanel(full));
           break;
         case 'band':
-          grid.appendChild(modernPanel('频段分布', 'band', '横向条形 · TOP', 'coral', full));
+          grid.appendChild(modernPanel('频段分布', 'band', '各频段通联数量（TOP 14）', 'coral', full));
           break;
         case 'year':
-          grid.appendChild(modernPanel('历年通联', 'year', '年度汇总', 'green', full));
+          grid.appendChild(modernPanel('历年通联', 'year', '历年通联数量', 'green', full));
           break;
         case 'recent':
           grid.appendChild(modernRecentPanel(full, data.recent || []));

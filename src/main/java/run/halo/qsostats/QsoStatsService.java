@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.security.MessageDigest;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -54,9 +55,10 @@ public class QsoStatsService {
                         "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。", config));
                 }
                 return fetchStats(api)
-                    .flatMap(qsoNode -> fetchStatsGroup()
-                        .flatMap(stats -> buildSections(api, qsoNode, stats)))
-                    .map(sections -> StatsPayload.success(sections, Instant.now().toString(), config))
+                    .flatMap(qsoCache -> fetchStatsGroup()
+                        .flatMap(stats -> buildSections(api, qsoCache.value(), stats))
+                        .map(sections -> StatsPayload.success(sections,
+                            qsoCache.updatedAt(), config)))
                     .onErrorResume(e -> Mono.just(StatsPayload.error(friendlyMessage(e), config)));
             }));
     }
@@ -77,12 +79,12 @@ public class QsoStatsService {
                         "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。", config));
                 }
                 return fetchStats(api)
-                    .flatMap(qsoNode -> fetchAllQsoRows(api)
-                        .flatMap(rows -> fetchLayout().map(layout ->
+                    .flatMap(qsoCache -> fetchAllQsoRows(api)
+                        .flatMap(rowsCache -> fetchLayout().map(layout ->
                             new StatsPayload.DashboardPayload(
-                                buildStatistics(qsoNode, rows),
-                                buildRecent(rows, 10),
-                                Instant.now().toString(),
+                                buildStatistics(qsoCache.value(), rowsCache.rows()),
+                                buildRecent(rowsCache.rows(), 10),
+                                latestUpdate(qsoCache.updatedAt(), rowsCache.updatedAt()),
                                 null,
                                 config.fallbackText(),
                                 config.searchEnabled(),
@@ -110,10 +112,10 @@ public class QsoStatsService {
                     "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。"));
             }
             return fetchSearchMaxResults()
-                .flatMap(maxResults -> cached(cacheKey("search", api, call),
+                .flatMap(maxResults -> cachedJson(cacheKey("search", api, call),
                     api.cacheSecondsOrDefault(),
                     wavelogClient.fetchQsosByCallsign(api, call, maxResults)))
-                .map(node -> PayloadBuilder.buildSearchResult(call, node))
+                .map(cache -> PayloadBuilder.buildSearchResult(call, cache.value()))
                 .onErrorResume(e -> Mono.just(StatsPayload.searchError(friendlyMessage(e))));
         });
     }
@@ -223,21 +225,28 @@ public class QsoStatsService {
             return Mono.just(PayloadBuilder.buildSections(qsoNode, null, items));
         }
         return fetchRecent(api)
-            .map(recentNode -> PayloadBuilder.buildSections(qsoNode, recentNode, items))
+            .map(recentCache -> PayloadBuilder.buildSections(qsoNode,
+                recentCache.value(), items))
             // 最近通联失败不拖垮整页，降级为空列表
             .onErrorResume(e -> Mono.just(PayloadBuilder.buildSections(qsoNode, null, items)));
     }
 
-    // ---------- Wavelog 数据（TTL 缓存，避免高频请求日志平台） ----------
+    // ---------- Wavelog 数据（变更检测缓存） ----------
+    //
+    // 缓存策略：按后台配置的 TTL 向 Wavelog 拉取数据，并对响应内容计算签名。
+    //   - 若签名与缓存一致（数据无更新）：保留缓存的原始数据与「更新于」时间，
+    //     仅延长有效期，前端展示的更新时间不会因刷新而跳动；
+    //   - 若签名不一致（数据有更新）：更新缓存数据与「更新于」时间为当前时间；
+    //   - 缓存有效期内直接命中，不再请求 Wavelog。
 
-    private Mono<JsonNode> fetchStats(WavelogSettings.Api api) {
-        return cached(cacheKey("stats", api), api.cacheSecondsOrDefault(),
+    private Mono<CachedJson> fetchStats(WavelogSettings.Api api) {
+        return cachedJson(cacheKey("stats", api), api.cacheSecondsOrDefault(),
             wavelogClient.fetchStatistics(api));
     }
 
-    private Mono<JsonNode> fetchRecent(WavelogSettings.Api api) {
+    private Mono<CachedJson> fetchRecent(WavelogSettings.Api api) {
         // 后台每个 recent 项目的 limit 上限为 50，这里统一拉取 50 条按需截取，便于缓存复用
-        return cached(cacheKey("recent", api), api.cacheSecondsOrDefault(),
+        return cachedJson(cacheKey("recent", api), api.cacheSecondsOrDefault(),
             wavelogClient.fetchRecentQsos(api, 50));
     }
 
@@ -246,16 +255,28 @@ public class QsoStatsService {
      * 分页拉取全部 QSO（newest first），聚合统计图表数据。
      * 结果按 API 缓存策略复用，避免高频请求日志平台。
      */
-    private Mono<List<JsonNode>> fetchAllQsoRows(WavelogSettings.Api api) {
+    private Mono<CachedRows> fetchAllQsoRows(WavelogSettings.Api api) {
         String key = cacheKey("qso-rows", api);
         long now = System.currentTimeMillis();
+        long ttlMillis = api.cacheSecondsOrDefault() * 1000L;
         CacheListEntry entry = rowsCache.get(key);
         if (entry != null && entry.expiresAt() > now) {
-            return Mono.just(entry.rows());
+            return Mono.just(new CachedRows(entry.rows(), entry.updatedAt()));
         }
-        return fetchAllQsos(api)
-            .doOnNext(rows -> rowsCache.put(key,
-                new CacheListEntry(rows, now + api.cacheSecondsOrDefault() * 1000L)));
+        return fetchAllQsos(api).map(rows -> {
+            String signature = signature(rows);
+            if (entry != null && StringUtils.equals(entry.signature(), signature)) {
+                // 数据无变化：保留原值与「更新于」时间，仅延长有效期
+                CacheListEntry kept = new CacheListEntry(entry.rows(), entry.updatedAt(),
+                    now + ttlMillis, signature);
+                rowsCache.put(key, kept);
+                return new CachedRows(kept.rows(), kept.updatedAt());
+            }
+            CacheListEntry fresh = new CacheListEntry(rows, Instant.now().toString(),
+                now + ttlMillis, signature);
+            rowsCache.put(key, fresh);
+            return new CachedRows(fresh.rows(), fresh.updatedAt());
+        });
     }
 
     private Mono<List<JsonNode>> fetchAllQsos(WavelogSettings.Api api) {
@@ -320,20 +341,95 @@ public class QsoStatsService {
         return cacheKey(prefix, api) + "|" + callsign;
     }
 
-    private Mono<JsonNode> cached(String key, int ttlSeconds, Mono<JsonNode> loader) {
-        CacheEntry entry = cache.get(key);
+    /**
+     * 变更检测缓存：TTL 内直接命中；TTL 到期后重新拉取 Wavelog 数据，
+     * 通过签名比较判断数据是否更新——有更新才替换缓存值与「更新于」时间，
+     * 无更新则保留原缓存（仅延长有效期）。
+     */
+    private Mono<CachedJson> cachedJson(String key, int ttlSeconds, Mono<JsonNode> loader) {
         long now = System.currentTimeMillis();
+        long ttlMillis = ttlSeconds * 1000L;
+        CacheEntry entry = cache.get(key);
         if (entry != null && entry.expiresAt() > now) {
-            return Mono.just(entry.value());
+            return Mono.just(new CachedJson(entry.value(), entry.updatedAt()));
         }
-        return loader.doOnNext(node -> cache.put(key,
-            new CacheEntry(node, now + ttlSeconds * 1000L)));
+        return loader.map(node -> {
+            String signature = signature(node);
+            if (entry != null && StringUtils.equals(entry.signature(), signature)) {
+                // API 数据无更新：保留原值与「更新于」时间，仅延长有效期
+                CacheEntry kept = new CacheEntry(entry.value(), entry.updatedAt(),
+                    now + ttlMillis, signature);
+                cache.put(key, kept);
+                return new CachedJson(kept.value(), kept.updatedAt());
+            }
+            CacheEntry fresh = new CacheEntry(node, Instant.now().toString(),
+                now + ttlMillis, signature);
+            cache.put(key, fresh);
+            return new CachedJson(fresh.value(), fresh.updatedAt());
+        });
     }
 
-    private record CacheEntry(JsonNode value, long expiresAt) {
+    /** 数据签名：对 Wavelog 原始响应的序列化内容计算 SHA-256，用于判断数据是否更新 */
+    private static String signature(JsonNode node) {
+        if (node == null) {
+            return "null";
+        }
+        try {
+            return hexDigest(JsonUtils.mapper().writeValueAsBytes(node));
+        } catch (Exception e) {
+            return String.valueOf(node.hashCode());
+        }
     }
 
-    private record CacheListEntry(List<JsonNode> rows, long expiresAt) {
+    private static String signature(List<JsonNode> rows) {
+        if (rows == null) {
+            return "null";
+        }
+        try {
+            return hexDigest(JsonUtils.mapper().writeValueAsBytes(rows));
+        } catch (Exception e) {
+            return String.valueOf(rows.hashCode());
+        }
+    }
+
+    private static String hexDigest(byte[] data) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] digest = md.digest(data);
+        StringBuilder sb = new StringBuilder(digest.length * 2);
+        for (byte b : digest) {
+            sb.append(Character.forDigit((b >> 4) & 0xF, 16));
+            sb.append(Character.forDigit(b & 0xF, 16));
+        }
+        return sb.toString();
+    }
+
+    /** 取两个 ISO-8601 UTC 时间中较新的一个（同格式字符串可直接按字典序比较） */
+    private static String latestUpdate(String a, String b) {
+        if (StringUtils.isBlank(a)) {
+            return b;
+        }
+        if (StringUtils.isBlank(b)) {
+            return a;
+        }
+        return a.compareTo(b) >= 0 ? a : b;
+    }
+
+    /** 缓存条目：原始数据 + 数据实际变更时间 + 有效期 + 内容签名 */
+    private record CacheEntry(JsonNode value, String updatedAt, long expiresAt,
+                              String signature) {
+    }
+
+    /** QSO 行缓存条目 */
+    private record CacheListEntry(List<JsonNode> rows, String updatedAt, long expiresAt,
+                                  String signature) {
+    }
+
+    /** 变更检测缓存读取结果：数据值 + 数据实际变更时间（无更新时保留旧时间） */
+    private record CachedJson(JsonNode value, String updatedAt) {
+    }
+
+    /** QSO 行缓存读取结果 */
+    private record CachedRows(List<JsonNode> rows, String updatedAt) {
     }
 
     // ---------- 错误信息（不泄露 Token） ----------

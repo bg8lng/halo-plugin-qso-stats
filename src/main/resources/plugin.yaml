@@ -10,11 +10,12 @@ spec:
   requires: ">=2.20.0"
   author:
     name: BG8LNG
-    website: https://github.com/bg8lng
+    website: https://bg8lng.com
   logo: logo.svg
   settingName: qso-stats-settings
   configMapName: qso-stats-configmap
-  homepage: https://github.com/bg8lng/halo-plugin-qso-stats
+  homepage: https://bg8lng.com
+  repo: https://github.com/bg8lng/halo-plugin-qso-stats
   displayName: "通联统计"
   description: "通过 Wavelog API 展示通联统计信息（QSO 总数、DXCC 字头、波段/模式分布、最近通联等），统计项目与 API 均可在后台配置。"
   license:

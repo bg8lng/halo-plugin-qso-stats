@@ -1003,6 +1003,11 @@
 .qs-dash--modern .qs-dash__hero {
   position: relative;
   overflow: hidden;
+  /* 顶部横幅全宽贯通：突破 .qso-stats-page 的 max-width 容器，铺满整个视口宽度 */
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   background:
     radial-gradient(1100px 480px at 18% -60%, rgba(47, 107, 255, 0.55), transparent 60%),
     radial-gradient(900px 420px at 88% 130%, rgba(6, 195, 216, 0.32), transparent 62%),
