@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
@@ -60,15 +60,26 @@ public final class WavelogSettings {
         }
     }
 
-    /** display 分组：展示与交互（含数据展示样式、默认主题、呼号查询开关） */
+    /** display 分组：展示与交互（含数据展示样式、默认主题、呼号查询与 OQRS 开关） */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Display(Boolean searchEnabled, Integer searchMaxResults,
                           Boolean showSectionTitle, String sectionTitle,
                           Boolean showUpdatedAt, String fallbackText,
-                          String displayStyle, String defaultTheme) {
+                          String displayStyle, String defaultTheme,
+                          Boolean oqrsEnabled) {
 
         public boolean searchEnabledOrDefault() {
             return searchEnabled == null || searchEnabled;
+        }
+
+        /**
+         * OQRS 写操作是否启用。
+         *
+         * <p>OQRS 依附于呼号查询：总开关关闭时 OQRS 一并关闭，
+         * 服务端据此拒绝 {@code POST /qso-stats/api/oqrs}。
+         */
+        public boolean oqrsEnabledOrDefault() {
+            return searchEnabledOrDefault() && (oqrsEnabled == null || oqrsEnabled);
         }
 
         public int searchMaxResultsOrDefault() {
@@ -97,6 +108,38 @@ public final class WavelogSettings {
 
         public String defaultThemeOrDefault() {
             return StringUtils.defaultIfBlank(defaultTheme, "auto");
+        }
+    }
+
+    /**
+     * security 分组：公开接口的防滥用控制。
+     *
+     * <p>呼号查询与 OQRS 是无需认证的公开端点，其中 OQRS 为写操作，
+     * 这些参数用于限制单个来源的调用频率、单次提交规模与重复提交窗口。
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Security(Integer searchRateLimit, Integer oqrsRateLimit,
+                           Integer oqrsMaxQsos, Integer oqrsDuplicateWindowHours) {
+
+        /** 单 IP 每分钟允许的呼号查询次数；0 表示不限制 */
+        public int searchRateLimitOrDefault() {
+            return searchRateLimit != null && searchRateLimit >= 0 ? searchRateLimit : 20;
+        }
+
+        /** 单 IP 每小时允许的 OQRS 提交次数；0 表示不限制 */
+        public int oqrsRateLimitOrDefault() {
+            return oqrsRateLimit != null && oqrsRateLimit >= 0 ? oqrsRateLimit : 5;
+        }
+
+        /** 单次 OQRS 申请允许携带的最大通联条数 */
+        public int oqrsMaxQsosOrDefault() {
+            return oqrsMaxQsos != null && oqrsMaxQsos > 0 ? oqrsMaxQsos : 50;
+        }
+
+        /** 相同内容的重复提交拦截窗口（小时）；0 表示不去重 */
+        public int oqrsDuplicateWindowHoursOrDefault() {
+            return oqrsDuplicateWindowHours != null && oqrsDuplicateWindowHours >= 0
+                ? oqrsDuplicateWindowHours : 24;
         }
     }
 

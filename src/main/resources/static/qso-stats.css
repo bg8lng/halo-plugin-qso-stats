@@ -514,6 +514,30 @@
   accent-color: var(--qso-stats-accent);
 }
 
+/* 第三方数据处理告知：提交前必须勾选 */
+.qso-stats__oqrs-privacy {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--qso-stats-card-border);
+  border-radius: calc(var(--qso-stats-radius) - 6px);
+  background: var(--qso-stats-track);
+}
+
+.qso-stats__oqrs-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.82em;
+  line-height: 1.6;
+  color: var(--qso-stats-muted);
+  cursor: pointer;
+}
+
+.qso-stats__oqrs-consent input[type="checkbox"] {
+  margin-top: 0.25em;
+  flex: 0 0 auto;
+  accent-color: var(--qso-stats-accent);
+}
+
 .qso-stats__oqrs-actions {
   display: flex;
   gap: 0.5rem;

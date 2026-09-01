@@ -141,7 +141,27 @@
 
   /* ---------------- 呼号查询与一键 OQRS ---------------- */
 
-  function searchSection(widgetRoot, root, maxResults) {
+  /** 把服务端的访问控制结果翻译成访客能看懂的提示 */
+  function statusMessage(status) {
+    if (status === 403) { return '该功能已由站长关闭'; }
+    if (status === 429) { return '请求过于频繁，请稍后再试'; }
+    if (status === 409) { return '该申请已提交过，请勿重复提交'; }
+    if (status === 400) { return '请求参数不正确，请检查后重试'; }
+    return '请求失败（HTTP ' + status + '）';
+  }
+
+  /** fetch 包装：无论状态码如何都尽量取出服务端返回的 JSON 提示 */
+  function fetchJson(url, options) {
+    return fetch(url, options).then(function (res) {
+      return res.json().then(function (data) {
+        return { ok: res.ok, status: res.status, data: data };
+      }, function () {
+        return { ok: res.ok, status: res.status, data: null };
+      });
+    });
+  }
+
+  function searchSection(widgetRoot, root, maxResults, oqrsEnabled) {
     var sectionEl = el('div', 'qso-stats__search');
 
     var head = el('div', 'qso-stats__search-head');
@@ -155,8 +175,9 @@
     head.appendChild(btn);
 
     var body = el('div', 'qso-stats__search-body');
-    var hint = el('div', 'qso-stats__search-hint',
-      '按呼号检索本站通联记录（仅展示日期、模式、频段），可一键提交 OQRS 卡片申请。');
+    var hint = el('div', 'qso-stats__search-hint', oqrsEnabled
+      ? '按呼号检索本站通联记录（仅展示日期、模式、频段），可一键提交 OQRS 卡片申请。'
+      : '按呼号检索本站通联记录（仅展示日期、模式、频段）。');
     body.appendChild(hint);
 
     sectionEl.appendChild(head);
@@ -173,15 +194,14 @@
         return;
       }
       renderSearchLoading(body);
-      fetch(searchEndpoint + '?callsign=' + encodeURIComponent(callsign))
-        .then(function (res) {
-          if (!res.ok) {
-            throw new Error('HTTP ' + res.status);
+      fetchJson(searchEndpoint + '?callsign=' + encodeURIComponent(callsign))
+        .then(function (out) {
+          var message = (out.data && out.data.error) || statusMessage(out.status);
+          if (!out.ok || !out.data) {
+            renderSearchMessage(body, message, true);
+            return;
           }
-          return res.json();
-        })
-        .then(function (data) {
-          renderSearchResult(body, data, maxResults, oqrsEndpoint);
+          renderSearchResult(body, out.data, maxResults, oqrsEndpoint, oqrsEnabled);
         })
         .catch(function (err) {
           renderSearchMessage(body,
@@ -212,7 +232,7 @@
     body.appendChild(box);
   }
 
-  function renderSearchResult(body, data, maxResults, oqrsEndpoint) {
+  function renderSearchResult(body, data, maxResults, oqrsEndpoint, oqrsEnabled) {
     body.innerHTML = '';
     if (data.error) {
       renderSearchMessage(body, data.error, true);
@@ -257,12 +277,17 @@
     var countNote = el('span', 'qso-stats__result-count',
       '共 ' + rows.length + ' 条' + (maxResults > 0 && rows.length >= maxResults
         ? '（已达查询上限 ' + maxResults + ' 条）' : ''));
-    var oqrsBtn = el('button', 'qso-stats__oqrs-btn', '一键 OQRS 申请');
-    oqrsBtn.type = 'button';
     foot.appendChild(countNote);
-    foot.appendChild(oqrsBtn);
     result.appendChild(foot);
     body.appendChild(result);
+
+    // OQRS 关闭时不渲染任何提交入口（服务端同样会拒绝，双重保险）
+    if (!oqrsEnabled) {
+      return;
+    }
+    var oqrsBtn = el('button', 'qso-stats__oqrs-btn', '一键 OQRS 申请');
+    oqrsBtn.type = 'button';
+    foot.appendChild(oqrsBtn);
 
     oqrsBtn.addEventListener('click', function () {
       renderOqrsForm(foot, {
@@ -305,6 +330,18 @@
     message.placeholder = '备注留言（可选）';
     message.maxLength = 500;
 
+    // 第三方数据处理告知：提交前明确说明数据去向、用途与撤回方式
+    var privacy = el('div', 'qso-stats__oqrs-privacy');
+    var consentLabel = el('label', 'qso-stats__oqrs-consent');
+    var consent = document.createElement('input');
+    consent.type = 'checkbox';
+    consentLabel.appendChild(consent);
+    consentLabel.appendChild(document.createTextNode(
+      '我已知悉：提交后，我填写的邮箱、留言与所选通联记录将被发送至本站站长自行搭建的'
+      + ' Wavelog 日志系统，仅用于处理本次 QSL 卡片申请，并保存在该系统中直至申请处理完毕；'
+      + '如需撤回或删除，可通过本站联系方式联系站长。'));
+    privacy.appendChild(consentLabel);
+
     var actions = el('div', 'qso-stats__oqrs-actions');
     var submitBtn = el('button', 'qso-stats__oqrs-submit', '提交申请');
     submitBtn.type = 'button';
@@ -318,6 +355,7 @@
     form.appendChild(email);
     form.appendChild(routeRow);
     form.appendChild(message);
+    form.appendChild(privacy);
     form.appendChild(actions);
     form.appendChild(status);
     container.appendChild(form);
@@ -344,6 +382,12 @@
         email.focus();
         return;
       }
+      if (!consent.checked) {
+        status.textContent = '请先阅读并勾选数据处理告知，再提交申请';
+        status.className = 'qso-stats__oqrs-status qso-stats__oqrs-status-error';
+        consent.focus();
+        return;
+      }
       var routeValue = 'B';
       var radios = form.querySelectorAll('input[name="qslroute"]');
       for (var i = 0; i < radios.length; i++) {
@@ -364,7 +408,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = '提交中…';
       status.textContent = '';
-      fetch(ctx.endpoint, {
+      fetchJson(ctx.endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -375,21 +419,17 @@
           qsos: qsos
         })
       })
-        .then(function (res) {
-          if (!res.ok) {
-            throw new Error('HTTP ' + res.status);
-          }
-          return res.json();
-        })
-        .then(function (result) {
-          if (result && result.success) {
+        .then(function (out) {
+          var result = out.data;
+          if (out.ok && result && result.success) {
             status.textContent = result.message || 'OQRS 卡片申请已提交，感谢使用！';
             status.className = 'qso-stats__oqrs-status qso-stats__oqrs-status-success';
             email.disabled = true;
             message.disabled = true;
+            consent.disabled = true;
             cancelBtn.textContent = '关闭';
           } else {
-            status.textContent = (result && result.message) || '提交失败，请稍后再试';
+            status.textContent = (result && result.message) || statusMessage(out.status);
             status.className = 'qso-stats__oqrs-status qso-stats__oqrs-status-error';
             submitBtn.disabled = false;
             submitBtn.textContent = '提交申请';
@@ -1361,7 +1401,8 @@
     if (data.searchEnabled && layoutHas(layout, 'search')) {
       var searchCard = el('section', 'qs-dash__search-card');
       wrap.appendChild(searchCard);
-      searchSection(root, searchCard, Number(data.searchMaxResults) || 50);
+      searchSection(root, searchCard, Number(data.searchMaxResults) || 50,
+          data.oqrsEnabled !== false);
     }
 
     // 3. 核心指标（Bento）
@@ -1432,7 +1473,8 @@
         case 'search':
           if (data.searchEnabled) {
             panelEl = el('div', 'qs-dash__slot' + (full ? ' qs-dash__slot--full' : ''));
-            searchSection(root, panelEl, Number(data.searchMaxResults) || 50);
+            searchSection(root, panelEl, Number(data.searchMaxResults) || 50,
+              data.oqrsEnabled !== false);
           }
           break;
         case 'kpi':
@@ -1504,7 +1546,8 @@
       wrap.appendChild(err);
     } else {
       if (data.searchEnabled) {
-        searchSection(root, wrap, Number(data.searchMaxResults) || 50);
+        searchSection(root, wrap, Number(data.searchMaxResults) || 50,
+          data.oqrsEnabled !== false);
       }
       (data.sections || []).forEach(function (section) {
         wrap.appendChild(card(section));

@@ -3,7 +3,7 @@ plugins {
     id "run.halo.plugin.devtools" version "0.2.0"
 }
 
-group 'run.halo.qsostats'
+group 'com.bg8lng.qsostats'
 sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {

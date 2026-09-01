@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 /**
  * Wavelog 响应体不是合法 JSON 时抛出。

@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
@@ -18,7 +18,25 @@ public final class StatsPayload {
     public record Payload(List<Section> sections, String updatedAt, String error,
                           String sectionTitle, boolean showSectionTitle,
                           boolean showUpdatedAt, String fallbackText,
-                          boolean searchEnabled, int searchMaxResults) {
+                          boolean searchEnabled, int searchMaxResults,
+                          boolean oqrsEnabled) {
+    }
+
+    /**
+     * 公开接口的响应包装：{@code status} 供路由层设置 HTTP 状态码。
+     *
+     * <p>功能关闭返回 403、频率超限返回 429、参数非法返回 400、
+     * 重复提交返回 409，避免所有异常都以 200 掩盖真实结果。
+     */
+    public record ApiResponse<T>(int status, T body) {
+
+        public static <T> ApiResponse<T> ok(T body) {
+            return new ApiResponse<>(200, body);
+        }
+
+        public static <T> ApiResponse<T> of(int status, T body) {
+            return new ApiResponse<>(status, body);
+        }
     }
 
     /** 一个统计区块，type 决定前端渲染方式 */
@@ -89,13 +107,13 @@ public final class StatsPayload {
                                   DisplayConfig display) {
         return new Payload(sections, updatedAt, null, display.sectionTitle(),
             display.showSectionTitle(), display.showUpdatedAt(), display.fallbackText(),
-            display.searchEnabled(), display.searchMaxResults());
+            display.searchEnabled(), display.searchMaxResults(), display.oqrsEnabled());
     }
 
     public static Payload error(String message, DisplayConfig display) {
         return new Payload(List.of(), null, message, display.sectionTitle(),
             display.showSectionTitle(), display.showUpdatedAt(), display.fallbackText(),
-            display.searchEnabled(), display.searchMaxResults());
+            display.searchEnabled(), display.searchMaxResults(), display.oqrsEnabled());
     }
 
     public static SearchPayload searchError(String message) {
@@ -108,13 +126,13 @@ public final class StatsPayload {
                                              List<PanelConfig> layout) {
         return new DashboardPayload(statistics, recent, updatedAt, null,
             display.fallbackText(), display.searchEnabled(), display.searchMaxResults(),
-            display.displayStyle(), display.defaultTheme(), layout);
+            display.displayStyle(), display.defaultTheme(), layout, display.oqrsEnabled());
     }
 
     public static DashboardPayload dashboardError(String message, DisplayConfig display) {
         return new DashboardPayload(null, List.of(), null, message,
             display.fallbackText(), display.searchEnabled(), display.searchMaxResults(),
-            display.displayStyle(), display.defaultTheme(), List.of());
+            display.displayStyle(), display.defaultTheme(), List.of(), display.oqrsEnabled());
     }
 
     public static OqrsResult oqrsResult(boolean success, String message) {
@@ -147,13 +165,14 @@ public final class StatsPayload {
                                    String updatedAt, String error, String fallbackText,
                                    boolean searchEnabled, int searchMaxResults,
                                    String displayStyle, String defaultTheme,
-                                   List<PanelConfig> layout) {
+                                   List<PanelConfig> layout, boolean oqrsEnabled) {
     }
 
     /** 展示设置的只读快照，避免在载荷构造中反复读取 */
     public record DisplayConfig(String sectionTitle, boolean showSectionTitle,
                                 boolean showUpdatedAt, String fallbackText,
                                 boolean searchEnabled, int searchMaxResults,
-                                String displayStyle, String defaultTheme) {
+                                String displayStyle, String defaultTheme,
+                                boolean oqrsEnabled) {
     }
 }

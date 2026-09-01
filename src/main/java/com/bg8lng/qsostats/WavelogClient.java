@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.Duration;

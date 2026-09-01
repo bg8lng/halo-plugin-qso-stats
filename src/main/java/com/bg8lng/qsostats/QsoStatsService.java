@@ -1,14 +1,17 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.security.MessageDigest;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -27,18 +30,33 @@ public class QsoStatsService {
     private static final String GROUP_STATS = "stats";
     private static final String GROUP_DISPLAY = "display";
     private static final String GROUP_LAYOUT = "layout";
+    private static final String GROUP_SECURITY = "security";
+
+    /** 业余无线电呼号：字母数字，允许 / 前后缀（如 BY1CRA/8、VP8/BG8LNG） */
+    private static final Pattern CALLSIGN_PATTERN =
+        Pattern.compile("^[A-Z0-9]{1,12}(/[A-Z0-9]{1,10}){0,2}$");
+    /** 邮箱地址的保守校验：仅用于挡掉明显非法输入，真实性由 Wavelog 侧确认 */
+    private static final Pattern EMAIL_PATTERN =
+        Pattern.compile("^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}$");
+    /** OQRS 留言长度上限，与前端 maxlength 保持一致 */
+    private static final int OQRS_MESSAGE_MAX_LENGTH = 500;
+    /** OQRS 邮箱长度上限 */
+    private static final int OQRS_EMAIL_MAX_LENGTH = 128;
 
     private final ReactiveSettingFetcher settingFetcher;
     private final WavelogClient wavelogClient;
+    private final PublicApiGuard guard;
     private static final int DASHBOARD_PER_PAGE = 5000;
     private static final int DASHBOARD_MAX_PAGES = 20;
 
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
     private final Map<String, CacheListEntry> rowsCache = new ConcurrentHashMap<>();
 
-    public QsoStatsService(ReactiveSettingFetcher settingFetcher, WavelogClient wavelogClient) {
+    public QsoStatsService(ReactiveSettingFetcher settingFetcher, WavelogClient wavelogClient,
+                           PublicApiGuard guard) {
         this.settingFetcher = settingFetcher;
         this.wavelogClient = wavelogClient;
+        this.guard = guard;
     }
 
     /**
@@ -91,61 +109,226 @@ public class QsoStatsService {
                                 config.searchMaxResults(),
                                 config.displayStyle(),
                                 config.defaultTheme(),
-                                resolveLayout(layout.panelsOrDefault())))))
+                                resolveLayout(layout.panelsOrDefault()),
+                                config.oqrsEnabled()))))
                     .onErrorResume(e -> Mono.just(StatsPayload.dashboardError(friendlyMessage(e), config)));
             }));
     }
 
     /**
-     * 按呼号查询通联记录（供 /qso-stats/api/search 使用）。
+     * 按呼号查询通联记录（供 GET /qso-stats/api/search 使用）。
      *
-     * <p>结果按缓存策略复用，避免高频请求日志平台。
+     * <p>访问控制与防滥用：
+     * <ol>
+     *   <li>后台「启用呼号查询与 OQRS」关闭时，服务端直接返回 403，
+     *       公开接口不再返回任何日志数据；</li>
+     *   <li>按客户端标识（IP）做每分钟频率限制，超限返回 429；</li>
+     *   <li>呼号格式非法时返回 400，不向 Wavelog 透传任意字符串；</li>
+     *   <li>结果按缓存策略复用，避免高频请求日志平台。</li>
+     * </ol>
      */
-    public Mono<StatsPayload.SearchPayload> searchQsos(String callsign) {
-        String call = StringUtils.trimToEmpty(callsign).toUpperCase(Locale.ROOT);
-        if (StringUtils.isBlank(call)) {
-            return Mono.just(StatsPayload.searchError("请输入要查询的呼号"));
-        }
-        return fetchApi().flatMap(api -> {
-            if (!api.isConfigured()) {
-                return Mono.just(StatsPayload.searchError(
-                    "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。"));
+    public Mono<StatsPayload.ApiResponse<StatsPayload.SearchPayload>> searchQsos(String callsign,
+                                                                                 String clientId) {
+        return fetchDisplay().flatMap(display -> {
+            if (!display.searchEnabledOrDefault()) {
+                return Mono.just(StatsPayload.ApiResponse.of(403,
+                    StatsPayload.searchError("呼号查询功能已关闭")));
             }
-            return fetchSearchMaxResults()
-                .flatMap(maxResults -> cachedJson(cacheKey("search", api, call),
-                    api.cacheSecondsOrDefault(),
-                    wavelogClient.fetchQsosByCallsign(api, call, maxResults)))
-                .map(cache -> PayloadBuilder.buildSearchResult(call, cache.value()))
-                .onErrorResume(e -> Mono.just(StatsPayload.searchError(friendlyMessage(e))));
+            return fetchSecurity().flatMap(security -> {
+                if (!guard.allow("search", clientId, security.searchRateLimitOrDefault(),
+                    60_000L)) {
+                    return Mono.just(StatsPayload.ApiResponse.of(429,
+                        StatsPayload.searchError("查询过于频繁，请稍后再试")));
+                }
+                String call = StringUtils.trimToEmpty(callsign).toUpperCase(Locale.ROOT);
+                if (StringUtils.isBlank(call)) {
+                    return Mono.just(StatsPayload.ApiResponse.of(400,
+                        StatsPayload.searchError("请输入要查询的呼号")));
+                }
+                if (!CALLSIGN_PATTERN.matcher(call).matches()) {
+                    return Mono.just(StatsPayload.ApiResponse.of(400,
+                        StatsPayload.searchError("呼号格式不正确，请输入有效的业余无线电呼号")));
+                }
+                return searchInLog(call, display.searchMaxResultsOrDefault())
+                    .map(StatsPayload.ApiResponse::ok)
+                    .onErrorResume(e -> Mono.just(StatsPayload.ApiResponse.of(502,
+                        StatsPayload.searchError(friendlyMessage(e)))));
+            });
         });
     }
 
     /**
      * 提交 OQRS 卡片申请（供 POST /qso-stats/api/oqrs 使用）。
      *
-     * <p>不缓存，直接转发给 Wavelog 公开申请端点。
+     * <p>这是本插件唯一的公开写操作，会把访客邮箱与留言转发到站长自建的
+     * Wavelog 站点，因此在转发前完成以下服务端校验（前端校验一律不可信）：
+     * <ol>
+     *   <li><b>功能开关</b>：后台关闭「呼号查询与 OQRS」或单独关闭 OQRS 时返回 403；</li>
+     *   <li><b>频率限制</b>：单个客户端标识（IP）每小时可提交的次数上限，超限返回 429；</li>
+     *   <li><b>参数校验</b>：呼号格式、邮箱格式与长度、留言长度、单次条数上限；</li>
+     *   <li><b>记录校验</b>：逐条比对本站日志，提交的通联必须真实存在于该呼号名下，
+     *       否则返回 400，杜绝伪造记录刷 OQRS；</li>
+     *   <li><b>防重复提交</b>：对「呼号 + 邮箱 + 寄送方式 + 通联集合」计算指纹，
+     *       去重窗口内重复提交返回 409；转发失败时释放指纹，允许访客重试。</li>
+     * </ol>
      */
-    public Mono<StatsPayload.OqrsResult> submitOqrs(StatsPayload.OqrsSubmitRequest request) {
-        if (StringUtils.isBlank(request.email())) {
-            return Mono.just(StatsPayload.oqrsResult(false, "请填写您的邮箱地址"));
+    public Mono<StatsPayload.ApiResponse<StatsPayload.OqrsResult>> submitOqrs(
+        StatsPayload.OqrsSubmitRequest request, String clientId) {
+        return fetchDisplay().flatMap(display -> {
+            if (!display.oqrsEnabledOrDefault()) {
+                return Mono.just(StatsPayload.ApiResponse.of(403,
+                    StatsPayload.oqrsResult(false, "OQRS 卡片申请功能已关闭")));
+            }
+            return fetchSecurity().flatMap(security -> {
+                if (!guard.allow("oqrs", clientId, security.oqrsRateLimitOrDefault(),
+                    3_600_000L)) {
+                    return Mono.just(StatsPayload.ApiResponse.of(429,
+                        StatsPayload.oqrsResult(false, "提交过于频繁，请稍后再试")));
+                }
+                String invalid = validateOqrs(request, security);
+                if (invalid != null) {
+                    return Mono.just(StatsPayload.ApiResponse.of(400,
+                        StatsPayload.oqrsResult(false, invalid)));
+                }
+                return submitVerifiedOqrs(request, display, security);
+            });
+        });
+    }
+
+    /** 参数校验：返回 null 表示通过，否则返回给访客的提示文案 */
+    private String validateOqrs(StatsPayload.OqrsSubmitRequest request,
+                                WavelogSettings.Security security) {
+        String call = StringUtils.trimToEmpty(request.callsign()).toUpperCase(Locale.ROOT);
+        if (StringUtils.isBlank(call) || !CALLSIGN_PATTERN.matcher(call).matches()) {
+            return "呼号格式不正确，请输入有效的业余无线电呼号";
+        }
+        String email = StringUtils.trimToEmpty(request.email());
+        if (StringUtils.isBlank(email)) {
+            return "请填写您的邮箱地址";
+        }
+        if (email.length() > OQRS_EMAIL_MAX_LENGTH
+            || !EMAIL_PATTERN.matcher(email).matches()) {
+            return "邮箱地址格式不正确";
+        }
+        if (StringUtils.length(request.message()) > OQRS_MESSAGE_MAX_LENGTH) {
+            return "留言过长，请控制在 " + OQRS_MESSAGE_MAX_LENGTH + " 字以内";
+        }
+        String route = StringUtils.defaultIfBlank(request.qslroute(), "B");
+        if (!"B".equals(route) && !"D".equals(route)) {
+            return "寄送方式不正确";
         }
         if (request.qsos() == null || request.qsos().isEmpty()) {
-            return Mono.just(StatsPayload.oqrsResult(false, "没有可提交的通联记录"));
+            return "没有可提交的通联记录";
         }
+        if (request.qsos().size() > security.oqrsMaxQsosOrDefault()) {
+            return "单次最多提交 " + security.oqrsMaxQsosOrDefault() + " 条通联记录";
+        }
+        return null;
+    }
+
+    /** 记录校验 + 防重复 + 转发 Wavelog */
+    private Mono<StatsPayload.ApiResponse<StatsPayload.OqrsResult>> submitVerifiedOqrs(
+        StatsPayload.OqrsSubmitRequest request, WavelogSettings.Display display,
+        WavelogSettings.Security security) {
+        String call = StringUtils.trimToEmpty(request.callsign()).toUpperCase(Locale.ROOT);
+        String email = StringUtils.trimToEmpty(request.email());
+        String message = StringUtils.trimToEmpty(request.message());
+        String route = StringUtils.defaultIfBlank(request.qslroute(), "B");
         return fetchApi().flatMap(api -> {
             if (!api.isConfigured()) {
-                return Mono.just(StatsPayload.oqrsResult(false,
+                return Mono.just(StatsPayload.ApiResponse.of(503, StatsPayload.oqrsResult(false,
+                    "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。")));
+            }
+            return searchInLog(call, display.searchMaxResultsOrDefault())
+                .flatMap(found -> {
+                    if (found.qsos().isEmpty()) {
+                        return Mono.just(StatsPayload.ApiResponse.of(400,
+                            StatsPayload.oqrsResult(false, "本站日志中没有与该呼号的通联记录")));
+                    }
+                    if (!allQsosExist(request.qsos(), found.qsos())) {
+                        return Mono.just(StatsPayload.ApiResponse.of(400,
+                            StatsPayload.oqrsResult(false,
+                                "提交的通联记录与本站日志不一致，请重新查询后再申请")));
+                    }
+                    String fingerprint = oqrsFingerprint(call, email, route, request.qsos());
+                    long window = security.oqrsDuplicateWindowHoursOrDefault() * 3_600_000L;
+                    if (guard.registerOrDuplicate(fingerprint, window)) {
+                        return Mono.just(StatsPayload.ApiResponse.of(409,
+                            StatsPayload.oqrsResult(false,
+                                "该申请已提交过，请勿重复提交；如需修改请联系站长")));
+                    }
+                    return wavelogClient
+                        .submitOqrsRequest(api, call, email, message, route, request.qsos())
+                        .thenReturn(StatsPayload.ApiResponse.ok(
+                            StatsPayload.oqrsResult(true, "OQRS 卡片申请已提交，感谢使用！")))
+                        .onErrorResume(e -> {
+                            // 转发失败不占用去重窗口，允许访客修正后重试
+                            guard.release(fingerprint);
+                            return Mono.just(StatsPayload.ApiResponse.of(502,
+                                StatsPayload.oqrsResult(false, friendlyMessage(e))));
+                        });
+                })
+                .onErrorResume(e -> Mono.just(StatsPayload.ApiResponse.of(502,
+                    StatsPayload.oqrsResult(false, friendlyMessage(e)))));
+        });
+    }
+
+    /** 按呼号读取本站日志（带缓存），供查询接口与 OQRS 记录校验共用 */
+    private Mono<StatsPayload.SearchPayload> searchInLog(String callsign, int maxResults) {
+        return fetchApi().flatMap(api -> {
+            if (!api.isConfigured()) {
+                return Mono.just(StatsPayload.searchError(
                     "未配置 Wavelog API 地址或 Token，请在插件「设置」中完成配置。"));
             }
-            return wavelogClient.submitOqrsRequest(api,
-                    StringUtils.trimToEmpty(request.callsign()).toUpperCase(Locale.ROOT),
-                    StringUtils.trimToEmpty(request.email()),
-                    StringUtils.trimToEmpty(request.message()),
-                    StringUtils.defaultIfBlank(request.qslroute(), "B"),
-                    request.qsos())
-                .thenReturn(StatsPayload.oqrsResult(true, "OQRS 卡片申请已提交，感谢使用！"))
-                .onErrorResume(e -> Mono.just(StatsPayload.oqrsResult(false, friendlyMessage(e))));
+            return cachedJson(cacheKey("search", api, callsign), api.cacheSecondsOrDefault(),
+                wavelogClient.fetchQsosByCallsign(api, callsign, maxResults))
+                .map(cached -> PayloadBuilder.buildSearchResult(callsign, cached.value()));
         });
+    }
+
+    /** 提交的每一条通联都必须能在本站日志的查询结果中找到 */
+    private static boolean allQsosExist(List<StatsPayload.OqrsQso> submitted,
+                                        List<StatsPayload.QsoRow> logged) {
+        Set<String> known = new HashSet<>();
+        for (StatsPayload.QsoRow row : logged) {
+            known.add(qsoKey(row.date(), row.time(), row.band(), row.mode(), row.stationId()));
+        }
+        for (StatsPayload.OqrsQso qso : submitted) {
+            if (!known.contains(qsoKey(qso.date(), qso.time(), qso.band(), qso.mode(),
+                qso.stationId()))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** 通联记录的比对键：日期 + 时间 + 频段 + 模式 + 电台位置（大小写与空白归一化） */
+    private static String qsoKey(String date, String time, String band, String mode,
+                                 long stationId) {
+        return StringUtils.trimToEmpty(date) + '|'
+            + StringUtils.trimToEmpty(time) + '|'
+            + StringUtils.trimToEmpty(band).toUpperCase(Locale.ROOT) + '|'
+            + StringUtils.trimToEmpty(mode).toUpperCase(Locale.ROOT) + '|'
+            + stationId;
+    }
+
+    /** 重复提交指纹：呼号 + 邮箱 + 寄送方式 + 通联集合（与顺序无关） */
+    static String oqrsFingerprint(String callsign, String email, String route,
+                                  List<StatsPayload.OqrsQso> qsos) {
+        List<String> keys = new ArrayList<>();
+        for (StatsPayload.OqrsQso qso : qsos) {
+            keys.add(qsoKey(qso.date(), qso.time(), qso.band(), qso.mode(), qso.stationId()));
+        }
+        java.util.Collections.sort(keys);
+        String raw = StringUtils.upperCase(callsign) + '\n'
+            + StringUtils.lowerCase(StringUtils.trimToEmpty(email)) + '\n'
+            + StringUtils.upperCase(route) + '\n'
+            + String.join(";", keys);
+        try {
+            return hexDigest(raw.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            return raw;
+        }
     }
 
     /** /qso-stats 页面标题 */
@@ -170,12 +353,20 @@ public class QsoStatsService {
     private Mono<WavelogSettings.Display> fetchDisplay() {
         return settingFetcher.fetch(GROUP_DISPLAY, WavelogSettings.Display.class)
             .onErrorResume(e -> Mono.empty())
-            .defaultIfEmpty(new WavelogSettings.Display(null, null, null, null, null, null, null, null));
+            .defaultIfEmpty(new WavelogSettings.Display(null, null, null, null, null, null,
+                null, null, null));
     }
 
-    /** 呼号查询结果上限已并入 display 分组（searchMaxResults） */
-    private Mono<Integer> fetchSearchMaxResults() {
-        return fetchDisplay().map(WavelogSettings.Display::searchMaxResultsOrDefault);
+    /**
+     * security 分组：公开接口的防滥用参数。
+     *
+     * <p>读取失败或未配置时回落到内置默认值（而非「不限制」），
+     * 保证任何情况下公开写操作都处在限流保护之下。
+     */
+    private Mono<WavelogSettings.Security> fetchSecurity() {
+        return settingFetcher.fetch(GROUP_SECURITY, WavelogSettings.Security.class)
+            .onErrorResume(e -> Mono.empty())
+            .defaultIfEmpty(new WavelogSettings.Security(null, null, null, null));
     }
 
     private Mono<WavelogSettings.Layout> fetchLayout() {
@@ -212,7 +403,7 @@ public class QsoStatsService {
                 d.showSectionTitleOrDefault(), d.showUpdatedAtOrDefault(),
                 d.fallbackTextOrDefault(), d.searchEnabledOrDefault(),
                 d.searchMaxResultsOrDefault(), d.displayStyleOrDefault(),
-                d.defaultThemeOrDefault()));
+                d.defaultThemeOrDefault(), d.oqrsEnabledOrDefault()));
     }
 
     private Mono<List<StatsPayload.Section>> buildSections(WavelogSettings.Api api,
@@ -467,7 +658,7 @@ public class QsoStatsService {
             || StringUtils.containsIgnoreCase(message, "UnknownHost")) {
             return "无法连接 Wavelog 服务，请检查站点地址与网络连接";
         }
-        return "操作失败：" + StringUtils.defaultString(message,
+        return "操作失败：" + StringUtils.defaultIfBlank(message,
             e.getClass().getSimpleName());
     }
 }

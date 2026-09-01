@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -87,6 +87,53 @@ class WavelogSettingsTest {
         assertEquals(50, defaults.searchMaxResultsOrDefault());
         assertEquals("modern", defaults.displayStyleOrDefault());
         assertEquals("auto", defaults.defaultThemeOrDefault());
+    }
+
+    /** OQRS 依附于总开关：总开关关闭时 OQRS 必须一并关闭 */
+    @Test
+    void oqrsSwitchDependsOnSearchSwitch() throws Exception {
+        WavelogSettings.Display bothOn = mapper.convertValue(
+            mapper.readTree("{}"), WavelogSettings.Display.class);
+        assertTrue(bothOn.oqrsEnabledOrDefault());
+
+        WavelogSettings.Display oqrsOff = mapper.convertValue(
+            mapper.readTree("{\"oqrsEnabled\":false}"), WavelogSettings.Display.class);
+        assertTrue(oqrsOff.searchEnabledOrDefault());
+        assertFalse(oqrsOff.oqrsEnabledOrDefault());
+
+        WavelogSettings.Display searchOff = mapper.convertValue(
+            mapper.readTree("{\"searchEnabled\":false,\"oqrsEnabled\":true}"),
+            WavelogSettings.Display.class);
+        assertFalse(searchOff.searchEnabledOrDefault());
+        assertFalse(searchOff.oqrsEnabledOrDefault());
+    }
+
+    /** 防滥用参数：未配置时回落到内置默认值，而不是「不限制」 */
+    @Test
+    void securityDefaultsProtectPublicEndpoints() throws Exception {
+        WavelogSettings.Security defaults = mapper.convertValue(
+            mapper.readTree("{}"), WavelogSettings.Security.class);
+        assertEquals(20, defaults.searchRateLimitOrDefault());
+        assertEquals(5, defaults.oqrsRateLimitOrDefault());
+        assertEquals(50, defaults.oqrsMaxQsosOrDefault());
+        assertEquals(24, defaults.oqrsDuplicateWindowHoursOrDefault());
+
+        WavelogSettings.Security custom = mapper.convertValue(
+            mapper.readTree("{\"searchRateLimit\":0,\"oqrsRateLimit\":1,"
+                + "\"oqrsMaxQsos\":10,\"oqrsDuplicateWindowHours\":0}"),
+            WavelogSettings.Security.class);
+        // 0 是合法值，表示明确关闭该项限制
+        assertEquals(0, custom.searchRateLimitOrDefault());
+        assertEquals(1, custom.oqrsRateLimitOrDefault());
+        assertEquals(10, custom.oqrsMaxQsosOrDefault());
+        assertEquals(0, custom.oqrsDuplicateWindowHoursOrDefault());
+
+        // 非法负值回落默认
+        WavelogSettings.Security negative = mapper.convertValue(
+            mapper.readTree("{\"searchRateLimit\":-5,\"oqrsMaxQsos\":-1}"),
+            WavelogSettings.Security.class);
+        assertEquals(20, negative.searchRateLimitOrDefault());
+        assertEquals(50, negative.oqrsMaxQsosOrDefault());
     }
 
     @Test

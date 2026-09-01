@@ -4,6 +4,7 @@
   "showUpdatedAt": true,
   "fallbackText": "统计数据暂不可用，请稍后再试",
   "searchEnabled": true,
+  "oqrsEnabled": true,
   "searchMaxResults": 50,
   "updatedAt": "2026-08-19T10:30:00Z",
   "sections": [

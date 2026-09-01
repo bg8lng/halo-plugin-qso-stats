@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

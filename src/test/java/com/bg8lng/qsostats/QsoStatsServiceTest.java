@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -67,6 +67,10 @@ class QsoStatsServiceTest {
         server.stop(0);
     }
 
+    private static QsoStatsService service(ReactiveSettingFetcher fetcher) {
+        return new QsoStatsService(fetcher, new WavelogClient(), new PublicApiGuard());
+    }
+
     private ReactiveSettingFetcher mockFetcher() {
         ReactiveSettingFetcher fetcher = mock(ReactiveSettingFetcher.class);
         when(fetcher.fetch(eq("api"), eq(WavelogSettings.Api.class)))
@@ -81,13 +85,17 @@ class QsoStatsServiceTest {
             ))));
         when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
             .thenReturn(Mono.just(new WavelogSettings.Display(
-                true, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto")));
+                true, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto", true)));
+        when(fetcher.fetch(eq("security"), eq(WavelogSettings.Security.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Security(null, null, null, null)));
+        when(fetcher.fetch(eq("layout"), eq(WavelogSettings.Layout.class)))
+            .thenReturn(Mono.empty());
         return fetcher;
     }
 
     @Test
     void buildsPayloadEndToEnd() {
-        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
+        QsoStatsService service = service(mockFetcher());
         StatsPayload.Payload payload = service.buildPayload().block();
 
         assertNotNull(payload);
@@ -127,7 +135,7 @@ class QsoStatsServiceTest {
             .thenReturn(Mono.just(new WavelogSettings.Api("", "", null, null, null)));
         when(fetcher.fetch(any(), any())).thenReturn(Mono.empty());
 
-        QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
+        QsoStatsService service = service(fetcher);
         StatsPayload.Payload payload = service.buildPayload().block();
 
         assertNotNull(payload.error());
@@ -149,7 +157,7 @@ class QsoStatsServiceTest {
         when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
             .thenReturn(Mono.empty());
 
-        QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
+        QsoStatsService service = service(fetcher);
         StatsPayload.Payload payload = service.buildPayload().block();
 
         // /wrong 路径下 404（Handler not found 由连接器返回 404 或连接错误），无论哪种都应是错误载荷
@@ -163,7 +171,7 @@ class QsoStatsServiceTest {
         ReactiveSettingFetcher fetcher = mock(ReactiveSettingFetcher.class);
         when(fetcher.fetch(any(), any())).thenReturn(Mono.error(new RuntimeException("boom")));
 
-        QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
+        QsoStatsService service = service(fetcher);
         StatsPayload.Payload payload = service.buildPayload().block();
 
         // 设置读取失败 → 视为未配置，返回友好错误而非 500
@@ -175,10 +183,13 @@ class QsoStatsServiceTest {
 
     @Test
     void searchQsosByCallsignReturnsRows() {
-        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
-        StatsPayload.SearchPayload payload = service.searchQsos("n9eat").block();
+        QsoStatsService service = service(mockFetcher());
+        StatsPayload.ApiResponse<StatsPayload.SearchPayload> response =
+            service.searchQsos("n9eat", "1.2.3.4").block();
 
-        assertNotNull(payload);
+        assertNotNull(response);
+        assertEquals(200, response.status());
+        StatsPayload.SearchPayload payload = response.body();
         assertEquals(null, payload.error());
         assertEquals("N9EAT", payload.callsign());
         assertEquals(1, payload.qsos().size());
@@ -193,13 +204,60 @@ class QsoStatsServiceTest {
 
     @Test
     void blankCallsignReturnsFriendlyError() {
-        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
-        StatsPayload.SearchPayload payload = service.searchQsos("   ").block();
+        QsoStatsService service = service(mockFetcher());
+        StatsPayload.ApiResponse<StatsPayload.SearchPayload> response =
+            service.searchQsos("   ", "1.2.3.4").block();
 
-        assertNotNull(payload);
-        assertNotNull(payload.error());
-        assertTrue(payload.error().contains("呼号"));
-        assertTrue(payload.qsos().isEmpty());
+        assertNotNull(response);
+        assertEquals(400, response.status());
+        assertNotNull(response.body().error());
+        assertTrue(response.body().error().contains("呼号"));
+        assertTrue(response.body().qsos().isEmpty());
+    }
+
+    @Test
+    void malformedCallsignIsRejectedBeforeReachingWavelog() {
+        QsoStatsService service = service(mockFetcher());
+        StatsPayload.ApiResponse<StatsPayload.SearchPayload> response =
+            service.searchQsos("'; DROP TABLE qsos--", "1.2.3.4").block();
+
+        assertNotNull(response);
+        assertEquals(400, response.status());
+        assertTrue(response.body().error().contains("格式"));
+    }
+
+    /** 审核意见 1：开关关闭后，直接调用公开接口必须被服务端拒绝 */
+    @Test
+    void searchIsRejectedWhenFeatureDisabled() {
+        ReactiveSettingFetcher fetcher = mockFetcher();
+        when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Display(
+                false, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto", true)));
+
+        StatsPayload.ApiResponse<StatsPayload.SearchPayload> response =
+            service(fetcher).searchQsos("N9EAT", "1.2.3.4").block();
+
+        assertNotNull(response);
+        assertEquals(403, response.status());
+        assertTrue(response.body().qsos().isEmpty());
+        assertTrue(response.body().error().contains("已关闭"));
+    }
+
+    /** 审核意见 1：呼号查询的频率限制 */
+    @Test
+    void searchIsRateLimitedPerClient() {
+        ReactiveSettingFetcher fetcher = mockFetcher();
+        when(fetcher.fetch(eq("security"), eq(WavelogSettings.Security.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Security(2, 5, 50, 24)));
+        QsoStatsService service = service(fetcher);
+
+        assertEquals(200, service.searchQsos("N9EAT", "9.9.9.9").block().status());
+        assertEquals(200, service.searchQsos("N9EAT", "9.9.9.9").block().status());
+        StatsPayload.ApiResponse<StatsPayload.SearchPayload> third =
+            service.searchQsos("N9EAT", "9.9.9.9").block();
+        assertEquals(429, third.status());
+        // 其他来源不受影响
+        assertEquals(200, service.searchQsos("N9EAT", "8.8.8.8").block().status());
     }
 
     @Test
@@ -209,12 +267,12 @@ class QsoStatsServiceTest {
             .thenReturn(Mono.just(new WavelogSettings.Api("", "", null, null, null)));
         when(fetcher.fetch(any(), any())).thenReturn(Mono.empty());
 
-        QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
-        StatsPayload.SearchPayload payload = service.searchQsos("BG8LNG").block();
+        StatsPayload.ApiResponse<StatsPayload.SearchPayload> response =
+            service(fetcher).searchQsos("BG8LNG", "1.2.3.4").block();
 
-        assertNotNull(payload);
-        assertNotNull(payload.error());
-        assertTrue(payload.error().contains("未配置"));
+        assertNotNull(response);
+        assertNotNull(response.body().error());
+        assertTrue(response.body().error().contains("未配置"));
     }
 
     @Test
@@ -230,17 +288,17 @@ class QsoStatsServiceTest {
             }
         });
 
-        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
-        StatsPayload.OqrsResult result = service.submitOqrs(new StatsPayload.OqrsSubmitRequest(
-            "bg8lng", "me@example.com", "你好，申请卡片", "B",
-            List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1)))).block();
+        QsoStatsService service = service(mockFetcher());
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service.submitOqrs(oqrs("n9eat", "me@example.com"), "1.2.3.4").block();
 
-        assertNotNull(result);
-        assertTrue(result.success());
+        assertNotNull(response);
+        assertEquals(200, response.status());
+        assertTrue(response.body().success());
 
         String body = capturedBody.get();
         assertNotNull(body);
-        assertTrue(body.contains("callsign=BG8LNG"), body);
+        assertTrue(body.contains("callsign=N9EAT"), body);
         assertTrue(body.contains("email=me%40example.com"), body);
         assertTrue(body.contains("qslroute=B"), body);
         assertTrue(body.contains("qsos%5B0%5D%5B0%5D=2026-06-16"), body);
@@ -250,27 +308,176 @@ class QsoStatsServiceTest {
         assertTrue(body.contains("qsos%5B0%5D%5B4%5D=1"), body);
     }
 
+    /** 与假 Wavelog 日志中唯一一条记录一致的合法申请 */
+    private static StatsPayload.OqrsSubmitRequest oqrs(String callsign, String email) {
+        return new StatsPayload.OqrsSubmitRequest(callsign, email, "你好，申请卡片", "B",
+            List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1)));
+    }
+
     @Test
     void oqrsWithoutEmailReturnsError() {
-        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
-        StatsPayload.OqrsResult result = service.submitOqrs(new StatsPayload.OqrsSubmitRequest(
-            "BG8LNG", "  ", "", "B",
-            List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1)))).block();
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(mockFetcher()).submitOqrs(new StatsPayload.OqrsSubmitRequest(
+                "N9EAT", "  ", "", "B",
+                List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1))),
+                "1.2.3.4").block();
 
-        assertNotNull(result);
-        assertTrue(!result.success());
-        assertTrue(result.message().contains("邮箱"));
+        assertNotNull(response);
+        assertEquals(400, response.status());
+        assertTrue(!response.body().success());
+        assertTrue(response.body().message().contains("邮箱"));
+    }
+
+    @Test
+    void oqrsWithMalformedEmailReturnsError() {
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(mockFetcher()).submitOqrs(oqrs("N9EAT", "not-an-email"), "1.2.3.4").block();
+
+        assertNotNull(response);
+        assertEquals(400, response.status());
+        assertTrue(response.body().message().contains("邮箱"));
     }
 
     @Test
     void oqrsWithoutQsosReturnsError() {
-        QsoStatsService service = new QsoStatsService(mockFetcher(), new WavelogClient());
-        StatsPayload.OqrsResult result = service.submitOqrs(new StatsPayload.OqrsSubmitRequest(
-            "BG8LNG", "me@example.com", "", "B", List.of())).block();
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(mockFetcher()).submitOqrs(new StatsPayload.OqrsSubmitRequest(
+                "N9EAT", "me@example.com", "", "B", List.of()), "1.2.3.4").block();
 
-        assertNotNull(result);
-        assertTrue(!result.success());
-        assertTrue(result.message().contains("通联"));
+        assertNotNull(response);
+        assertEquals(400, response.status());
+        assertTrue(response.body().message().contains("通联"));
+    }
+
+    /** 审核意见 1：开关关闭后，OQRS 写接口必须被服务端拒绝 */
+    @Test
+    void oqrsIsRejectedWhenFeatureDisabled() {
+        ReactiveSettingFetcher fetcher = mockFetcher();
+        when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Display(
+                true, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto", false)));
+
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(fetcher).submitOqrs(oqrs("N9EAT", "me@example.com"), "1.2.3.4").block();
+
+        assertNotNull(response);
+        assertEquals(403, response.status());
+        assertTrue(!response.body().success());
+    }
+
+    /** 审核意见 1：总开关关闭时 OQRS 一并关闭 */
+    @Test
+    void oqrsIsRejectedWhenSearchDisabled() {
+        ReactiveSettingFetcher fetcher = mockFetcher();
+        when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Display(
+                false, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto", true)));
+
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(fetcher).submitOqrs(oqrs("N9EAT", "me@example.com"), "1.2.3.4").block();
+
+        assertEquals(403, response.status());
+    }
+
+    /** 审核意见 1：服务端记录校验——伪造的通联记录不得被转发 */
+    @Test
+    void oqrsRejectsQsosThatDoNotExistInTheLog() throws Exception {
+        AtomicReference<Boolean> forwarded = new AtomicReference<>(false);
+        server.createContext("/index.php/oqrs/save_oqrs_request_grouped", exchange -> {
+            forwarded.set(true);
+            exchange.sendResponseHeaders(200, 0);
+            exchange.getResponseBody().close();
+        });
+
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(mockFetcher()).submitOqrs(new StatsPayload.OqrsSubmitRequest(
+                "N9EAT", "me@example.com", "", "B",
+                List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1),
+                    // 本站日志中不存在的伪造记录
+                    new StatsPayload.OqrsQso("1999-01-01", "00:00", "160m", "CW", 42))),
+                "1.2.3.4").block();
+
+        assertNotNull(response);
+        assertEquals(400, response.status());
+        assertTrue(response.body().message().contains("不一致"));
+        assertTrue(!forwarded.get(), "校验失败的申请不应转发到 Wavelog");
+    }
+
+    /** 审核意见 1：呼号在本站日志中没有任何记录时不得提交 */
+    @Test
+    void oqrsRejectsCallsignWithoutAnyLoggedQso() throws Exception {
+        server.removeContext("/index.php/api/v2/qso");
+        server.createContext("/index.php/api/v2/qso", exchange -> {
+            byte[] b = "{\"data\":[],\"meta\":{}}".getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, b.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(b);
+            }
+        });
+
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(mockFetcher()).submitOqrs(oqrs("N9EAT", "me@example.com"), "1.2.3.4").block();
+
+        assertEquals(400, response.status());
+        assertTrue(response.body().message().contains("没有"));
+    }
+
+    /** 审核意见 1：防重复提交 */
+    @Test
+    void duplicateOqrsSubmissionIsRejected() throws Exception {
+        AtomicReference<Integer> forwardCount = new AtomicReference<>(0);
+        server.createContext("/index.php/oqrs/save_oqrs_request_grouped", exchange -> {
+            forwardCount.set(forwardCount.get() + 1);
+            exchange.sendResponseHeaders(200, 0);
+            exchange.getResponseBody().close();
+        });
+
+        QsoStatsService service = service(mockFetcher());
+        assertEquals(200,
+            service.submitOqrs(oqrs("N9EAT", "me@example.com"), "1.2.3.4").block().status());
+
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> again =
+            service.submitOqrs(oqrs("n9eat", "ME@Example.com"), "1.2.3.4").block();
+        assertEquals(409, again.status());
+        assertTrue(again.body().message().contains("重复"));
+        assertEquals(1, forwardCount.get(), "重复申请不应再次转发到 Wavelog");
+    }
+
+    /** 审核意见 1：OQRS 频率限制 */
+    @Test
+    void oqrsIsRateLimitedPerClient() throws Exception {
+        server.createContext("/index.php/oqrs/save_oqrs_request_grouped", exchange -> {
+            exchange.sendResponseHeaders(200, 0);
+            exchange.getResponseBody().close();
+        });
+        ReactiveSettingFetcher fetcher = mockFetcher();
+        when(fetcher.fetch(eq("security"), eq(WavelogSettings.Security.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Security(20, 1, 50, 24)));
+        QsoStatsService service = service(fetcher);
+
+        assertEquals(200,
+            service.submitOqrs(oqrs("N9EAT", "a@example.com"), "7.7.7.7").block().status());
+        assertEquals(429,
+            service.submitOqrs(oqrs("N9EAT", "b@example.com"), "7.7.7.7").block().status());
+    }
+
+    /** 审核意见 1：单次提交条数上限 */
+    @Test
+    void oqrsRejectsTooManyQsos() {
+        ReactiveSettingFetcher fetcher = mockFetcher();
+        when(fetcher.fetch(eq("security"), eq(WavelogSettings.Security.class)))
+            .thenReturn(Mono.just(new WavelogSettings.Security(20, 5, 1, 24)));
+
+        StatsPayload.ApiResponse<StatsPayload.OqrsResult> response =
+            service(fetcher).submitOqrs(new StatsPayload.OqrsSubmitRequest(
+                "N9EAT", "me@example.com", "", "B",
+                List.of(new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1),
+                    new StatsPayload.OqrsQso("2026-06-16", "17:06", "20m", "SSB", 1))),
+                "1.2.3.4").block();
+
+        assertEquals(400, response.status());
+        assertTrue(response.body().message().contains("单次最多"));
     }
 
     // ---------- 变更检测缓存 ----------
@@ -318,11 +525,11 @@ class QsoStatsServiceTest {
                 "http://localhost:" + port, "wl2_test", 1, 5, "我的通联")));
         when(fetcher.fetch(eq("display"), eq(WavelogSettings.Display.class)))
             .thenReturn(Mono.just(new WavelogSettings.Display(
-                true, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto")));
+                true, 50, true, "我的通联统计", true, "暂不可用", "modern", "auto", true)));
         when(fetcher.fetch(eq("layout"), eq(WavelogSettings.Layout.class)))
             .thenReturn(Mono.empty());
 
-        QsoStatsService service = new QsoStatsService(fetcher, new WavelogClient());
+        QsoStatsService service = service(fetcher);
         StatsPayload.DashboardPayload first = service.buildDashboard().block();
         assertNotNull(first);
         String firstUpdatedAt = first.updatedAt();

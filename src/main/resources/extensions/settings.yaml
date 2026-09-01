@@ -134,7 +134,12 @@ spec:
           name: searchEnabled
           label: 启用呼号查询与 OQRS
           value: true
-          help: "在统计组件中显示呼号查询框，可按呼号检索通联记录并一键提交 OQRS 卡片申请。需要 Wavelog 站点已启用 OQRS（站点设置中为电台位置开启 OQRS），且 API Token 具备 qso:read 权限。"
+          help: "总开关。关闭后前台不再显示查询框，且服务端会直接拒绝 /qso-stats/api/search 与 /qso-stats/api/oqrs（返回 403），即使被直接调用也不会返回日志数据或转发申请。需要 Wavelog 站点已启用 OQRS（站点设置中为电台位置开启 OQRS），且 API Token 具备 qso:read 权限。"
+        - $formkit: switch
+          name: oqrsEnabled
+          label: 启用一键 OQRS 卡片申请
+          value: true
+          help: "【涉及第三方数据处理】开启后，访客填写的邮箱、留言与所选通联记录会由本插件后端转发到你配置的 Wavelog 站点，用于生成 QSL 卡片申请。关闭后仅保留呼号查询（只读），服务端拒绝所有 OQRS 提交。详见插件 README 的「隐私与第三方数据处理说明」。"
         - $formkit: number
           name: searchMaxResults
           label: 查询结果上限
@@ -160,6 +165,38 @@ spec:
           name: fallbackText
           label: 加载失败提示文案
           value: "统计数据暂不可用，请稍后再试"
+
+    - group: security
+      label: 访问控制与防滥用
+      formSchema:
+        - $formkit: number
+          name: searchRateLimit
+          label: 呼号查询频率上限（次 / 分钟 / IP）
+          value: 20
+          min: 0
+          max: 600
+          help: "单个访客 IP 每分钟允许的呼号查询次数，超出返回 429。填 0 表示不限制（不建议）。站点部署在反向代理后时，请确保代理正确透传 X-Forwarded-For 或 X-Real-IP，否则所有访客会共用同一计数。"
+        - $formkit: number
+          name: oqrsRateLimit
+          label: OQRS 提交频率上限（次 / 小时 / IP）
+          value: 5
+          min: 0
+          max: 100
+          help: "单个访客 IP 每小时允许提交的 OQRS 卡片申请次数，超出返回 429。OQRS 是公开写操作，建议保持较小的数值。填 0 表示不限制（不建议）。"
+        - $formkit: number
+          name: oqrsMaxQsos
+          label: 单次申请最多通联条数
+          value: 50
+          min: 1
+          max: 200
+          help: "单次 OQRS 申请允许携带的通联记录条数上限，超出返回 400。"
+        - $formkit: number
+          name: oqrsDuplicateWindowHours
+          label: 重复提交拦截窗口（小时）
+          value: 24
+          min: 0
+          max: 720
+          help: "窗口内「相同呼号 + 邮箱 + 寄送方式 + 通联集合」的重复提交会被拒绝（返回 409），避免访客连点或脚本重复刷卡片申请。转发失败的提交不占用窗口，可立即重试。填 0 表示不去重。"
 
     - group: layout
       label: 统计页面布局

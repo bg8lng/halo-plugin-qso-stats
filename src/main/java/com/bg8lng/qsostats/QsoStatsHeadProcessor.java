@@ -1,4 +1,4 @@
-package run.halo.qsostats;
+package com.bg8lng.qsostats;
 
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.ITemplateContext;
