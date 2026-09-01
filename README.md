@@ -1,6 +1,6 @@
 # 通联统计（QsoStats）
 
-![Version](https://img.shields.io/badge/version-1.6.0-1677ff)
+![Version](https://img.shields.io/badge/version-1.6.1-1677ff)
 ![Halo](https://img.shields.io/badge/Halo-2.20%2B-00b42a)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -12,7 +12,8 @@
 - 🔒 **隐私说明**：[PRIVACY.md](PRIVACY.md)
 - 📝 **更新日志**：[CHANGELOG.md](CHANGELOG.md)
 
-> 🆕 **v1.6.0**：公开接口访问控制与防滥用强化（开关关闭时服务端拒绝、OQRS 服务端记录校验 / 频率限制 / 防重复提交）、补充完整隐私与第三方数据处理说明、Java 包名迁移至 `com.bg8lng.qsostats`。详见 [CHANGELOG](CHANGELOG.md)。
+> 🆕 **v1.6.1**：修复访客提交 OQRS 被 Halo CSRF 拒为 403 的问题（新增 `GET /qso-stats/api/csrf` 令牌端点，前端自动携带）。
+> **v1.6.0**：公开接口访问控制与防滥用强化（开关关闭时服务端拒绝、OQRS 服务端记录校验 / 频率限制 / 防重复提交）、补充完整隐私与第三方数据处理说明、Java 包名迁移至 `com.bg8lng.qsostats`。详见 [CHANGELOG](CHANGELOG.md)。
 
 ## 功能一览
 
@@ -47,7 +48,7 @@
 
 ### 方式一：直接安装（推荐）
 
-在 [Releases](https://github.com/bg8lng/halo-plugin-qso-stats/releases) 下载最新的 `qso-stats-1.6.0.jar`，
+在 [Releases](https://github.com/bg8lng/halo-plugin-qso-stats/releases) 下载最新的 `qso-stats-1.6.1.jar`，
 在 Halo 后台「插件」→「安装」→ 上传并启用。
 
 ### 方式二：本地构建
@@ -57,7 +58,7 @@
 git clone https://github.com/bg8lng/halo-plugin-qso-stats.git
 cd halo-plugin-qso-stats
 ./gradlew build
-# 产物：build/libs/qso-stats-1.6.0.jar
+# 产物：build/libs/qso-stats-1.6.1.jar
 ```
 
 ## 前置准备：Wavelog API Token
@@ -123,6 +124,7 @@ cd halo-plugin-qso-stats
 | GET | `/qso-stats/api/statistics` | 始终可用（只读聚合统计） | 服务端缓存（默认 300s） |
 | GET | `/qso-stats/api/dashboard` | 始终可用（只读聚合统计） | 服务端缓存（默认 300s） |
 | GET | `/qso-stats/api/search` | 「启用呼号查询与 OQRS」 | 关闭 → 403；呼号格式校验 → 400；频率限制 → 429 |
+| GET | `/qso-stats/api/csrf` | 始终可用（只读） | 仅下发当前会话的 CSRF 令牌，跨源无法读取响应 |
 | POST | `/qso-stats/api/oqrs` | 「启用呼号查询与 OQRS」+「启用一键 OQRS 卡片申请」 | 关闭 → 403；频率限制 → 429；参数/记录校验 → 400；重复提交 → 409；请求体上限 64 KB |
 
 ### OQRS 写操作的服务端校验链
@@ -187,6 +189,7 @@ Wavelog 站点**，用于处理这一次 QSL 卡片申请。
 | `data-endpoint` | 覆盖数据接口地址（默认 `/qso-stats/api/statistics`） |
 | `data-search-endpoint` | 覆盖呼号查询接口（默认 `/qso-stats/api/search`） |
 | `data-oqrs-endpoint` | 覆盖 OQRS 申请接口（默认 `/qso-stats/api/oqrs`） |
+| `data-csrf-endpoint` | 覆盖 CSRF 令牌接口（默认 `/qso-stats/api/csrf`） |
 | `data-refresh` | 自动刷新间隔（秒，≥ 30 生效，默认关闭） |
 
 ### 方式 B：独立统计页面
@@ -237,6 +240,11 @@ Token 无效、过期或缺少权限。请确认 Token 以 `wl2_` 开头、未�
 
 **Q：修改设置后数据没变化**
 统计接口结果有缓存（默认 300 秒），可在设置中调低「缓存时间」。
+
+**Q：一键 OQRS 提交返回 403 且响应是纯文本 `Access Denied`**
+这是 Halo 的 CSRF 保护拒绝了请求（不是插件返回的，插件的 403 一定是 JSON）。
+v1.6.1 起前端会自动通过 `GET /qso-stats/api/csrf` 获取并携带令牌；若仍出现，
+请确认该端点可正常访问（升级后记得刷新浏览器与 CDN 缓存）。
 
 **Q：一键 OQRS 提交失败（502）**
 请确认 Wavelog 站点已为该电台位置开启 OQRS 且设置了公开 slug；另外，若 Wavelog 管理员开启了 CSRF 防护，公开申请端点会拒绝插件转发的请求（Wavelog 默认关闭 CSRF）。

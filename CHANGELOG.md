@@ -2,6 +2,29 @@
 
 本项目遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## v1.6.1 - 2026-09-01
+
+### 修复
+
+- **访客无法提交 OQRS 卡片申请（403 Access Denied）**：插件的自定义路径
+  `/qso-stats/**` 不在 Halo 的 CSRF 豁免前缀（`/apis/**`、`/api/**`）内，
+  `POST /qso-stats/api/oqrs` 受 Spring Security CSRF 保护；而前端此前从未携带 CSRF 令牌。
+  在 `XSRF-TOKEN` Cookie 被标记为 **HttpOnly** 的站点（例如反向代理配置了
+  `proxy_cookie_flags ~ httponly`）上，JavaScript 根本读不到该 Cookie，
+  导致**所有访客的申请一律被拒**。
+  - 新增只读端点 `GET /qso-stats/api/csrf`，由服务端把当前会话的 CSRF 令牌回给同源前端；
+  - 前端提交 OQRS 前自动获取并携带令牌，读不到时回退到 `XSRF-TOKEN` Cookie；
+  - 令牌过期（403 且响应体非插件 JSON）时自动刷新并重试一次；
+  - 新增容器属性 `data-csrf-endpoint` 以便自定义该端点地址。
+  - 安全性说明：跨源页面受同源策略限制无法读取该响应（插件不输出任何 CORS 头），
+    因此不削弱 CSRF 防护。
+
+### 测试
+
+- 新增 `QsoStatsRouterTest`：CSRF 令牌下发（启用/未启用两种情形）、
+  限流客户端标识解析（`X-Forwarded-For` 首段 / `X-Real-IP` / 回落 / 超长截断），
+  全量用例 **56 个**
+
 ## v1.6.0 - 2026-09-01
 
 > 本版本针对 Halo 应用市场审核意见做安全、合规与材料完善，建议所有用户升级。

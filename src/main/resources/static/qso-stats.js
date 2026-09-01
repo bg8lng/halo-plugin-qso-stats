@@ -14,6 +14,7 @@
   var DEFAULT_ENDPOINT = '/qso-stats/api/statistics';
   var SEARCH_ENDPOINT = '/qso-stats/api/search';
   var OQRS_ENDPOINT = '/qso-stats/api/oqrs';
+  var CSRF_ENDPOINT = '/qso-stats/api/csrf';
   var DASHBOARD_ENDPOINT = '/qso-stats/api/dashboard';
   var MIN_REFRESH = 30;
 
@@ -150,6 +151,46 @@
     return '请求失败（HTTP ' + status + '）';
   }
 
+  /* ---------------- CSRF ----------------
+     插件的自定义路径不在 Halo 的 CSRF 豁免范围（/apis/**、/api/**）内，
+     因此 POST /qso-stats/api/oqrs 需要携带 CSRF 令牌。
+     常规做法是读 XSRF-TOKEN Cookie，但站点或其反向代理可能把该 Cookie 标记为
+     HttpOnly（此时 document.cookie 读不到），所以优先向服务端要，读不到再回退到 Cookie。 */
+
+  var csrfCache = null;
+
+  function cookieValue(name) {
+    var parts = String(document.cookie || '').split(';');
+    for (var i = 0; i < parts.length; i++) {
+      var kv = parts[i].split('=');
+      if (kv[0].replace(/^\s+|\s+$/g, '') === name) {
+        return decodeURIComponent(kv.slice(1).join('=') || '');
+      }
+    }
+    return '';
+  }
+
+  /** 取 CSRF 令牌，返回 Promise<{headerName, token} | null>；失败不阻断提交 */
+  function csrfToken(endpoint) {
+    if (csrfCache) { return csrfCache; }
+    csrfCache = fetch(endpoint, { credentials: 'same-origin' })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        if (data && data.required && data.token) {
+          return { headerName: data.headerName || 'X-XSRF-TOKEN', token: data.token };
+        }
+        return null;
+      })
+      .catch(function () { return null; })
+      .then(function (result) {
+        if (result) { return result; }
+        // 回退：Cookie 可读时（未设 HttpOnly）直接用 Cookie 里的令牌
+        var fromCookie = cookieValue('XSRF-TOKEN');
+        return fromCookie ? { headerName: 'X-XSRF-TOKEN', token: fromCookie } : null;
+      });
+    return csrfCache;
+  }
+
   /** fetch 包装：无论状态码如何都尽量取出服务端返回的 JSON 提示 */
   function fetchJson(url, options) {
     return fetch(url, options).then(function (res) {
@@ -186,6 +227,7 @@
 
     var searchEndpoint = widgetRoot.getAttribute('data-search-endpoint') || SEARCH_ENDPOINT;
     var oqrsEndpoint = widgetRoot.getAttribute('data-oqrs-endpoint') || OQRS_ENDPOINT;
+    var csrfEndpoint = widgetRoot.getAttribute('data-csrf-endpoint') || CSRF_ENDPOINT;
 
     function doSearch() {
       var callsign = input.value.replace(/^\s+|\s+$/g, '').toUpperCase();
@@ -201,7 +243,7 @@
             renderSearchMessage(body, message, true);
             return;
           }
-          renderSearchResult(body, out.data, maxResults, oqrsEndpoint, oqrsEnabled);
+          renderSearchResult(body, out.data, maxResults, oqrsEndpoint, oqrsEnabled, csrfEndpoint);
         })
         .catch(function (err) {
           renderSearchMessage(body,
@@ -232,7 +274,7 @@
     body.appendChild(box);
   }
 
-  function renderSearchResult(body, data, maxResults, oqrsEndpoint, oqrsEnabled) {
+  function renderSearchResult(body, data, maxResults, oqrsEndpoint, oqrsEnabled, csrfEndpoint) {
     body.innerHTML = '';
     if (data.error) {
       renderSearchMessage(body, data.error, true);
@@ -293,7 +335,8 @@
       renderOqrsForm(foot, {
         callsign: data.callsign,
         qsos: rows,
-        endpoint: oqrsEndpoint
+        endpoint: oqrsEndpoint,
+        csrfEndpoint: csrfEndpoint
       });
     });
   }
@@ -408,17 +451,36 @@
       submitBtn.disabled = true;
       submitBtn.textContent = '提交中…';
       status.textContent = '';
-      fetchJson(ctx.endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          callsign: ctx.callsign,
-          email: emailValue,
-          message: message.value,
-          qslroute: routeValue,
-          qsos: qsos
+      var payload = JSON.stringify({
+        callsign: ctx.callsign,
+        email: emailValue,
+        message: message.value,
+        qslroute: routeValue,
+        qsos: qsos
+      });
+
+      function post() {
+        return csrfToken(ctx.csrfEndpoint || CSRF_ENDPOINT).then(function (csrf) {
+          var headers = { 'Content-Type': 'application/json' };
+          if (csrf) { headers[csrf.headerName] = csrf.token; }
+          return fetchJson(ctx.endpoint, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: headers,
+            body: payload
+          });
+        });
+      }
+
+      post()
+        .then(function (out) {
+          // 403 且响应体不是插件的 JSON —— 多半是 CSRF 令牌过期，刷新后重试一次
+          if (out.status === 403 && !out.data) {
+            csrfCache = null;
+            return post();
+          }
+          return out;
         })
-      })
         .then(function (out) {
           var result = out.data;
           if (out.ok && result && result.success) {

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.web.server.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -24,6 +25,7 @@ import run.halo.app.theme.TemplateNameResolver;
  * <ul>
  *   <li>GET /qso-stats/api/statistics —— 展示组件的数据接口（公开，无需认证）</li>
  *   <li>GET /qso-stats/api/search —— 按呼号查询通联（公开，受开关与限流控制）</li>
+ *   <li>GET /qso-stats/api/csrf —— 下发 CSRF 令牌，供 OQRS 提交使用（公开只读）</li>
  *   <li>POST /qso-stats/api/oqrs —— 提交 OQRS 卡片申请（公开写操作，受开关、
  *       限流、记录校验与防重复提交控制）</li>
  *   <li>GET /qso-stats —— 独立统计页面</li>
@@ -65,6 +67,7 @@ public class QsoStatsRouter {
         return route(GET("/qso-stats/api/statistics"), this::statistics)
             .andRoute(GET("/qso-stats/api/dashboard"), this::dashboard)
             .andRoute(GET("/qso-stats/api/search"), this::search)
+            .andRoute(GET("/qso-stats/api/csrf"), this::csrf)
             .andRoute(POST("/qso-stats/api/oqrs"), this::oqrs)
             .andRoute(GET("/qso-stats"), this::page);
     }
@@ -102,6 +105,41 @@ public class QsoStatsRouter {
             .onErrorResume(e -> Mono.just(StatsPayload.ApiResponse.of(400,
                 StatsPayload.oqrsResult(false, "请求参数解析失败，请检查后重试"))))
             .flatMap(QsoStatsRouter::toResponse);
+    }
+
+    /**
+     * 下发本次会话的 CSRF 令牌，供前端提交 OQRS 时携带。
+     *
+     * <p><b>为什么需要它</b>：插件的自定义路径（{@code /qso-stats/**}）不在 Halo 的
+     * CSRF 豁免前缀（{@code /apis/**}、{@code /api/**}）内，因此 {@code POST /qso-stats/api/oqrs}
+     * 受 Spring Security CSRF 保护。常规做法是前端从 {@code XSRF-TOKEN} Cookie 读取令牌，
+     * 但当站点（或其反向代理，如 Nginx 的 {@code proxy_cookie_flags ~ httponly}）把该 Cookie
+     * 标记为 HttpOnly 时，JavaScript 无法读取，访客的申请会一律得到 403 Access Denied。
+     * 这里由服务端把令牌回给同源前端，兼容两种部署。
+     *
+     * <p><b>安全性</b>：跨源页面受同源策略限制无法读取本响应体（插件不输出任何 CORS 头），
+     * 因此不会削弱 CSRF 防护；令牌本身与访客会话绑定，且本接口为只读 GET。
+     */
+    private Mono<ServerResponse> csrf(ServerRequest request) {
+        return csrfBody(request).flatMap(body -> ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body));
+    }
+
+    /** 从 exchange 属性中取出本次会话的 CSRF 令牌（拆分出来便于单元测试） */
+    static Mono<Map<String, Object>> csrfBody(ServerRequest request) {
+        Mono<CsrfToken> tokenMono = request.exchange().getAttribute(CsrfToken.class.getName());
+        if (tokenMono == null) {
+            // 站点未启用 CSRF 保护（或过滤器未注册）：前端无需附加令牌
+            return Mono.just(Map.of("required", false));
+        }
+        return tokenMono
+            .<Map<String, Object>>map(token -> Map.of(
+                "required", true,
+                "headerName", token.getHeaderName(),
+                "parameterName", token.getParameterName(),
+                "token", token.getToken()))
+            .defaultIfEmpty(Map.of("required", false));
     }
 
     /** 统一按业务结果设置 HTTP 状态码，便于调用方与审计区分「关闭 / 限流 / 失败」 */

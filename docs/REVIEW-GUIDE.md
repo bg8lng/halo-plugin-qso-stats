@@ -1,6 +1,6 @@
 # 审核复核指南（主要功能路径）
 
-> 适用版本：v1.6.0 · 面向 Halo 应用市场审核与任何希望自行复核的使用者
+> 适用版本：v1.6.1 · 面向 Halo 应用市场审核与任何希望自行复核的使用者
 
 本文提供**可复核的主要功能路径**：既包含线上演示环境的直接访问路径，
 也包含**无需 Wavelog 账号**即可在本地完整复核的方式。
@@ -73,7 +73,7 @@ python3 -m http.server 8080
 
 ### 2.3 在自己的 Halo 中复核
 
-1. `./gradlew build` → 上传 `build/libs/qso-stats-1.6.0.jar` 并启用；
+1. `./gradlew build` → 上传 `build/libs/qso-stats-1.6.1.jar` 并启用；
 2. 插件设置中填写任意 Wavelog 站点地址与 Token（**未配置时页面会给出明确提示，不会报错崩溃**）；
 3. 访问 `/qso-stats` 复核页面渲染；
 4. 按第三节用 curl 复核访问控制。
@@ -99,6 +99,18 @@ curl -i -X POST "https://example.com/qso-stats/api/oqrs" \
 ```
 
 只关闭「启用一键 OQRS 卡片申请」时，`search` 返回 200 而 `oqrs` 返回 403。
+
+> **注意**：`POST /qso-stats/api/oqrs` 受 Halo 的 Spring Security CSRF 保护。
+> 用 curl 直接 POST 会得到纯文本 `403 Access Denied`（这是 Halo 返回的，不是插件）。
+> 复核写接口时请先取令牌：
+>
+> ```bash
+> TOKEN=$(curl -s https://example.com/qso-stats/api/csrf | python3 -c "import sys,json;print(json.load(sys.stdin).get('token',''))")
+> curl -i -H "X-XSRF-TOKEN: $TOKEN" -H "Cookie: XSRF-TOKEN=$TOKEN" -H "Content-Type: application/json" \
+>   -X POST -d '{...}' https://example.com/qso-stats/api/oqrs
+> ```
+>
+> 浏览器中由插件前端自动完成这一步，访客无感知。
 
 ### 3.2 参数校验
 
@@ -154,7 +166,8 @@ done; echo
 
 本次提交前已完成的人工验证：
 
-- [x] `./gradlew build` 通过，**50 个单元测试全部通过**（含 22 个访问控制 / 防滥用用例）
+- [x] `./gradlew build` 通过，**56 个单元测试全部通过**（含 28 个访问控制 / 防滥用 / 路由用例）
+- [x] 用真实无头浏览器在**线上站点**走通访客提交路径，确认 CSRF 令牌链路生效（v1.6.1 修复）
 - [x] 逐一走查全部 4 个公开端点的服务端分支，确认开关关闭时在**处理链第一步**即拒绝
 - [x] 走查 OQRS 全链路，确认前端提交的通联记录**不被信任**，一律以本站日志为准
 - [x] 复核内存结构（限流计数、去重指纹）具备过期清理与条目上限，无无界增长
